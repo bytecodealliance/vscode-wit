@@ -1,0 +1,75 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          command: manifest
+          config-file: .github/release-please-config.json
+          manifest-file: .github/release-please-manifest.json
+      - uses: actions/checkout@v3
+      - name: Add files and publish release
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.release.outputs.tag_name }}
+        run: |
+          npm ci
+          npm run package
+          mv wit-idl.vsix ${TAG_NAME}.vsix 
+          gh release upload ${TAG_NAME} ${TAG_NAME}.vsix
+
+  label:
+    needs: [publish]
+    if: ${{ needs.publish.outputs.release_created }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      repository-projects: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Add label to PR
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=$(gh pr list --state merged --label 'autorelease: tagged' --json number --jq '.[0].number')
+          gh pr edit ${PR_NUMBER} --add-label 'autorelease: published'
+
+  comments:
+    needs: [publish]
+    if: ${{ needs.publish.outputs.release_created }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: apexskier/github-release-commenter@v1
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          comment-template: |
+            :tada: This change has been included in ${{ needs.publish.outputs.tag_name }} :tada:
+
+            The release is available on:
+            - GitHub releases: {release_link}
+
+            Your **[release-please](https://github.com/googleapis/release-please)** bot :rocket::pray:
