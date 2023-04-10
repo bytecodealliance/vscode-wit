@@ -1,0 +1,12 @@
+{
+  "Add Interface": {
+    "prefix": "interface ",
+    "body": "interface ${1:my-interface} {\n  type ${2:my-type} = string\n  record ${3:my-record} {\n    foo: string,\n    bar: string\n  }\n}",
+    "description": "Adds a simple interface"
+  },
+  "Add World": {
+    "prefix": "world ",
+    "body": "world ${1:my-world} {\n  import ${2:my-input}: foo.bar\n  export ${3:my-output}: func() -> u32\n}",
+    "description": "Adds a simple world"
+  }
+}

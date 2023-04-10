@@ -1,0 +1,61 @@
+{
+  "name": "wit-idl",
+  "displayName": "WIT IDL",
+  "description": "WebAssembly Interface Type (WIT) IDL Extension for VSCode",
+  "private": true,
+  "version": "0.0.1",
+  "publisher": "bytecodealliance",
+  "icon": "images/wit-icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bytecodealliance/vscode-wit.git"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "install-plugin": "npm run package && code --install-extension wit-idl.vsix",
+    "package": "vsce package -o wit-idl.vsix",
+    "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/*'",
+    "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/*'",
+    "test": "npm run test-grammar"
+  },
+  "engines": {
+    "vscode": "^1.65.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "wit",
+        "aliases": [
+          "WIT",
+          "wit",
+          "WebAssembly Interface Type"
+        ],
+        "extensions": [
+          ".wit"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "wit",
+        "scopeName": "source.wit",
+        "path": "./syntaxes/wit.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "wit",
+        "path": "./snippets.json"
+      }
+    ]
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^2.18.0",
+    "vscode-tmgrammar-test": "^0.1.1"
+  }
+}
