@@ -89,7 +89,14 @@ world another-world {
 //         ^^^^    keyword.other.func.func-type.wit
 //             ^    meta.function.wit punctuation.brackets.round.begin.wit
 
-    output: func(
+    output-XML: func(
+//  ^^^^^^    meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+//        ^    entity.name.function.id.func-item.wit meta.word-separator.wit
+//         ^^^    entity.name.function.id.func-item.wit meta.word.wit
+//            ^    meta.func-item.wit keyword.operator.key-value.wit
+//              ^^^^    keyword.other.func.func-type.wit
+//                  ^    meta.function.wit punctuation.brackets.round.begin.wit
+
       response: result<_,failure>
 //    ^^^^^^^^    variable.parameter.id.named-type.wit
 //            ^    meta.named-type-list.wit keyword.operator.key-value.wit

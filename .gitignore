@@ -72,3 +72,5 @@ typings/
 # VSCode extension development
 .vscode-test/
 *.vsix
+*.tmLanguage.json
+!/syntaxes/*.tmLanguage.json
