@@ -5,17 +5,17 @@ interface some-interface {
 //        ^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
 //                       ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
-  use self.io.level-1.2-level.{
+  use self.io.level-L1.level-L2.{
 //^^^    keyword.other.use.use-item.wit
 //    ^^^^    variable.language.self.use-path.wit
 //        ^    keyword.operator.namespace-separator.use-path.wit
 //         ^^    entity.name.namespace.id.use-path.wit
 //           ^    keyword.operator.namespace-separator.use-path.wit
-//            ^^^^^^^    entity.name.namespace.id.use-path.wit
-//                   ^    keyword.operator.namespace-separator.use-path.wit
-//                    ^^^^^^^    entity.name.namespace.id.use-path.wit
-//                           ^    keyword.operator.namespace-separator.use-item.wit
-//                            ^    meta.use-item.wit punctuation.brackets.curly.begin.wit
+//            ^^^^^^^^    entity.name.namespace.id.use-path.wit
+//                    ^    keyword.operator.namespace-separator.use-path.wit
+//                     ^^^^^^^^    entity.name.namespace.id.use-path.wit
+//                             ^    keyword.operator.namespace-separator.use-item.wit
+//                              ^    meta.use-item.wit punctuation.brackets.curly.begin.wit
 
     input-stream,
 //  ^^^^^^^^^^^^    entity.name.type.declaration.use-names-item.use-item.wit
