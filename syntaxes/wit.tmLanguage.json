@@ -131,7 +131,7 @@
     "world": {
       "name": "meta.world-item.wit",
       "comment": "Syntax for WIT like `world \"id\" {`",
-      "begin": "^\\b(default\\s+)?(world)\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "^\\b(default\\s+)?(world)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "storage.modifier.default.world-item.wit"
@@ -142,7 +142,7 @@
         "3": {
           "name": "entity.name.type.id.world-item.wit"
         },
-        "5": {
+        "8": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -153,7 +153,7 @@
         {
           "name": "meta.export-item.wit",
           "comment": "Syntax for WIT like `export \"id\":`",
-          "begin": "\\s*\\b(export)\\b\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\:)\\s*",
+          "begin": "\\s*\\b(export)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)\\s*",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.export.export-item.wit"
@@ -161,7 +161,7 @@
             "2": {
               "name": "variable.other.constant.id.export-item.wit"
             },
-            "4": {
+            "7": {
               "name": "keyword.operator.key-value.wit"
             }
           },
@@ -176,7 +176,7 @@
         {
           "name": "meta.import-item.wit",
           "comment": "Syntax for WIT like `import \"id\":`",
-          "begin": "\\s*\\b(import)\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\:)",
+          "begin": "\\s*\\b(import)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.import.import-item.wit"
@@ -184,7 +184,7 @@
             "2": {
               "name": "variable.other.id.import-item.wit"
             },
-            "4": {
+            "7": {
               "name": "keyword.operator.key-value.wit"
             }
           },
@@ -213,7 +213,7 @@
     "interface": {
       "name": "meta.interface-item.wit",
       "comment": "Syntax for WIT like `interface \"id\" {`",
-      "begin": "^\\b(default\\s+)?(interface)\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "^\\b(default\\s+)?(interface)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "storage.modifier.default.interface-item.wit"
@@ -224,7 +224,7 @@
         "3": {
           "name": "entity.name.type.id.interface-item.wit"
         },
-        "5": {
+        "8": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -352,7 +352,7 @@
         },
         {
           "name": "entity.name.type.declaration.use-names-item.use-item.wit",
-          "match": "\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b"
+          "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
         },
         {
           "name": "punctuation.comma.wit",
@@ -375,7 +375,7 @@
         },
         {
           "name": "entity.name.namespace.id.use-path.wit",
-          "match": "\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b"
+          "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
         },
         {
           "name": "keyword.operator.namespace-separator.use-path.wit",
@@ -386,7 +386,7 @@
     "type-definition": {
       "name": "meta.type-item.wit",
       "comment": "Syntax for WIT like `type \"id\" =`",
-      "begin": "\\s*\\b(type)\\b\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\=)\\s*",
+      "begin": "\\s*\\b(type)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\=)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.declaration.type.type-item.wit storage.type.wit"
@@ -394,7 +394,7 @@
         "2": {
           "name": "entity.name.type.id.type-item.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.equal.wit"
         }
       },
@@ -410,7 +410,7 @@
     "record": {
       "name": "meta.record-item.wit",
       "comment": "Syntax for WIT like `record \"id\" {`",
-      "begin": "\\s*\\b(record)\\b\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(record)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.declaration.record.record-item.wit"
@@ -418,7 +418,7 @@
         "2": {
           "name": "entity.name.type.id.record-item.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -440,12 +440,12 @@
     },
     "record-fields": {
       "name": "meta.record-fields.wit",
-      "begin": "\\s*\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b\\s*(\\:)\\s*",
+      "begin": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b\\s*(\\:)\\s*",
       "beginCaptures": {
         "1": {
           "name": "variable.declaration.id.record-fields.wit"
         },
-        "3": {
+        "6": {
           "name": "keyword.operator.key-value.wit"
         }
       },
@@ -469,7 +469,7 @@
     "flags": {
       "name": "meta.flags-items.wit",
       "comment": "Syntax for WIT like `flags \"id\" {`",
-      "begin": "\\s*\\b(flags)\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(flags)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.flags.flags-items.wit"
@@ -477,7 +477,7 @@
         "2": {
           "name": "entity.name.type.id.flags-items.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -505,7 +505,7 @@
         },
         {
           "name": "variable.other.enummember.id.flags-fields.wit",
-          "match": "\\s*\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b"
+          "match": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
         },
         {
           "name": "punctuation.comma.wit",
@@ -516,7 +516,7 @@
     "variant": {
       "name": "meta.variant.wit",
       "comment": "Syntax for WIT like `variant \"id\" {`",
-      "begin": "\\s*\\b(variant)\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(variant)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.variant.wit"
@@ -524,7 +524,7 @@
         "2": {
           "name": "entity.name.type.id.variant.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -549,12 +549,12 @@
     },
     "variant-cases": {
       "name": "meta.variant-cases.wit",
-      "begin": "\\s*\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b\\s*(\\()\\s*",
+      "begin": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b\\s*(\\()\\s*",
       "beginCaptures": {
         "1": {
           "name": "variable.other.enummember.id.variant-cases.wit"
         },
-        "3": {
+        "6": {
           "name": "punctuation.brackets.round.begin.wit"
         }
       },
@@ -578,7 +578,7 @@
     "enum": {
       "name": "meta.enum-items.wit",
       "comment": "Syntax for WIT like `enum \"id\" {`",
-      "begin": "\\s*\\b(enum)\\b\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(enum)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.enum.enum-items.wit"
@@ -586,7 +586,7 @@
         "2": {
           "name": "entity.name.type.id.enum-items.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -614,7 +614,7 @@
         },
         {
           "name": "variable.other.enummember.id.enum-cases.wit",
-          "match": "\\s*\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b"
+          "match": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
         },
         {
           "name": "punctuation.comma.wit",
@@ -625,7 +625,7 @@
     "union": {
       "name": "meta.union-items.wit",
       "comment": "Syntax for WIT like `union \"id\" {`",
-      "begin": "\\s*\\b(union)\\b\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(union)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.union.union-items.wit"
@@ -633,7 +633,7 @@
         "2": {
           "name": "entity.name.type.declaration.id.union-items.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -861,7 +861,7 @@
             "handle": {
               "name": "meta.handle.ty.wit",
               "comment": "Syntax for WIT types such as handle",
-              "match": "\\s*\\b(borrow)\\b(\\<)\\s*((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\>)\\s*",
+              "match": "\\s*\\b(borrow)\\b(\\<)\\s*((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\>)\\s*",
               "captures": {
                 "1": {
                   "name": "entity.name.type.borrow.handle.wit"
@@ -872,7 +872,7 @@
                 "3": {
                   "name": "entity.name.type.id.handle.wit"
                 },
-                "5": {
+                "8": {
                   "name": "punctuation.brackets.angle.end.wit"
                 }
               }
@@ -882,14 +882,14 @@
         "identifier": {
           "name": "entity.name.type.id.wit",
           "comment": "Syntax for WIT types based on its identifier",
-          "match": "\\s*\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b"
+          "match": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
         }
       }
     },
     "resource": {
       "name": "meta.resource.wit",
       "comment": "Syntax for WIT like `resource \"id\" {`",
-      "begin": "\\s*\\b(resource)\\b\\s+((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(resource)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.resource.wit"
@@ -897,7 +897,7 @@
         "2": {
           "name": "entity.name.type.id.resource.wit"
         },
-        "4": {
+        "7": {
           "name": "punctuation.brackets.curly.begin.wit"
         }
       },
@@ -919,7 +919,7 @@
     "function": {
       "name": "meta.func-item.wit",
       "comment": "This is a function item that includes its identifier. This starts with a variable name, succeded by a `func` keyword and ends with `new line`",
-      "begin": "\\s*\\b(static\\s+)?((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\s*(\\:)\\s*",
+      "begin": "\\s*\\b(static\\s+)?((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)\\s*",
       "beginCaptures": {
         "1": {
           "name": "storage.modifier.static.func-item.wit"
@@ -927,7 +927,16 @@
         "2": {
           "name": "entity.name.function.id.func-item.wit"
         },
-        "4": {
+        "3": {
+          "name": "meta.word.wit"
+        },
+        "5": {
+          "name": "meta.word-separator.wit"
+        },
+        "6": {
+          "name": "meta.word.wit"
+        },
+        "7": {
           "name": "keyword.operator.key-value.wit"
         }
       },
@@ -960,12 +969,12 @@
             },
             {
               "name": "meta.named-type-list.wit",
-              "begin": "\\s*\\b((?<![\\-\\w])[a-z0-9]([\\-]?[a-z0-9]+)*)\\b\\s*(\\:)\\s*",
+              "begin": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b\\s*(\\:)\\s*",
               "beginCaptures": {
                 "1": {
                   "name": "variable.parameter.id.named-type.wit"
                 },
-                "3": {
+                "6": {
                   "name": "keyword.operator.key-value.wit"
                 }
               },
