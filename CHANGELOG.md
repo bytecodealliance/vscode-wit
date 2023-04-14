@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.0.3...wit-idl-v0.1.0) (2023-04-14)
+
+
+### Miscellaneous Chores
+
+* release 0.1.0 ([e50fec0](https://github.com/bytecodealliance/vscode-wit/commit/e50fec096a700b25b98570381eb77f2be9962ab2))
+
 ## [0.0.3](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.0.2...wit-idl-v0.0.3) (2023-04-12)
 
 
