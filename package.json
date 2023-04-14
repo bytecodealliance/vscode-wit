@@ -55,7 +55,7 @@
     ]
   },
   "devDependencies": {
-    "@vscode/vsce": "^2.18.0",
+    "@vscode/vsce": "^2.19.0",
     "vscode-tmgrammar-test": "^0.1.1"
   }
 }
