@@ -170,7 +170,7 @@
               "include": "#extern"
             }
           ],
-          "end": "(?<=\\s*\\n)",
+          "end": "\\s*(?<=\\n)",
           "applyEndPatternLast": 1
         },
         {
@@ -193,7 +193,7 @@
               "include": "#extern"
             }
           ],
-          "end": "(?<=\\s*\\n)",
+          "end": "\\s*(?<=\\n)",
           "applyEndPatternLast": 1
         },
         {
@@ -404,7 +404,7 @@
           "include": "#types"
         }
       ],
-      "end": "(?<=\\s*\\n)",
+      "end": "\\s*(?<=\\n)",
       "applyEndPatternLast": 1
     },
     "record": {
@@ -945,7 +945,7 @@
           "include": "#function-definition"
         }
       ],
-      "end": "(?<=\\s*\\n)",
+      "end": "\\s*(?<=\\n)",
       "applyEndPatternLast": 1
     },
     "function-definition": {
