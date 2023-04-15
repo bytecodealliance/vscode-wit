@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.1.0...wit-idl-v0.1.1) (2023-04-15)
+
+
+### Bug Fixes
+
+* lookbehind assertion with malformed regex ([#11](https://github.com/bytecodealliance/vscode-wit/issues/11)) ([8787a0a](https://github.com/bytecodealliance/vscode-wit/commit/8787a0a9c283249448f07a7ee97d2a9e7365e4ac))
+* move repository fields to top-level object ([#13](https://github.com/bytecodealliance/vscode-wit/issues/13)) ([74f1ffc](https://github.com/bytecodealliance/vscode-wit/commit/74f1ffcf9ed0bd700066e51721bff042a1589c93))
+
 ## [0.1.0](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.0.3...wit-idl-v0.1.0) (2023-04-14)
 
 
