@@ -4,7 +4,7 @@ use tower_lsp::{
     lsp_types::{
         InitializeParams, InitializeResult, InitializedParams,
         MessageType, ServerCapabilities, ServerInfo, TextDocumentSyncCapability,
-        TextDocumentSyncKind, Url, DidOpenTextDocumentParams, DidCloseTextDocumentParams, DidChangeTextDocumentParams, DidSaveTextDocumentParams, WillSaveTextDocumentParams,
+        TextDocumentSyncKind, Url, DidOpenTextDocumentParams, DidCloseTextDocumentParams, DidChangeTextDocumentParams, DidSaveTextDocumentParams, WillSaveTextDocumentParams, Hover, HoverParams, HoverContents, MarkupContent, MarkupKind, Range, MarkedString,
     },
     Client,
 };
@@ -30,7 +30,8 @@ impl Handler {
                 text_document_sync: Some(TextDocumentSyncCapability::Kind(
                     TextDocumentSyncKind::FULL,
                 )),
-                ..Default::default()
+                hover_provider: Some(true.into()),
+                ..ServerCapabilities::default()
             },
             server_info: Some(ServerInfo {
                 name: env!("CARGO_PKG_NAME").to_owned(),
@@ -80,6 +81,27 @@ impl Handler {
         self.client.log_message(MessageType::LOG, format!("Will save {}", params.text_document.uri)).await;
 
         self.lint(params.text_document.uri).await;
+    }
+
+    pub async fn hover(&self, params: HoverParams) -> Hover {
+        let uri = params.text_document_position_params.text_document.uri;
+        let position = params.text_document_position_params.position;
+
+        let mut contents = Vec::new();
+        
+        contents.push(
+            MarkedString::String(
+                format!("Hovering over {} at {}:{}", uri, position.line, position.character)
+            )
+        );
+
+        Hover {
+            contents: HoverContents::Array(contents),
+            range: Some(Range {
+                start: position,
+                end: position,
+            }),
+        }
     }
 
     async fn lint(

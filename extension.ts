@@ -8,7 +8,7 @@ export function activate(context: ExtensionContext) {
 		'witLanguageClient',
 		'WIT Language Client',
 		{
-			command: context.asAbsolutePath('./out/server/wit-lsp'),
+			command: context.asAbsolutePath('./out/wit-lsp'),
 		},
 		{
 			documentSelector: [{

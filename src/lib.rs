@@ -4,7 +4,7 @@ use tower_lsp::{
     lsp_types::{
         DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
         DidSaveTextDocumentParams, InitializeParams, InitializeResult, InitializedParams,
-        WillSaveTextDocumentParams
+        WillSaveTextDocumentParams, HoverParams, Hover
     },
     Client, LanguageServer,
 };
@@ -53,6 +53,10 @@ impl LanguageServer for WitLsp {
 
     async fn will_save(&self, params: WillSaveTextDocumentParams) {
         self.handler.will_save(params).await;
+    }
+
+    async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
+        Ok(Some(self.handler.hover(params).await))
     }
 
     async fn shutdown(&self) -> Result<()> {
