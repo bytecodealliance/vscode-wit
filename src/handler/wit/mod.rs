@@ -1,6 +1,6 @@
 use tower_lsp::lsp_types::Position;
 
-pub mod consts;
+pub mod docs;
 
 pub struct WitFile {
     text: String,
@@ -24,29 +24,27 @@ impl WitToken {
         &self.position
     }
 
-    pub fn describe(&self) -> String {
-            match self.text.as_str() {
-                "package" => consts::PACKAGE_DESCRIPTION,
-                "world" => consts::WORLD_DESCRIPTION,
-                "interface" => consts::INTERFACE_DESCRIPTION,
-                "type" => consts::TYPE_DESCRIPTION,
-                "record" => consts::RECORD_DESCRIPTION,
-                "func" => consts::FUNC_DESCRIPTION,
-                "use" => consts::USE_DESCRIPTION,
-                "import" => "An import statement imports a function.",
-                "export" => "An export statement exports a function.",
-                "{" | "}" => "A block is a collection of statements.",
-                "(" | ")" => "A group is a collection of expressions.",
-                ":" => "A type annotation specifies the type of a field.",
-                "." => "A field access expression accesses a field of a record.",
-                "<" | ">" => "A type parameter is a specialized a generic type.",
-                _ => "An identifier",
-            }
-            .to_string()
+    pub fn documentation(&self) -> String {
+        match self.text.as_str() {
+            "package" => docs::PACKAGE,
+            "world" => docs::WORLD,
+            "interface" => docs::INTERFACE,
+            "type" => docs::DESCRIPTION,
+            "record" => docs::RECORD,
+            "func" => docs::FUNC,
+            "use" => docs::USE,
+            "import" => "An import statement imports a function.",
+            "export" => "An export statement exports a function.",
+            "{" | "}" => "A block is a collection of statements.",
+            "(" | ")" => "A group is a collection of expressions.",
+            ":" => "A type annotation specifies the type of a field.",
+            "." => "A field access expression accesses a field of a record.",
+            "<" | ">" => "A type parameter is a specialized a generic type.",
+            _ => "An identifier",
         }
+        .to_string()
     }
-
-    
+}
 
 impl WitFile {
     pub fn new(text: String) -> Self {

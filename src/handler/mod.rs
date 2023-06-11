@@ -4,8 +4,9 @@ use tower_lsp::{
     lsp_types::{
         DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
         DidSaveTextDocumentParams, Hover, HoverContents, HoverParams, InitializeParams,
-        InitializeResult, InitializedParams, LanguageString, MarkedString, MessageType, Range, ServerCapabilities, ServerInfo, TextDocumentSyncCapability, TextDocumentSyncKind,
-        Url, WillSaveTextDocumentParams,
+        InitializeResult, InitializedParams, LanguageString, MarkedString, MessageType, Range,
+        ServerCapabilities, ServerInfo, TextDocumentSyncCapability, TextDocumentSyncKind, Url,
+        WillSaveTextDocumentParams,
     },
     Client,
 };
@@ -15,7 +16,6 @@ mod wit;
 
 use linter::Linter;
 use wit::WitFile;
-
 
 pub struct Handler {
     client: Client,
@@ -118,7 +118,7 @@ impl Handler {
                     value: token.text().to_owned(),
                 }));
 
-                contents.push(MarkedString::String(token.describe()));
+                contents.push(MarkedString::String(token.documentation()));
             }
         }
 
