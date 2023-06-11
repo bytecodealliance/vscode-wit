@@ -32,8 +32,7 @@ impl LanguageServer for WitLsp {
     }
 
     async fn initialized(&self, params: InitializedParams) {
-        let _ = params;
-        self.handler.initialized(&params).await;
+        self.handler.initialized(params).await;
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {

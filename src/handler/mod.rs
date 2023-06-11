@@ -39,7 +39,7 @@ impl Handler {
         }
     }
 
-    pub async fn initialized(&self, params: &InitializedParams) {
+    pub async fn initialized(&self, params: InitializedParams) {
         let _ = params;
         self.client.log_message(MessageType::LOG, "Wit LSP initialized").await;
     }
