@@ -1,16 +1,21 @@
-use std::{path::Path, fmt::Display};
+use std::{fmt::Display, path::Path};
 
 use tower_lsp::{
     lsp_types::{
-        InitializeParams, InitializeResult, InitializedParams,
-        MessageType, ServerCapabilities, ServerInfo, TextDocumentSyncCapability,
-        TextDocumentSyncKind, Url, DidOpenTextDocumentParams, DidCloseTextDocumentParams, DidChangeTextDocumentParams, DidSaveTextDocumentParams, WillSaveTextDocumentParams, Hover, HoverParams, HoverContents, MarkupContent, MarkupKind, Range, MarkedString,
+        DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
+        DidSaveTextDocumentParams, Hover, HoverContents, HoverParams, InitializeParams,
+        InitializeResult, InitializedParams, LanguageString, MarkedString, MessageType, Range, ServerCapabilities, ServerInfo, TextDocumentSyncCapability, TextDocumentSyncKind,
+        Url, WillSaveTextDocumentParams,
     },
     Client,
 };
 
 mod linter;
+mod wit;
+
 use linter::Linter;
+use wit::WitFile;
+
 
 pub struct Handler {
     client: Client,
@@ -18,9 +23,7 @@ pub struct Handler {
 
 impl Handler {
     pub fn new(client: Client) -> Self {
-        Self {
-            client,
-        }
+        Self { client }
     }
 
     pub async fn initialize(&self, params: &InitializeParams) -> InitializeResult {
@@ -42,12 +45,17 @@ impl Handler {
 
     pub async fn initialized(&self, params: InitializedParams) {
         let _ = params;
-        self.client.log_message(MessageType::LOG, "Wit LSP initialized").await;
+        self.client
+            .log_message(MessageType::LOG, "Wit LSP initialized")
+            .await;
     }
 
     pub async fn did_open(&self, params: DidOpenTextDocumentParams) {
         self.client
-            .log_message(MessageType::LOG, format!("Opened {}", params.text_document.uri))
+            .log_message(
+                MessageType::LOG,
+                format!("Opened {}", params.text_document.uri),
+            )
             .await;
 
         self.lint(params.text_document.uri).await;
@@ -55,7 +63,10 @@ impl Handler {
 
     pub async fn did_close(&self, params: DidCloseTextDocumentParams) {
         self.client
-            .log_message(MessageType::LOG, format!("Closed {}", params.text_document.uri))
+            .log_message(
+                MessageType::LOG,
+                format!("Closed {}", params.text_document.uri),
+            )
             .await;
 
         self.lint(params.text_document.uri).await;
@@ -63,7 +74,10 @@ impl Handler {
 
     pub async fn did_change(&self, params: DidChangeTextDocumentParams) {
         self.client
-            .log_message(MessageType::LOG, format!("Changed {}", params.text_document.uri))
+            .log_message(
+                MessageType::LOG,
+                format!("Changed {}", params.text_document.uri),
+            )
             .await;
 
         self.lint(params.text_document.uri).await;
@@ -71,14 +85,22 @@ impl Handler {
 
     pub async fn did_save(&self, params: DidSaveTextDocumentParams) {
         self.client
-            .log_message(MessageType::LOG, format!("Saved {}", params.text_document.uri))
+            .log_message(
+                MessageType::LOG,
+                format!("Saved {}", params.text_document.uri),
+            )
             .await;
 
         self.lint(params.text_document.uri).await;
     }
 
     pub async fn will_save(&self, params: WillSaveTextDocumentParams) {
-        self.client.log_message(MessageType::LOG, format!("Will save {}", params.text_document.uri)).await;
+        self.client
+            .log_message(
+                MessageType::LOG,
+                format!("Will save {}", params.text_document.uri),
+            )
+            .await;
 
         self.lint(params.text_document.uri).await;
     }
@@ -88,12 +110,17 @@ impl Handler {
         let position = params.text_document_position_params.position;
 
         let mut contents = Vec::new();
-        
-        contents.push(
-            MarkedString::String(
-                format!("Hovering over {} at {}:{}", uri, position.line, position.character)
-            )
-        );
+
+        if let Ok(text) = self.read_file(uri).await {
+            if let Some(token) = text.token_at(position) {
+                contents.push(MarkedString::LanguageString(LanguageString {
+                    language: "wit".to_owned(),
+                    value: token.text().to_owned(),
+                }));
+
+                contents.push(MarkedString::String(token.describe()));
+            }
+        }
 
         Hover {
             contents: HoverContents::Array(contents),
@@ -104,10 +131,7 @@ impl Handler {
         }
     }
 
-    async fn lint(
-        &self,
-        url: Url,
-    ) {
+    async fn lint(&self, url: Url) {
         self.client
             .publish_diagnostics(url.clone(), Vec::new(), None)
             .await;
@@ -130,5 +154,11 @@ impl Handler {
 
     pub async fn log(&self, text: impl Display) {
         self.client.log_message(MessageType::LOG, text).await;
+    }
+
+    pub async fn read_file(&self, uri: Url) -> std::io::Result<WitFile> {
+        let path = Path::new(uri.path());
+        let text = tokio::fs::read_to_string(path).await?;
+        Ok(WitFile::new(text))
     }
 }

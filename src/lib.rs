@@ -3,8 +3,8 @@ use tower_lsp::{
     jsonrpc::Result,
     lsp_types::{
         DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
-        DidSaveTextDocumentParams, InitializeParams, InitializeResult, InitializedParams,
-        WillSaveTextDocumentParams, HoverParams, Hover
+        DidSaveTextDocumentParams, Hover, HoverParams, InitializeParams, InitializeResult,
+        InitializedParams, WillSaveTextDocumentParams,
     },
     Client, LanguageServer,
 };

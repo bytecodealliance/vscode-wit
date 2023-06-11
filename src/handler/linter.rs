@@ -1,9 +1,6 @@
 use lazy_regex::lazy_regex;
-use tower_lsp::lsp_types::{Diagnostic, Range, Position, DiagnosticSeverity, Url};
-use std::{
-    ffi::OsStr,
-    process::Stdio, collections::HashMap, path::Path,
-};
+use std::{collections::HashMap, ffi::OsStr, path::Path, process::Stdio};
+use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, Position, Range, Url};
 
 use tokio::process::Command;
 
@@ -35,10 +32,9 @@ impl Linter {
     }
 }
 
-
 fn ouput_from_str(s: String) -> HashMap<Url, Vec<Diagnostic>> {
-        let regex = lazy_regex!(r":(.*)\s*-->\s*(.*):(\d+):(\d+)\s.*\s.*\s.*(\^\-*)"m);
-        let mut hashmap = HashMap::new();
+    let regex = lazy_regex!(r":(.*)\s*-->\s*(.*):(\d+):(\d+)\s.*\s.*\s.*(\^\-*)"m);
+    let mut hashmap = HashMap::new();
 
     for cap in regex.captures_iter(&s) {
         let message = cap[1].to_string();
@@ -51,21 +47,24 @@ fn ouput_from_str(s: String) -> HashMap<Url, Vec<Diagnostic>> {
         let path = cwd.join(file);
         let uri = Url::from_file_path(path).unwrap();
 
-        hashmap.insert(uri, vec![Diagnostic {
-            range: Range {
-                start: Position {
-                    line: line - 1,
-                    character: character - 1,
+        hashmap.insert(
+            uri,
+            vec![Diagnostic {
+                range: Range {
+                    start: Position {
+                        line: line - 1,
+                        character: character - 1,
+                    },
+                    end: Position {
+                        line: line - 1,
+                        character: character - 1 + marker.len() as u32,
+                    },
                 },
-                end: Position {
-                    line: line - 1,
-                    character: character - 1 + marker.len() as u32,
-                },
-            },
-            severity: Some(DiagnosticSeverity::ERROR),
-            message,
-            ..Default::default()
-        }]);
+                severity: Some(DiagnosticSeverity::ERROR),
+                message,
+                ..Default::default()
+            }],
+        );
     }
 
     hashmap
