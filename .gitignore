@@ -1,3 +1,20 @@
+# wit-deps
+
+wit/deps
+wit/deps.lock
+
+# macOS
+
+.DS_Store
+
+# Rust
+
+target/
+
+# TypeScript
+
+out/
+
 # Logs
 logs
 *.log

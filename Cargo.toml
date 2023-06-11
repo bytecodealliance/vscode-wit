@@ -1,0 +1,24 @@
+[package]
+name = "wit-lsp"
+description = "A Language Server for the WebAssembly Interface Types (WIT) format."
+license = "Apache-2.0"
+repository = "https://github.com/bytecodealliance/vscode-wit"
+version = "0.1.0"
+edition = "2021"
+keywords = ["wasm", "wit", "lsp", "language-server", "language-server-protocol"]
+categories = ["development-tools", "web-development"]
+
+[[bin]]
+name = "wit-lsp"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+wit-parser = { path = "../wasm-tools/crates/wit-parser" }
+tower-lsp = "0.19"
+anyhow = "1"
+tokio = { version = "1", features = ["full"] }
+indexmap = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+regex = "1"
+lazy-regex = "2"
+lazy_static = "1"

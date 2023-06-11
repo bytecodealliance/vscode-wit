@@ -5,7 +5,9 @@ interface some-interface {
 //        ^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
 //                       ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
-  use self.io.level-L1.level-L2.{
+  use io.{level-L1}
+  use level-L1.{level-L2}
+  use level-L2.{
 //^^^    keyword.other.use.use-item.wit
 //    ^^^^    variable.language.self.use-path.wit
 //        ^    keyword.operator.namespace-separator.use-path.wit

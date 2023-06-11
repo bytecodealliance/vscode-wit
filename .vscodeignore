@@ -1,5 +1,15 @@
 .vscode/**
 .vscode-test/**
-.github/
+.github/**
 .gitignore
-tests/
+.git/**
+
+tests/**
+target/**
+node_modules/**
+
+commitlint.config.js
+
+Cargo.lock
+Cargo.toml
+.DS_Store
