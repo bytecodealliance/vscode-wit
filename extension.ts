@@ -9,12 +9,6 @@ export function activate(context: ExtensionContext) {
 		'WIT Language Client',
 		{
 			command: context.asAbsolutePath('./out/server/wit-lsp'),
-			args: ['--linter'],
-			options: {
-				env: {
-					...process.env,
-				},
-			},
 		},
 		{
 			documentSelector: [{

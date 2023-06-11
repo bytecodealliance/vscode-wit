@@ -29,8 +29,6 @@ impl Linter {
 
         if let Ok(stderr) = String::from_utf8(output.stderr) {
             Ok(ouput_from_str(stderr))
-        } else if let Ok(stdout) = String::from_utf8(output.stdout) {
-            Ok(HashMap::new())
         } else {
             Ok(HashMap::new())
         }
