@@ -1,12 +1,12 @@
 // SYNTAX TEST "source.wit" "This tests world shapes"
 
-world some-world {
+default world some-world {
 // <----    storage.modifier.default.world-item.wit
 //      ^^^^^   keyword.declaration.world.world-item.wit storage.type.wit
 //            ^^^^^^^^^^   entity.name.type.id.world-item.wit
 //                       ^ meta.world-item.wit punctuation.brackets.curly.begin.wit
 
-  import filesystem: filesystem/filesystem
+  import filesystem: filesystem.filesystem
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^^^^^   variable.other.id.import-item.wit
 //                 ^   meta.import-item.wit keyword.operator.key-value.wit
@@ -14,7 +14,7 @@ world some-world {
 //                             ^   keyword.operator.namespace-separator.use-path.wit
 //                              ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
 
-  import random: random/random
+  import random: pkg.random
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^   variable.other.id.import-item.wit
 //             ^   meta.import-item.wit keyword.operator.key-value.wit

@@ -12,7 +12,6 @@ categories = ["development-tools", "web-development"]
 name = "wit-lsp"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-wit-parser = { path = "../wasm-tools/crates/wit-parser" }
 tower-lsp = "0.19"
 anyhow = "1"
 tokio = { version = "1", features = ["full"] }
