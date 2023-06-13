@@ -104,7 +104,7 @@ impl Handler {
         let position = params.text_document_position_params.position;
 
         if let Ok(wit) = self.read_file(uri).await {
-            wit.hover_at(position)
+            wit.hover_at(position).ok()
         } else {
             None
         }

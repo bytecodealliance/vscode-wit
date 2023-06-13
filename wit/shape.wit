@@ -1,6 +1,4 @@
 interface shape {
-
-    
     record point {
         x: s32,
         y: s32

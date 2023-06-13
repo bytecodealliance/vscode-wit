@@ -1,12 +1,14 @@
-# Type
+# Types
 
-Types in WIT files can only be defined in `interface`s at this
+Types in WIT files can only be defined in `interface` at this
 time. The types supported in WIT is the same set of types supported in the
 component model itself:
 
 ```wit
+package local:demo
+
 interface foo {
-  // package of named fields
+  // "package of named fields"
   record r {
     a: u32,
     b: string,

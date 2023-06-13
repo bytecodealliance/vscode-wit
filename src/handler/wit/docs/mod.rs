@@ -7,6 +7,7 @@ pub const TYPE: &str = include_str!("type.md");
 pub const RECORD: &str = include_str!("record.md");
 pub const FUNC: &str = include_str!("func.md");
 pub const USE: &str = include_str!("use.md");
+pub const IDENTIFIER: &str = include_str!("identifier.md");
 
 pub fn for_token(token: &Token) -> &'static str {
     use Token::*;
@@ -18,6 +19,8 @@ pub fn for_token(token: &Token) -> &'static str {
         Record => RECORD,
         Func => FUNC,
         Use => USE,
+        Id => IDENTIFIER,
+    
         _ => token.describe(),
     }
 }

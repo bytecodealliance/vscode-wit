@@ -1,10 +1,12 @@
-# Function
+# WIT Functions
 
 Functions are defined in an `interface` or are listed as an
 `import` or `export` from a `world`. Parameters to a function must all
 be named and have unique names:
 
 ```wit
+package local:demo
+
 interface foo {
   a1: func()
   a2: func(x: u32)
@@ -15,6 +17,8 @@ interface foo {
 Functions can return at most one unnamed type:
 
 ```wit
+package local:demo
+
 interface foo {
   a1: func() -> u32
   a2: func() -> string
@@ -24,6 +28,8 @@ interface foo {
 And functions can also return multiple types by naming them:
 
 ```wit
+package local:demo
+
 interface foo {
   a: func() -> (a: u32, b: float32)
 }

@@ -1,7 +1,7 @@
 use tower_lsp::lsp_types::SemanticTokensLegend;
 use tower_lsp::lsp_types::{SemanticTokenModifier, SemanticTokenType};
 
-pub fn token_type_index(token_type: &SemanticTokenType) -> u32 {
+pub fn type_index(token_type: &SemanticTokenType) -> u32 {
     TYPES.iter().position(|t| t == token_type).unwrap_or(0) as u32
 }
 

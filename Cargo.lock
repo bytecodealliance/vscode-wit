@@ -164,6 +164,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "getopts"
+version = "0.2.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "14dbbfd5c71d70241ecf9e6f13737f7b5ce823821063188d7e46c41d371eebd5"
+dependencies = [
+ "unicode-width",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -414,6 +423,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77a1a2f1f0a7ecff9c31abbe177637be0e97a0aef46cf8738ece09327985d998"
 dependencies = [
  "bitflags",
+ "getopts",
  "memchr",
  "unicase",
 ]
@@ -767,6 +777,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "unicode-width"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c0edd1e5b14653f783770bce4a4dabb4a5108a5370a5f5d8cfe8710c361f6c8b"
+
+[[package]]
 name = "unicode-xid"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -892,6 +908,7 @@ dependencies = [
  "indexmap",
  "lazy-regex",
  "lazy_static",
+ "pulldown-cmark",
  "regex",
  "ropey",
  "serde",
@@ -904,7 +921,7 @@ dependencies = [
 [[package]]
 name = "wit-parser"
 version = "0.8.0"
-source = "git+https://github.com/cardoso/wasm-tools?branch=lsp#6854efcead536ec6bc551dc206c9e549dc63aad2"
+source = "git+https://github.com/cardoso/wasm-tools?branch=lsp#5c516bf6138ce39e6c9a0fea62c6dad0bc91d811"
 dependencies = [
  "anyhow",
  "id-arena",

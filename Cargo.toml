@@ -23,3 +23,4 @@ lazy-regex = "2"
 lazy_static = "1"
 wit-parser = { git = "https://github.com/cardoso/wasm-tools", branch = "lsp" }
 ropey = { version = "1.6" }
+pulldown-cmark = "0.9"
