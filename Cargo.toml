@@ -21,6 +21,5 @@ serde_json = "1"
 regex = "1"
 lazy-regex = "2"
 lazy_static = "1"
-logos = { version = "0.13" }
 wit-parser = { git = "https://github.com/cardoso/wasm-tools", branch = "lsp" }
 ropey = { version = "1.6" }

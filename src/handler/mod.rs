@@ -1,15 +1,11 @@
-use std::{
-    fmt::Display,
-    path::Path
-};
+use std::{fmt::Display, path::Path};
 
 use tower_lsp::{
     lsp_types::{
         DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
-        DidSaveTextDocumentParams, Hover, HoverParams, InitializeParams,
-        InitializeResult, InitializedParams, MessageType,
-        SemanticTokens, SemanticTokensParams, SemanticTokensResult, ServerInfo, Url,
-        WillSaveTextDocumentParams,
+        DidSaveTextDocumentParams, Hover, HoverParams, InitializeParams, InitializeResult,
+        InitializedParams, MessageType, SemanticTokens, SemanticTokensParams, SemanticTokensResult,
+        ServerInfo, Url, WillSaveTextDocumentParams,
     },
     Client,
 };
@@ -107,7 +103,6 @@ impl Handler {
         let uri = params.text_document_position_params.text_document.uri;
         let position = params.text_document_position_params.position;
 
-
         if let Ok(wit) = self.read_file(uri).await {
             wit.hover_at(position)
         } else {
@@ -157,7 +152,3 @@ impl Handler {
         Ok(File::new(text))
     }
 }
-
-
-
-

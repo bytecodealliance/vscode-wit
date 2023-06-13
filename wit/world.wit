@@ -1,12 +1,7 @@
-package namespace:name
+package qweq:maaa
 
-interface paacco {
-    record point {
-        x: s32,
-        y: s32
-    }
-
-    add: func(a: u32) -> s32
+interface hello-world {  // interface
+    log: func(param: string)
 }
 
 world hello {
@@ -24,6 +19,10 @@ world hello {
     import wasi:random/insecure
     import wasi:random/insecure-seed
     import wasi:poll/poll
+
+    import host: interface {
+        log: func(param: string)
+    }
 
     export run: func(a: s32) -> s32
 }

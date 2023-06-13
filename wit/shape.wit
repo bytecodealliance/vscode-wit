@@ -1,0 +1,58 @@
+interface shape {
+
+    
+    record point {
+        x: s32,
+        y: s32
+    }
+
+
+
+    record line {
+        start: point,
+        end: point
+    }
+
+    record triangle {
+        a: point,
+        b: point,
+        c: point
+    }
+
+    record rectangle {
+        a: point,
+        b: point,
+        c: point,
+        d: point
+    }
+
+    record circle {
+        center: point,
+        radius: s32
+    }
+
+    record square {
+        a: point,
+        b: point,
+        c: point,
+        d: point
+    }
+
+    record polygon {
+        points: list<point>
+    }
+
+    variant shape {
+        line(line),
+        triangle(triangle),
+        rectangle(rectangle),
+        circle(circle),
+        square(square),
+        polygon(polygon)
+    }
+
+    record canvas {
+        width: s32,
+        height: s32
+    }
+}

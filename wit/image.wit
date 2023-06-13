@@ -1,0 +1,28 @@
+interface image {
+    enum error {
+        file-not-found,
+        invalid-file-format,
+        invalid-file-contents
+    }
+
+    variant area {
+        circle(float32),
+        rectangle(tuple<float32, float32>)
+    }
+
+    record texture {
+        width: u32,
+        height: u32,
+        pixels: list<tuple<u8, u8, u8>>
+    }
+
+    resource file {
+        read: func(path: string) -> result<texture, error>,
+        write: func(texture: texture) -> option<error>
+    }
+}
+
+world renderer {
+    use image.{texture, area}
+    export render: func(texture: texture, area: area) -> texture
+}
