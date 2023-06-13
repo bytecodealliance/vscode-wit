@@ -1,8 +1,11 @@
 use std::sync::atomic::{AtomicU32, Ordering};
 
 use ropey::Rope;
-use tower_lsp::lsp_types::{Position, Range, SemanticToken, SemanticTokenType, SemanticTokens, Hover, HoverContents, MarkedString};
-use wit_parser::ast::{lex::{Span, Token, Tokenizer}};
+use tower_lsp::lsp_types::{
+    Hover, HoverContents, MarkedString, Position, Range, SemanticToken, SemanticTokenType,
+    SemanticTokens,
+};
+use wit_parser::ast::lex::{Span, Token, Tokenizer};
 
 use crate::handler::wit::token::token_type_index;
 
@@ -11,12 +14,13 @@ pub(crate) mod token;
 
 pub struct File {
     rope: Rope,
-
 }
 
 impl File {
     pub fn new(text: impl AsRef<str>) -> Self {
-        Self { rope: Rope::from_str(text.as_ref()) }
+        Self {
+            rope: Rope::from_str(text.as_ref()),
+        }
     }
 
     pub fn text(&self) -> String {
@@ -47,7 +51,10 @@ impl File {
         while let Ok(Some((span, token))) = lexer.next() {
             let Ok(range) = self.range_at(&span) else { continue };
 
-            if range.start.line == position.line && range.start.character <= position.character && range.end.character >= position.character {
+            if range.start.line == position.line
+                && range.start.character <= position.character
+                && range.end.character >= position.character
+            {
                 hover.push(MarkedString::String(docs::for_token(&token).to_string()))
             }
         }
@@ -99,7 +106,6 @@ impl SemanticTokensBuilder {
 
     /// Push a new token onto the builder
     pub fn push(&mut self, range: &Range, token: &SemanticTokenType) {
-        
         let mut push_line = range.start.line;
         let mut push_char = range.start.character;
         if !self.data.is_empty() {
@@ -129,22 +135,20 @@ impl SemanticTokensBuilder {
     pub fn push_token(&mut self, range: &Range, token: &Token) {
         use Token::*;
         match token {
-            Whitespace => {},
+            Whitespace => {}
             Comment => self.push(range, &SemanticTokenType::COMMENT),
-            Equals | Comma | Colon | Period | 
-            Semicolon | LeftParen | RightParen |
-            LeftBrace | RightBrace | LessThan |
-            GreaterThan | RArrow |  Star | At |
-            Slash | Plus | Minus => self.push(range, &SemanticTokenType::OPERATOR),
-            Package | As | From_ | Static | 
-            Interface | Import | Export |
-            World | Use | Type | Func |
-            Resource | Record | Shared |
-            Flags | Variant | Enum | Union => self.push(range, &SemanticTokenType::KEYWORD),
-            U8 | U16 | U32 | U64 |
-            S8 | S16 | S32 | S64 | Float32 | Float64 |
-            Char | Bool | String_ | Option_ | Result_ |
-            Future | Stream | List | Tuple  => self.push(range, &SemanticTokenType::TYPE),
+            Equals | Comma | Colon | Period | Semicolon | LeftParen | RightParen | LeftBrace
+            | RightBrace | LessThan | GreaterThan | RArrow | Star | At | Slash | Plus | Minus => {
+                self.push(range, &SemanticTokenType::OPERATOR)
+            }
+            Package | As | From_ | Static | Interface | Import | Export | World | Use | Type
+            | Func | Resource | Record | Shared | Flags | Variant | Enum | Union => {
+                self.push(range, &SemanticTokenType::KEYWORD)
+            }
+            U8 | U16 | U32 | U64 | S8 | S16 | S32 | S64 | Float32 | Float64 | Char | Bool
+            | String_ | Option_ | Result_ | Future | Stream | List | Tuple => {
+                self.push(range, &SemanticTokenType::TYPE)
+            }
             Underscore | Id | ExplicitId => self.push(range, &SemanticTokenType::VARIABLE),
             Integer => self.push(range, &SemanticTokenType::NUMBER),
         }

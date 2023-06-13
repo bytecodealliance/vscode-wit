@@ -18,6 +18,6 @@ pub fn for_token(token: &Token) -> &'static str {
         Record => RECORD,
         Func => FUNC,
         Use => USE,
-        _ => token.describe()
+        _ => token.describe(),
     }
 }
