@@ -1,4 +1,13 @@
-package bytecodealliance:wit
+package namespace:name
+
+interface paacco {
+    record point {
+        x: s32,
+        y: s32
+    }
+
+    add: func(a: u32) -> s32
+}
 
 world hello {
     import wasi:clocks/monotonic-clock
@@ -15,4 +24,6 @@ world hello {
     import wasi:random/insecure
     import wasi:random/insecure-seed
     import wasi:poll/poll
+
+    export run: func(a: s32) -> s32
 }

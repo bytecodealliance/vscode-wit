@@ -1,75 +1,89 @@
-use tower_lsp::lsp_types::Position;
+use std::sync::atomic::{AtomicU32, Ordering};
 
-pub mod docs;
+use logos::{Lexer, Logos};
+use ropey::Rope;
+use tower_lsp::lsp_types::{Position, Range, SemanticTokens, SemanticToken, Hover};
 
-pub struct WitFile {
+use token::Token;
+
+use self::token::SemanticTokensBuilder;
+
+mod docs;
+pub(crate) mod token;
+
+pub struct File {
     text: String,
 }
 
-pub struct WitToken {
-    text: String,
-    position: Position,
-}
-
-impl WitToken {
-    pub fn new(text: String, position: Position) -> Self {
-        Self { text, position }
-    }
-
-    pub fn text(&self) -> &str {
-        &self.text
-    }
-
-    pub fn position(&self) -> &Position {
-        &self.position
-    }
-
-    pub fn documentation(&self) -> String {
-        match self.text.as_str() {
-            "package" => docs::PACKAGE,
-            "world" => docs::WORLD,
-            "interface" => docs::INTERFACE,
-            "type" => docs::DESCRIPTION,
-            "record" => docs::RECORD,
-            "func" => docs::FUNC,
-            "use" => docs::USE,
-            "import" => "An import statement imports a function.",
-            "export" => "An export statement exports a function.",
-            "{" | "}" => "A block is a collection of statements.",
-            "(" | ")" => "A group is a collection of expressions.",
-            ":" => "A type annotation specifies the type of a field.",
-            "." => "A field access expression accesses a field of a record.",
-            "<" | ">" => "A type parameter is a specialized a generic type.",
-            _ => "An identifier",
-        }
-        .to_string()
-    }
-}
-
-impl WitFile {
+impl File {
     pub fn new(text: String) -> Self {
         Self { text }
     }
 
-    pub fn lines(&self) -> impl Iterator<Item = &str> {
-        self.text.lines()
+    pub fn tokens(&self) -> Lexer<'_, Token<'_>> {
+        Token::lexer(&self.text)
     }
 
-    pub fn line_at(&self, line: u32) -> Option<&str> {
-        self.lines().nth(line as usize)
+    pub fn position_at(&self, offset: usize) -> Result<Position, ropey::Error> {
+        let rope = Rope::from(self.text.as_str());
+        let line = rope.try_char_to_line(offset)?;
+        let first_char_of_line = rope.try_line_to_char(line)?;
+        let column = offset - first_char_of_line;
+        Ok(Position::new(line as u32, column as u32))
     }
 
-    // buggy for now (doesn't handle whitespace correctly)
-    pub(crate) fn token_at(&self, position: Position) -> Option<WitToken> {
-        let mut character = 0;
+    pub fn range_at(&self, start: usize, end: usize) -> Result<Range, ropey::Error> {
+        let start = self.position_at(start)?;
+        let end = self.position_at(end)?;
+        Ok(Range::new(start, end))
+    }
 
-        for word in self.line_at(position.line)?.split_whitespace() {
-            character += word.len();
-            if character >= position.character as usize {
-                return Some(WitToken::new(word.to_owned(), position));
+    pub fn semantic_tokens(&self) -> SemanticTokens {
+        let id = TOKEN_RESULT_COUNTER.fetch_add(1, Ordering::SeqCst).to_string();
+        let mut builder = SemanticTokensBuilder::new(id);
+
+        let Ok(mut tokenizer) = wit_parser::ast::lex::Tokenizer::new(&self.text, 0) else {
+            return builder.build()
+        };
+
+        let Ok(ast) = wit_parser::ast::Ast::parse(&mut tokenizer) else {
+            return builder.build()
+        };
+
+        ast
+
+        for (token, span) in self.tokens().spanned() {
+            let Ok(token) = token else {
+                continue
+            };
+            let Ok(range) = self.range_at(span.start, span.end) else {
+                continue
+            };
+            for semantic_token in token.semantic_tokens(range) {
+                builder.push(range, semantic_token.token_type, semantic_token.token_modifiers_bitset);
             }
         }
 
-        None
+        builder.build()
+    }
+
+    pub fn token_at(&self, position: Position) -> Option<Result<Token, ()>> {
+        self.tokens()
+            .spanned()
+            .find(|(_, span)| {
+                let start = self.position_at(span.start).unwrap();
+                let end = self.position_at(span.end).unwrap();
+                start <= position && position < end
+            })
+            .map(|(token, _)| token)
+    }
+
+    pub fn hover_at(&self, position: Position) -> Option<Hover> {
+        self.token_at(position)
+            .and_then(|token| token.ok())
+            .map(|token| token.hover())
     }
 }
+
+static TOKEN_RESULT_COUNTER: AtomicU32 = AtomicU32::new(1);
+

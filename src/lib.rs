@@ -4,11 +4,12 @@ use tower_lsp::{
     lsp_types::{
         DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
         DidSaveTextDocumentParams, Hover, HoverParams, InitializeParams, InitializeResult,
-        InitializedParams, WillSaveTextDocumentParams,
+        InitializedParams, SemanticTokensParams, SemanticTokensResult, WillSaveTextDocumentParams,
     },
     Client, LanguageServer,
 };
 
+/// The main entry point for the Wit LSP.
 mod handler;
 use handler::Handler;
 
@@ -56,7 +57,14 @@ impl LanguageServer for WitLsp {
     }
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
-        Ok(Some(self.handler.hover(params).await))
+        Ok(self.handler.hover(params).await)
+    }
+
+    async fn semantic_tokens_full(
+        &self,
+        params: SemanticTokensParams,
+    ) -> Result<Option<SemanticTokensResult>> {
+        Ok(Some(self.handler.semantic_tokens_full(params).await))
     }
 
     async fn shutdown(&self) -> Result<()> {
