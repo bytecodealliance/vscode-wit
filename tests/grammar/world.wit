@@ -6,6 +6,10 @@ default world some-world {
 //            ^^^^^^^^^^   entity.name.type.id.world-item.wit
 //                       ^ meta.world-item.wit punctuation.brackets.curly.begin.wit
 
+  include foo
+//^^^^^^^    keyword.control.include.include-item.wit
+//        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
+
   import filesystem: filesystem.filesystem
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^^^^^   variable.other.id.import-item.wit
@@ -50,6 +54,20 @@ world another-world {
 // <----    keyword.declaration.world.world-item.wit storage.type.wit
 //    ^^^^^^^^^^^^^    entity.name.type.id.world-item.wit
 //                  ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
+
+  include bar with { a as a1, b as b1 }
+//^^^^^^^    keyword.control.include.include-item.wit
+//        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
+//            ^^^^    keyword.control.with.include-item.wit
+//                 ^    meta.with.include-item.wit punctuation.brackets.curly.begin.wit
+//                   ^    variable.other.id.include-names-item.wit
+//                     ^^    keyword.control.as.include-names-item.wit
+//                        ^^    entity.name.type.include-names-item.wit
+//                          ^    meta.with.include-item.wit punctuation.comma.wit
+//                            ^    variable.other.id.include-names-item.wit
+//                              ^^    keyword.control.as.include-names-item.wit
+//                                 ^^    entity.name.type.include-names-item.wit
+//                                    ^    meta.with.include-item.wit punctuation.brackets.curly.end.wit
 
   use pkg.path.{id}
 //^^^    keyword.other.use.use-item.wit
