@@ -1,8 +1,19 @@
 name: release
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_name:
+        required: true
+        type: string
+        default: "wit-idl: v0.0.1"
+      tag_name:
+        required: true
+        type: string
+        default: "wit-idl-v0.0.1"
+  release:
+    types:
+      - released
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,24 +24,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      release_name: ${{ steps.event_details.outputs.release_name }}
+      tag_name: ${{ steps.event_details.outputs.tag_name }}
+      version: ${{ steps.event_details.outputs.version }}
     steps:
-      - uses: google-github-actions/release-please-action@v3
-        id: release
-        with:
-          token: ${{ secrets.PAT_GITHUB }}
-          command: manifest
-          config-file: .github/release-please-config.json
-          manifest-file: .github/release-please-manifest.json
+      - name: Check event details
+        id: event_details
+        env:
+          RELEASE_NAME: ${{ github.event.release.name || inputs.release_name }}
+          TAG_NAME: ${{ github.event.release.tag_name || inputs.tag_name }}
+        run: |
+          echo "release_name=${RELEASE_NAME}" >> $GITHUB_OUTPUT
+          echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
+          echo "version=${TAG_NAME##*-v}" >> $GITHUB_OUTPUT
+          echo "package_name=${RELEASE_NAME%:*}" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.event_details.outputs.tag_name }}
       - name: Add files and publish release
-        if: ${{ steps.release.outputs.release_created }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          TAG_NAME: ${{ steps.release.outputs.tag_name }}
+          TAG_NAME: ${{ steps.event_details.outputs.tag_name }}
         run: |
           npm ci
           npm run package
@@ -39,7 +54,6 @@ jobs:
 
   label:
     needs: [publish]
-    if: ${{ needs.publish.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -58,7 +72,6 @@ jobs:
 
   comments:
     needs: [publish]
-    if: ${{ needs.publish.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

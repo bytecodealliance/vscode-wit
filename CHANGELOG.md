@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.1.1...wit-idl-v0.1.2) (2023-07-03)
+
+
+### Features
+
+* add include keyword to wit grammar ([#17](https://github.com/bytecodealliance/vscode-wit/issues/17)) ([dcc5a30](https://github.com/bytecodealliance/vscode-wit/commit/dcc5a30d300146eac0ee5fac8287a4d30ce6106f))
+
 ## [0.1.1](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.1.0...wit-idl-v0.1.1) (2023-04-15)
 
 
