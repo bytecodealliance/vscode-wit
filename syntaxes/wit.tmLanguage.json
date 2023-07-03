@@ -432,10 +432,6 @@
       "name": "meta.use-path.wit",
       "patterns": [
         {
-          "name": "variable.language.self.use-path.wit",
-          "match": "(?<!\\.)\\b(self|pkg)\\b"
-        },
-        {
           "name": "entity.name.namespace.id.use-path.wit",
           "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
         },

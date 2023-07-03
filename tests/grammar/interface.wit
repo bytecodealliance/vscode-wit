@@ -7,7 +7,7 @@ interface some-interface {
 
   use self.io.level-L1.level-L2.{
 //^^^    keyword.other.use.use-item.wit
-//    ^^^^    variable.language.self.use-path.wit
+//    ^^^^    entity.name.namespace.id.use-path.wit
 //        ^    keyword.operator.namespace-separator.use-path.wit
 //         ^^    entity.name.namespace.id.use-path.wit
 //           ^    keyword.operator.namespace-separator.use-path.wit

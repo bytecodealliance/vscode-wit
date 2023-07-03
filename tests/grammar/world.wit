@@ -22,7 +22,7 @@ default world some-world {
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^   variable.other.id.import-item.wit
 //             ^   meta.import-item.wit keyword.operator.key-value.wit
-//               ^^^   variable.language.self.use-path.wit
+//               ^^^   entity.name.namespace.id.use-path.wit
 //                  ^   keyword.operator.namespace-separator.use-path.wit
 //                   ^^^^^^   entity.name.namespace.id.use-path.wit
 
@@ -71,7 +71,7 @@ world another-world {
 
   use pkg.path.{id}
 //^^^    keyword.other.use.use-item.wit
-//    ^^^    variable.language.self.use-path.wit
+//    ^^^    entity.name.namespace.id.use-path.wit
 //       ^    keyword.operator.namespace-separator.use-path.wit
 //        ^^^^    entity.name.namespace.id.use-path.wit
 //            ^    keyword.operator.namespace-separator.use-item.wit
