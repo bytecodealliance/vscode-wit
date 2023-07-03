@@ -195,6 +195,70 @@
           "applyEndPatternLast": 1
         },
         {
+          "name": "meta.include-item.wit",
+          "comment": "Syntax for WIT like `include \"use-path\"`",
+          "begin": "\\s*\\b(include)\\s+([^\\s]+)\\s*",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.include.include-item.wit"
+            },
+            "2": {
+              "name": "meta.use-path.include-item.wit",
+              "patterns": [
+                {
+                  "include": "#use-path"
+                }
+              ]
+            }
+          },
+          "patterns": [
+            {
+              "name": "meta.with.include-item.wit",
+              "begin": "\\b(with)\\b\\s+(\\{)\\s*",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.with.include-item.wit"
+                },
+                "2": {
+                  "name": "punctuation.brackets.curly.begin.wit"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#comment"
+                },
+                {
+                  "name": "meta.include-names-item.wit",
+                  "match": "\\s*([^\\s]+)\\s+(as)\\s+([^\\s\\,]+)\\s*",
+                  "captures": {
+                    "1": {
+                      "name": "variable.other.id.include-names-item.wit"
+                    },
+                    "2": {
+                      "name": "keyword.control.as.include-names-item.wit"
+                    },
+                    "3": {
+                      "name": "entity.name.type.include-names-item.wit"
+                    }
+                  }
+                },
+                {
+                  "name": "punctuation.comma.wit",
+                  "match": "\\s*(\\,)"
+                }
+              ],
+              "end": "\\s*(\\})\\s*",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.brackets.curly.end.wit"
+                }
+              }
+            }
+          ],
+          "end": "\\s*(?<=\\n)",
+          "applyEndPatternLast": 1
+        },
+        {
           "include": "#use"
         },
         {
