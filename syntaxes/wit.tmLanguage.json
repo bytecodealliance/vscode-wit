@@ -13,6 +13,9 @@
       "include": "#comment"
     },
     {
+      "include": "#package"
+    },
+    {
       "include": "#world"
     },
     {
@@ -125,6 +128,51 @@
           "match": "\\-\\>"
         }
       ]
+    },
+    "package": {
+      "name": "meta.package-decl.wit",
+      "match": "\\s*(package)\\s+([^\\s]+)\\s*",
+      "captures": {
+        "1": {
+          "name": "storage.modifier.package-decl.wit"
+        },
+        "2": {
+          "name": "meta.id.package-decl.wit",
+          "patterns": [
+            {
+              "name": "meta.package-identifier.wit",
+              "match": "\\s*([^\\:]+)(\\:)([^\\@]+)((\\@)([^\\s]+))?",
+              "captures": {
+                "1": {
+                  "name": "entity.name.namespace.package-identifier.wit",
+                  "patterns": [
+                    {
+                      "include": "#identifier"
+                    }
+                  ]
+                },
+                "2": {
+                  "name": "keyword.operator.namespace.package-identifier.wit"
+                },
+                "3": {
+                  "name": "entity.name.type.package-identifier.wit",
+                  "patterns": [
+                    {
+                      "include": "#identifier"
+                    }
+                  ]
+                },
+                "5": {
+                  "name": "keyword.operator.version.package-identifier.wit"
+                },
+                "6": {
+                  "name": "variable.other.constant.version.package-identifier.wit"
+                }
+              }
+            }
+          ]
+        }
+      }
     },
     "world": {
       "name": "meta.world-item.wit",
@@ -431,10 +479,6 @@
     "use-path": {
       "name": "meta.use-path.wit",
       "patterns": [
-        {
-          "name": "variable.language.self.use-path.wit",
-          "match": "(?<!\\.)\\b(self|pkg)\\b"
-        },
         {
           "name": "entity.name.namespace.id.use-path.wit",
           "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"

@@ -1,5 +1,9 @@
 // SYNTAX TEST "source.wit" "This tests interface shapes"
 
+package bytecodealliance:test-interface
+// <----    storage.modifier.package-decl.wit
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   meta.id.package-decl.wit
+
 interface some-interface {
 // <----    keyword.declaration.interface.interface-item.wit storage.type.wit
 //        ^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
@@ -7,7 +11,7 @@ interface some-interface {
 
   use self.io.level-L1.level-L2.{
 //^^^    keyword.other.use.use-item.wit
-//    ^^^^    variable.language.self.use-path.wit
+//    ^^^^    entity.name.namespace.id.use-path.wit
 //        ^    keyword.operator.namespace-separator.use-path.wit
 //         ^^    entity.name.namespace.id.use-path.wit
 //           ^    keyword.operator.namespace-separator.use-path.wit

@@ -4,6 +4,7 @@ This package is a Visual Studio Code extension to recognize and highlight the We
 
 The description of the WIT format can be found at: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 
+
 ## Features
 
 This extension provides basic syntax highlighting of ".wit" files.

@@ -1,10 +1,18 @@
 // SYNTAX TEST "source.wit" "This tests world shapes"
 
+package bytecodealliance:test@1.0.0-beta.1
+// <----    storage.modifier.package-decl.wit
+//      ^^^^^^^^^^^^^^^^   entity.name.namespace.package-identifier.wit
+//                      ^   keyword.operator.namespace.package-identifier.wit
+//                       ^^^^   entity.name.type.package-identifier.wit
+//                           ^   keyword.operator.version.package-identifier.wit
+//                            ^^^^^^^^^^^^   variable.other.constant.version.package-identifier.wit
+
 default world some-world {
 // <----    storage.modifier.default.world-item.wit
 //      ^^^^^   keyword.declaration.world.world-item.wit storage.type.wit
 //            ^^^^^^^^^^   entity.name.type.id.world-item.wit
-//                       ^ meta.world-item.wit punctuation.brackets.curly.begin.wit
+//                       ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
 
   include foo
 //^^^^^^^    keyword.control.include.include-item.wit
@@ -22,7 +30,7 @@ default world some-world {
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^   variable.other.id.import-item.wit
 //             ^   meta.import-item.wit keyword.operator.key-value.wit
-//               ^^^   variable.language.self.use-path.wit
+//               ^^^   entity.name.namespace.id.use-path.wit
 //                  ^   keyword.operator.namespace-separator.use-path.wit
 //                   ^^^^^^   entity.name.namespace.id.use-path.wit
 
@@ -71,7 +79,7 @@ world another-world {
 
   use pkg.path.{id}
 //^^^    keyword.other.use.use-item.wit
-//    ^^^    variable.language.self.use-path.wit
+//    ^^^    entity.name.namespace.id.use-path.wit
 //       ^    keyword.operator.namespace-separator.use-path.wit
 //        ^^^^    entity.name.namespace.id.use-path.wit
 //            ^    keyword.operator.namespace-separator.use-item.wit
