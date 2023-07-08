@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.1.2...wit-idl-v0.2.0) (2023-07-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* The `default`, `self`, `pkg` keywords have been removed from the grammar.
+
+### Features
+
+* add package keyword to wit grammar ([#19](https://github.com/bytecodealliance/vscode-wit/issues/19)) ([8c9acc7](https://github.com/bytecodealliance/vscode-wit/commit/8c9acc7cb65b2dec1f15f2de8557c2e2f21e347c))
+
 ## [0.1.2](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.1.1...wit-idl-v0.1.2) (2023-07-03)
 
 
