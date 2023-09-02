@@ -52,7 +52,7 @@ jobs:
           npm run package
           mv wit-idl.vsix ${TAG_NAME}.vsix
           gh release upload ${TAG_NAME} ${TAG_NAME}.vsix
-          vsce publish --package-path ${TAG_NAME}.vsix
+          npx vsce publish --packagePath ${TAG_NAME}.vsix
 
   label:
     needs: [publish]
