@@ -42,7 +42,13 @@
     "doc-comment": {
       "name": "comment.line.documentation.wit",
       "comment": "documentation comments",
-      "match": "^\\s*///.*"
+      "begin": "^\\s*///",
+      "end": "$",
+      "patterns": [
+        {
+          "include": "#markdown"
+        }
+      ]
     },
     "line-comment": {
       "name": "comment.line.double-slash.wit",
@@ -64,6 +70,9 @@
           "patterns": [
             {
               "include": "#block-comments"
+            },
+            {
+              "include": "#markdown"
             }
           ]
         },
@@ -77,6 +86,85 @@
               "include": "#block-comments"
             }
           ]
+        }
+      ]
+    },
+    "markdown": {
+      "patterns": [
+        {
+          "match": "\\G\\s*(#+.*)$",
+          "captures": {
+            "1": {
+              "name": "markup.heading.markdown"
+            }
+          }
+        },
+        {
+          "match": "\\G\\s*((\\>)\\s+)+",
+          "captures": {
+            "2": {
+              "name": "punctuation.definition.quote.begin.markdown"
+            }
+          }
+        },
+        {
+          "match": "\\G\\s*(\\-)\\s+",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.list.begin.markdown"
+            }
+          }
+        },
+        {
+          "match": "\\G\\s*(([0-9]+\\.)\\s+)",
+          "captures": {
+            "1": {
+              "name": "markup.list.numbered.markdown"
+            },
+            "2": {
+              "name": "punctuation.definition.list.begin.markdown"
+            }
+          }
+        },
+        {
+          "match": "(`.*?`)",
+          "captures": {
+            "1": {
+              "name": "markup.italic.markdown"
+            }
+          }
+        },
+        {
+          "match": "\\b(__.*?__)",
+          "captures": {
+            "1": {
+              "name": "markup.bold.markdown"
+            }
+          }
+        },
+        {
+          "match": "\\b(_.*?_)",
+          "captures": {
+            "1": {
+              "name": "markup.italic.markdown"
+            }
+          }
+        },
+        {
+          "match": "(\\*\\*.*?\\*\\*)",
+          "captures": {
+            "1": {
+              "name": "markup.bold.markdown"
+            }
+          }
+        },
+        {
+          "match": "(\\*.*?\\*)",
+          "captures": {
+            "1": {
+              "name": "markup.italic.markdown"
+            }
+          }
         }
       ]
     },
