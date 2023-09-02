@@ -45,12 +45,14 @@ jobs:
       - name: Add files and publish release
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          VSCE_PAT: ${{ secrets.PAT_VSCE }}
           TAG_NAME: ${{ steps.event_details.outputs.tag_name }}
         run: |
           npm ci
           npm run package
-          mv wit-idl.vsix ${TAG_NAME}.vsix 
+          mv wit-idl.vsix ${TAG_NAME}.vsix
           gh release upload ${TAG_NAME} ${TAG_NAME}.vsix
+          vsce publish --package-path ${TAG_NAME}.vsix
 
   label:
     needs: [publish]
