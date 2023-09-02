@@ -106,5 +106,35 @@
       "end": "^\\s*// endregion\\b"
     }
   },
-  "wordPattern": "((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)"
+  "wordPattern": "((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)",
+  "onEnterRules": [
+    {
+      "beforeText": "^\\s*///.*$",
+      "action": {
+        "indent": "none",
+        "appendText": "/// "
+      }
+    },
+    {
+      "beforeText": "^\\s*/\\*\\*.*$",
+      "action": {
+        "indent": "none",
+        "appendText": " * "
+      }
+    },
+    {
+      "beforeText": "^\\s+\\*\\s+.*$",
+      "action": {
+        "indent": "outdent",
+        "appendText": " * "
+      }
+    },
+    {
+      "beforeText": "^(\t|  )* \\*/\\s*$",
+      "action": {
+        "indent": "none",
+        "removeText": 1
+      }
+    }
+  ]
 }
