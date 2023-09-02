@@ -105,5 +105,6 @@
       "start": "^\\s*// region:\\b",
       "end": "^\\s*// endregion\\b"
     }
-  }
+  },
+  "wordPattern": "((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)"
 }
