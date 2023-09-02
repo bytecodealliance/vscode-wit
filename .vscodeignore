@@ -5,3 +5,8 @@
 tests/
 commitlint.config.js
 src/**
+.yarnrc
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts
