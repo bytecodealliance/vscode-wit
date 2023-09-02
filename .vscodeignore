@@ -3,3 +3,5 @@
 .github/
 .gitignore
 tests/
+commitlint.config.js
+src/**
