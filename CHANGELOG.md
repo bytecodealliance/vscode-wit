@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.0...wit-idl-v0.2.1) (2023-09-02)
+
+
+### Bug Fixes
+
+* remove commitlint config file from extension package ([#23](https://github.com/bytecodealliance/vscode-wit/issues/23)) ([b75af2d](https://github.com/bytecodealliance/vscode-wit/commit/b75af2d050344f545f6c7dc848a6cd8a01160517))
+
 ## [0.2.0](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.1.2...wit-idl-v0.2.0) (2023-07-08)
 
 
