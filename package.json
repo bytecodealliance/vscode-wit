@@ -16,7 +16,11 @@
     "package": "vsce package -o wit-idl.vsix",
     "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/*'",
     "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/*'",
-    "test": "npm run test-grammar"
+    "test": "npm run test-grammar",
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
   },
   "engines": {
     "vscode": "^1.65.0"
@@ -25,6 +29,7 @@
     "Programming Languages",
     "Snippets"
   ],
+  "main": "./out/extension.js",
   "contributes": {
     "languages": [
       {
@@ -55,7 +60,13 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^20.5.8",
+    "@types/vscode": "^1.65.0",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
     "@vscode/vsce": "^2.19.0",
+    "eslint": "^8.48.0",
+    "typescript": "^5.2.2",
     "vscode-tmgrammar-test": "^0.1.1"
   }
 }
