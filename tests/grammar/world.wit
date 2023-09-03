@@ -1,15 +1,15 @@
 // SYNTAX TEST "source.wit" "This tests world shapes"
 
 package bytecodealliance:test@1.0.0-beta.1
-// <----    storage.modifier.package-decl.wit
+// <-------    storage.modifier.package-decl.wit
 //      ^^^^^^^^^^^^^^^^   entity.name.namespace.package-identifier.wit
 //                      ^   keyword.operator.namespace.package-identifier.wit
 //                       ^^^^   entity.name.type.package-identifier.wit
-//                           ^   keyword.operator.version.package-identifier.wit
-//                            ^^^^^^^^^^^^   variable.other.constant.version.package-identifier.wit
+//                           ^   meta.package-identifier.wit keyword.operator.versioning.package-identifier.wit
+//                            ^^^^^^^^^^^^   meta.package-identifier.wit constant.numeric.versioning.package-identifier.wit
 
 default world some-world {
-// <----    storage.modifier.default.world-item.wit
+// <-------    storage.modifier.default.world-item.wit
 //      ^^^^^   keyword.declaration.world.world-item.wit storage.type.wit
 //            ^^^^^^^^^^   entity.name.type.id.world-item.wit
 //                       ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
@@ -68,10 +68,10 @@ default world some-world {
 //     ^^^^^^    meta.types.result-list.wit entity.name.type.result.wit
 
 }
-// <----    meta.world-item.wit punctuation.brackets.curly.end.wit
+// <-    meta.world-item.wit punctuation.brackets.curly.end.wit
 
 world another-world {
-// <----    keyword.declaration.world.world-item.wit storage.type.wit
+// <-----    keyword.declaration.world.world-item.wit storage.type.wit
 //    ^^^^^^^^^^^^^    entity.name.type.id.world-item.wit
 //                  ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
 
@@ -174,4 +174,4 @@ world another-world {
 //                         ^^    variable.other.constant.id.export-item.wit
 
 }
-// <----    meta.world-item.wit punctuation.brackets.curly.end.wit
+// <-    meta.world-item.wit punctuation.brackets.curly.end.wit
