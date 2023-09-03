@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.3](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.2...wit-idl-v0.2.3) (2023-09-03)
+
+
+### Features
+
+* add basic markdown highlighting in doc-comments ([e64075b](https://github.com/bytecodealliance/vscode-wit/commit/e64075b4c76041e3262f690b1e8f918bc69b74b6))
+* add simple auto-complete for keywords and built-in types ([7bb2014](https://github.com/bytecodealliance/vscode-wit/commit/7bb2014f3d08b3d5a7084008163b2580d758366f))
+* automatically continue doc-comments (`///`, `/**`) on next line ([b037f85](https://github.com/bytecodealliance/vscode-wit/commit/b037f853533db8323dd988f98afe0951440b7bf6))
+* configure wordPattern to improve word highlighting and autocomplete suggestions ([7e887c6](https://github.com/bytecodealliance/vscode-wit/commit/7e887c6e50ff76576abc4d7ef45cc61e626124fc))
+
+
+### Bug Fixes
+
+* target newer VSCode to enable extension activation ([5c80b4a](https://github.com/bytecodealliance/vscode-wit/commit/5c80b4ad730f79100ced29970e963d034ff09dc6))
+
 ## [0.2.2](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.1...wit-idl-v0.2.2) (2023-09-03)
 
 
