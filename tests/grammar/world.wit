@@ -18,10 +18,22 @@ default world some-world {
 //^^^^^^^    keyword.control.include.include-item.wit
 //        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
 
+  import kebab-name
+//^^^^^^   keyword.control.import.import-item.wit
+//       ^^^^^^^^^^    variable.other.id.import-item.wit
+
+  import namespace:package/id
+//^^^^^^   keyword.control.import.import-item.wit
+//       ^^^^^^^^^    variable.other.id.import-item.wit
+//                ^    meta.import-item.wit meta.id.import-item.wit
+//                 ^^^^^^^    variable.other.id.import-item.wit
+//                        ^    meta.import-item.wit meta.id.import-item.wit
+//                         ^^    variable.other.id.import-item.wit
+
   import filesystem: filesystem.filesystem
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^^^^^   variable.other.id.import-item.wit
-//                 ^   meta.import-item.wit keyword.operator.key-value.wit
+//                 ^   meta.import-item.wit meta.id.import-item.wit
 //                   ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
 //                             ^   keyword.operator.namespace-separator.use-path.wit
 //                              ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
@@ -29,7 +41,7 @@ default world some-world {
   import random: pkg.random
 //^^^^^^   keyword.control.import.import-item.wit
 //       ^^^^^^   variable.other.id.import-item.wit
-//             ^   meta.import-item.wit keyword.operator.key-value.wit
+//             ^   meta.import-item.wit meta.id.import-item.wit
 //               ^^^   entity.name.namespace.id.use-path.wit
 //                  ^   keyword.operator.namespace-separator.use-path.wit
 //                   ^^^^^^   entity.name.namespace.id.use-path.wit
@@ -37,7 +49,7 @@ default world some-world {
   export main: func(
 //^^^^^^   keyword.control.export.export-item.wit
 //       ^^^^   variable.other.constant.id.export-item.wit
-//           ^   meta.export-item.wit keyword.operator.key-value.wit
+//           ^   meta.export-item.wit meta.id.export-item.wit
 //             ^^^^   keyword.other.func.func-type.wit
 //                 ^   meta.function.wit punctuation.brackets.round.begin.wit
 
@@ -144,10 +156,22 @@ world another-world {
   export hello: func()
 //^^^^^^   keyword.control.export.export-item.wit
 //       ^^^^^    variable.other.constant.id.export-item.wit
-//            ^    meta.export-item.wit keyword.operator.key-value.wit
+//            ^    meta.export-item.wit meta.id.export-item.wit
 //              ^^^^    keyword.other.func.func-type.wit
 //                  ^    meta.function.wit punctuation.brackets.round.begin.wit
 //                   ^    meta.function.wit punctuation.brackets.round.end.wit
+
+  export kebab-name
+//^^^^^^   keyword.control.export.export-item.wit
+//       ^^^^^^^^^^    variable.other.constant.id.export-item.wit
+
+  export namespace:package/id
+//^^^^^^   keyword.control.export.export-item.wit
+//       ^^^^^^^^^    variable.other.constant.id.export-item.wit
+//                ^    meta.export-item.wit meta.id.export-item.wit
+//                 ^^^^^^^    variable.other.constant.id.export-item.wit
+//                        ^    meta.export-item.wit meta.id.export-item.wit
+//                         ^^    variable.other.constant.id.export-item.wit
 
 }
 // <----    meta.world-item.wit punctuation.brackets.curly.end.wit

@@ -198,17 +198,20 @@
         },
         {
           "name": "meta.export-item.wit",
-          "comment": "Syntax for WIT like `export \"id\":`",
-          "begin": "\\s*\\b(export)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)\\s*",
+          "comment": "Syntax for WIT like `export \"id\"`",
+          "begin": "\\s*\\b(export)\\b\\s+([^\\s]+)\\s*",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.export.export-item.wit"
             },
             "2": {
-              "name": "variable.other.constant.id.export-item.wit"
-            },
-            "7": {
-              "name": "keyword.operator.key-value.wit"
+              "name": "meta.id.export-item.wit",
+              "patterns": [
+                {
+                  "name": "variable.other.constant.id.export-item.wit",
+                  "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
+                }
+              ]
             }
           },
           "patterns": [
@@ -221,17 +224,20 @@
         },
         {
           "name": "meta.import-item.wit",
-          "comment": "Syntax for WIT like `import \"id\":`",
-          "begin": "\\s*\\b(import)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)",
+          "comment": "Syntax for WIT like `import \"id\"`",
+          "begin": "\\s*\\b(import)\\s+([^\\s]+)\\s*",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.import.import-item.wit"
             },
             "2": {
-              "name": "variable.other.id.import-item.wit"
-            },
-            "7": {
-              "name": "keyword.operator.key-value.wit"
+              "name": "meta.id.import-item.wit",
+              "patterns": [
+                {
+                  "name": "variable.other.id.import-item.wit",
+                  "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
+                }
+              ]
             }
           },
           "patterns": [
