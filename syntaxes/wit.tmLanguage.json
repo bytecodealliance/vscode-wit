@@ -16,6 +16,9 @@
       "include": "#package"
     },
     {
+      "include": "#toplevel-use"
+    },
+    {
       "include": "#world"
     },
     {
@@ -163,14 +166,50 @@
                   ]
                 },
                 "5": {
-                  "name": "keyword.operator.version.package-identifier.wit"
+                  "name": "keyword.operator.versioning.package-identifier.wit"
                 },
                 "6": {
-                  "name": "variable.other.constant.version.package-identifier.wit"
+                  "name": "constant.numeric.versioning.package-identifier.wit"
                 }
               }
             }
           ]
+        }
+      }
+    },
+    "toplevel-use": {
+      "name": "meta.toplevel-use-item.wit",
+      "match": "\\s*(use)\\s+([^\\s]+)(\\s+(as)\\s+([^\\s]+))?\\s*",
+      "captures": {
+        "1": {
+          "name": "keyword.other.use.toplevel-use-item.wit"
+        },
+        "2": {
+          "name": "meta.interface.toplevel-use-item.wit",
+          "patterns": [
+            {
+              "name": "entity.name.type.declaration.interface.toplevel-use-item.wit",
+              "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
+            },
+            {
+              "name": "meta.versioning.interface.toplevel-use-item.wit",
+              "match": "(\\@)((0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)",
+              "captures": {
+                "1": {
+                  "name": "keyword.operator.versioning.interface.toplevel-use-item.wit"
+                },
+                "2": {
+                  "name": "constant.numeric.versioning.interface.toplevel-use-item.wit"
+                }
+              }
+            }
+          ]
+        },
+        "4": {
+          "name": "keyword.control.as.toplevel-use-item.wit"
+        },
+        "5": {
+          "name": "entity.name.type.toplevel-use-item.wit"
         }
       }
     },
@@ -198,17 +237,32 @@
         },
         {
           "name": "meta.export-item.wit",
-          "comment": "Syntax for WIT like `export \"id\":`",
-          "begin": "\\s*\\b(export)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)\\s*",
+          "comment": "Syntax for WIT like `export \"id\"`",
+          "begin": "\\s*\\b(export)\\b\\s+([^\\s]+)\\s*",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.export.export-item.wit"
             },
             "2": {
-              "name": "variable.other.constant.id.export-item.wit"
-            },
-            "7": {
-              "name": "keyword.operator.key-value.wit"
+              "name": "meta.id.export-item.wit",
+              "patterns": [
+                {
+                  "name": "variable.other.constant.id.export-item.wit",
+                  "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
+                },
+                {
+                  "name": "meta.versioning.id.export-item.wit",
+                  "match": "(\\@)((0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.operator.versioning.id.export-item.wit"
+                    },
+                    "2": {
+                      "name": "constant.numeric.versioning.id.export-item.wit"
+                    }
+                  }
+                }
+              ]
             }
           },
           "patterns": [
@@ -221,17 +275,32 @@
         },
         {
           "name": "meta.import-item.wit",
-          "comment": "Syntax for WIT like `import \"id\":`",
-          "begin": "\\s*\\b(import)\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)",
+          "comment": "Syntax for WIT like `import \"id\"`",
+          "begin": "\\s*\\b(import)\\s+([^\\s]+)\\s*",
           "beginCaptures": {
             "1": {
               "name": "keyword.control.import.import-item.wit"
             },
             "2": {
-              "name": "variable.other.id.import-item.wit"
-            },
-            "7": {
-              "name": "keyword.operator.key-value.wit"
+              "name": "meta.id.import-item.wit",
+              "patterns": [
+                {
+                  "name": "variable.other.id.import-item.wit",
+                  "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
+                },
+                {
+                  "name": "meta.versioning.id.import-item.wit",
+                  "match": "(\\@)((0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.operator.versioning.id.import-item.wit"
+                    },
+                    "2": {
+                      "name": "constant.numeric.versioning.id.import-item.wit"
+                    }
+                  }
+                }
+              ]
             }
           },
           "patterns": [
@@ -482,6 +551,18 @@
         {
           "name": "entity.name.namespace.id.use-path.wit",
           "match": "\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b"
+        },
+        {
+          "name": "meta.versioning.id.use-path.wit",
+          "match": "(\\@)((0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?)",
+          "captures": {
+            "1": {
+              "name": "keyword.operator.versioning.id.use-path.wit"
+            },
+            "2": {
+              "name": "constant.numeric.versioning.id.use-path.wit"
+            }
+          }
         },
         {
           "name": "keyword.operator.namespace-separator.use-path.wit",

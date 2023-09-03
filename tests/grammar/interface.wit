@@ -1,11 +1,23 @@
 // SYNTAX TEST "source.wit" "This tests interface shapes"
 
 package bytecodealliance:test-interface
-// <----    storage.modifier.package-decl.wit
+// <-------    storage.modifier.package-decl.wit
 //      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   meta.id.package-decl.wit
 
+use wasi:http/types@1.0.0 as http-types
+// <---    keyword.other.use.toplevel-use-item.wit
+//  ^^^^    entity.name.type.declaration.interface.toplevel-use-item.wit
+//      ^    meta.interface.toplevel-use-item.wit
+//       ^^^^    entity.name.type.declaration.interface.toplevel-use-item.wit
+//           ^    meta.interface.toplevel-use-item.wit
+//            ^^^^^    entity.name.type.declaration.interface.toplevel-use-item.wit
+//                 ^    meta.interface.toplevel-use-item.wit
+//                  ^^^^^    constant.numeric.versioning.interface.toplevel-use-item.wit
+//                        ^^    keyword.control.as.toplevel-use-item.wit
+//                           ^^^^^^^^^^    entity.name.type.toplevel-use-item.wit
+
 interface some-interface {
-// <----    keyword.declaration.interface.interface-item.wit storage.type.wit
+// <---------    keyword.declaration.interface.interface-item.wit storage.type.wit
 //        ^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
 //                       ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
@@ -64,10 +76,10 @@ interface some-interface {
 //                                      ^    meta.enum-items.wit
 
 }
-// <----    meta.interface-item.wit punctuation.brackets.curly.end.wit
+// <-    meta.interface-item.wit punctuation.brackets.curly.end.wit
 
 interface another-interface {
-// <----    keyword.declaration.interface.interface-item.wit storage.type.wit
+// <---------    keyword.declaration.interface.interface-item.wit storage.type.wit
 //        ^^^^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
 //                          ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
@@ -93,4 +105,4 @@ interface another-interface {
 //^    meta.record-item.wit punctuation.brackets.curly.end.wit
 
 }
-// <----    meta.interface-item.wit punctuation.brackets.curly.end.wit
+// <-    meta.interface-item.wit punctuation.brackets.curly.end.wit
