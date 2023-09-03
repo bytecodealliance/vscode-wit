@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.1...wit-idl-v0.2.2) (2023-09-03)
+
+
+### Features
+
+* add toplevel use keyword to wit grammar ([#26](https://github.com/bytecodealliance/vscode-wit/issues/26)) ([8990d18](https://github.com/bytecodealliance/vscode-wit/commit/8990d1836f2eb9e03de2fad0cb1d7acd1e7e61cb))
+
 ## [0.2.1](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.0...wit-idl-v0.2.1) (2023-09-02)
 
 
