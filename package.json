@@ -23,7 +23,7 @@
     "lint": "eslint src --ext ts"
   },
   "engines": {
-    "vscode": "^1.65.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Programming Languages",
@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.5.8",
-    "@types/vscode": "^1.65.0",
+    "@types/vscode": "^1.75.0",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
     "@vscode/vsce": "^2.19.0",
