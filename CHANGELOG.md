@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.3...wit-idl-v0.3.0) (2023-09-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* The `union` type has been removed from the WIT grammar.
+
+### Bug Fixes
+
+* remove union typedef ([#28](https://github.com/bytecodealliance/vscode-wit/issues/28)) ([8b97b47](https://github.com/bytecodealliance/vscode-wit/commit/8b97b47b98a9fcf018cc5a879c0f30b44866d911))
+
 ## [0.2.3](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.2...wit-idl-v0.2.3) (2023-09-03)
 
 
