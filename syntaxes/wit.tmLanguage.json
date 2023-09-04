@@ -1149,24 +1149,21 @@
     "function": {
       "name": "meta.func-item.wit",
       "comment": "This is a function item that includes its identifier. This starts with a variable name, succeded by a `func` keyword and ends with `new line`",
-      "begin": "\\s*\\b(static\\s+)?((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)\\s*",
+      "begin": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\:)\\s*",
       "beginCaptures": {
         "1": {
-          "name": "storage.modifier.static.func-item.wit"
-        },
-        "2": {
           "name": "entity.name.function.id.func-item.wit"
         },
-        "3": {
+        "2": {
           "name": "meta.word.wit"
         },
-        "5": {
+        "4": {
           "name": "meta.word-separator.wit"
         },
-        "6": {
+        "5": {
           "name": "meta.word.wit"
         },
-        "7": {
+        "6": {
           "name": "keyword.operator.key-value.wit"
         }
       },
@@ -1184,12 +1181,15 @@
       "patterns": [
         {
           "name": "meta.function.wit",
-          "begin": "\\s*\\b(func)\\b\\s*(\\()\\s*",
+          "begin": "\\s*\\b(static\\s+)?(func)\\b\\s*(\\()\\s*",
           "beginCaptures": {
             "1": {
-              "name": "keyword.other.func.func-type.wit"
+              "name": "storage.modifier.static.func-item.wit"
             },
             "2": {
+              "name": "keyword.other.func.func-type.wit"
+            },
+            "3": {
               "name": "punctuation.brackets.round.begin.wit"
             }
           },
@@ -1198,32 +1198,7 @@
               "include": "#comment"
             },
             {
-              "name": "meta.named-type-list.wit",
-              "begin": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b\\s*(\\:)\\s*",
-              "beginCaptures": {
-                "1": {
-                  "name": "variable.parameter.id.named-type.wit"
-                },
-                "6": {
-                  "name": "keyword.operator.key-value.wit"
-                }
-              },
-              "patterns": [
-                {
-                  "include": "#comment"
-                },
-                {
-                  "name": "meta.types.named-type-list.wit",
-                  "include": "#types"
-                }
-              ],
-              "end": "\\s*(\\,)?\\s*",
-              "applyEndPatternLast": 1,
-              "endCaptures": {
-                "1": {
-                  "name": "punctuation.comma.wit"
-                }
-              }
+              "include": "#function-parameters"
             }
           ],
           "end": "\\s*(\\))\\s*((\\-\\>)(.+))?\\s*",
@@ -1252,6 +1227,34 @@
           }
         }
       ]
+    },
+    "function-parameters": {
+      "name": "meta.named-type-list.wit",
+      "begin": "\\s*\\b((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\b\\s*(\\:)\\s*",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.parameter.id.named-type.wit"
+        },
+        "6": {
+          "name": "keyword.operator.key-value.wit"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "name": "meta.types.named-type-list.wit",
+          "include": "#types"
+        }
+      ],
+      "end": "\\s*(\\,)?\\s*",
+      "applyEndPatternLast": 1,
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.comma.wit"
+        }
+      }
     }
   }
 }
