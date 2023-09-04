@@ -1136,6 +1136,33 @@
           "include": "#comment"
         },
         {
+          "name": "meta.constructor-type.wit",
+          "begin": "\\s*\\b(constructor)\\b\\s*(\\()\\s*",
+          "beginCaptures": {
+            "1": {
+              "name": "meta.method.declaration.constructor.constructor-type.wit"
+            },
+            "2": {
+              "name": "punctuation.brackets.round.begin.wit"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment"
+            },
+            {
+              "include": "#function-parameters"
+            }
+          ],
+          "end": "\\s*(\\))\\s*",
+          "applyEndPatternLast": 1,
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.brackets.round.end.wit"
+            }
+          }
+        },
+        {
           "include": "#function"
         }
       ],
