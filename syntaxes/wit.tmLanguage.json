@@ -578,9 +578,6 @@
           "include": "#record"
         },
         {
-          "include": "#union"
-        },
-        {
           "include": "#flags"
         },
         {
@@ -896,42 +893,6 @@
           "match": "\\s*(\\,)"
         }
       ]
-    },
-    "union": {
-      "name": "meta.union-items.wit",
-      "comment": "Syntax for WIT like `union \"id\" {`",
-      "begin": "\\s*\\b(union)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
-      "beginCaptures": {
-        "1": {
-          "name": "keyword.other.union.union-items.wit"
-        },
-        "2": {
-          "name": "entity.name.type.declaration.id.union-items.wit"
-        },
-        "7": {
-          "name": "punctuation.brackets.curly.begin.wit"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#comment"
-        },
-        {
-          "name": "meta.types.union-cases.wit",
-          "include": "#types"
-        },
-        {
-          "name": "punctuation.comma.wit",
-          "match": "\\s*(\\,)"
-        }
-      ],
-      "end": "\\s*(\\})\\s*",
-      "applyEndPatternLast": 1,
-      "endCaptures": {
-        "1": {
-          "name": "punctuation.brackets.curly.end.wit"
-        }
-      }
     },
     "types": {
       "name": "meta.ty.wit",

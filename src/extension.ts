@@ -37,7 +37,6 @@ const keywords = [
   "resource",
   "static",
   "type",
-  "union",
   "use",
   "variant",
   "with",
