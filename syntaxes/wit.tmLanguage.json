@@ -67,6 +67,7 @@
           "comment": "block documentation comments",
           "begin": "/\\*\\*",
           "end": "\\*/",
+          "applyEndPatternLast": 1,
           "patterns": [
             {
               "include": "#block-comments"
@@ -81,6 +82,7 @@
           "comment": "block comments",
           "begin": "/\\*(?!\\*)",
           "end": "\\*/",
+          "applyEndPatternLast": 1,
           "patterns": [
             {
               "include": "#block-comments"
@@ -453,6 +455,7 @@
                 }
               ],
               "end": "\\s*(\\})\\s*",
+              "applyEndPatternLast": 1,
               "endCaptures": {
                 "1": {
                   "name": "punctuation.brackets.curly.end.wit"
@@ -471,6 +474,7 @@
         }
       ],
       "end": "\\s*(\\})\\s*",
+      "applyEndPatternLast": 1,
       "endCaptures": {
         "1": {
           "name": "punctuation.brackets.curly.end.wit"
@@ -504,6 +508,7 @@
         }
       ],
       "end": "\\s*(\\})\\s*",
+      "applyEndPatternLast": 1,
       "endCaptures": {
         "1": {
           "name": "punctuation.brackets.curly.end.wit"
@@ -535,6 +540,7 @@
                 }
               ],
               "end": "\\s*(\\})\\s*",
+              "applyEndPatternLast": 1,
               "endCaptures": {
                 "1": {
                   "name": "punctuation.brackets.curly.end.wit"
@@ -624,6 +630,7 @@
         }
       ],
       "end": "\\s*(\\})\\s*",
+      "applyEndPatternLast": 1,
       "endCaptures": {
         "1": {
           "name": "punctuation.brackets.curly.end.wit"
@@ -1167,6 +1174,7 @@
         }
       ],
       "end": "\\s*(\\})?\\s*",
+      "applyEndPatternLast": 1,
       "endCaptures": {
         "1": {
           "name": "punctuation.brackets.curly.end.wit"
