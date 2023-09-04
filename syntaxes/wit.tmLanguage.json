@@ -1119,7 +1119,7 @@
     "resource": {
       "name": "meta.resource.wit",
       "comment": "Syntax for WIT like `resource \"id\" {`",
-      "begin": "\\s*\\b(resource)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)\\s*",
+      "begin": "\\s*\\b(resource)\\b\\s+((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)?\\s*",
       "beginCaptures": {
         "1": {
           "name": "keyword.other.resource.wit"
@@ -1139,7 +1139,7 @@
           "include": "#function"
         }
       ],
-      "end": "\\s*(\\})\\s*",
+      "end": "\\s*(\\})?\\s*",
       "endCaptures": {
         "1": {
           "name": "punctuation.brackets.curly.end.wit"
