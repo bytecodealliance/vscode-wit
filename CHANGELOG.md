@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.0...wit-idl-v0.3.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* missing resource methods ([#31](https://github.com/bytecodealliance/vscode-wit/issues/31)) ([36d0ceb](https://github.com/bytecodealliance/vscode-wit/commit/36d0ceb7a565b3b7e48b696c6322ffb88ea6e3c0))
+
 ## [0.3.0](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.2.3...wit-idl-v0.3.0) (2023-09-04)
 
 
