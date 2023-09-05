@@ -1135,7 +1135,7 @@
     "result": {
       "name": "meta.result.ty.wit",
       "comment": "Syntax for WIT types such as result",
-      "begin": "\\b(result)\\b(\\<)?",
+      "begin": "\\b(result)\\b",
       "beginCaptures": {
         "1": {
           "name": "entity.name.type.result.wit"
@@ -1149,28 +1149,47 @@
           "include": "#comment"
         },
         {
-          "name": "variable.other.inferred-type.result.wit",
-          "match": "(?<!\\w)(\\_)(?!\\w)"
-        },
-        {
-          "name": "meta.types.result.wit",
-          "include": "#types"
-        },
-        {
-          "name": "punctuation.comma.wit",
-          "match": "(?<!result)\\s*(\\,)"
+          "name": "meta.inner.result.wit",
+          "begin": "(\\<)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.brackets.angle.begin.wit"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#comment"
+            },
+            {
+              "name": "variable.other.inferred-type.result.wit",
+              "match": "(?<!\\w)(\\_)(?!\\w)"
+            },
+            {
+              "name": "meta.types.result.wit",
+              "include": "#types"
+            },
+            {
+              "name": "punctuation.comma.wit",
+              "match": "(?<!result)\\s*(\\,)"
+            },
+            {
+              "include": "#whitespace"
+            }
+          ],
+          "end": "(\\>)",
+          "applyEndPatternLast": 1,
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.brackets.angle.end.wit"
+            }
+          } 
         },
         {
           "include": "#whitespace"
         }
       ],
-      "end": "((?<=\\n)|(\\>)|(?=\\,)|(?=\\}))",
-      "applyEndPatternLast": 1,
-      "endCaptures": {
-        "3": {
-          "name": "punctuation.brackets.angle.end.wit"
-        }
-      }
+      "end": "((?<=\\n)|(?=\\,)|(?=\\}))",
+      "applyEndPatternLast": 1
     },
     "handle": {
       "name": "meta.handle.ty.wit",
@@ -1250,7 +1269,7 @@
               "include": "#comment"
             },
             {
-              "include": "#parameters-list"
+              "include": "#parameter-list"
             },
             {
               "include": "#whitespace"
@@ -1326,7 +1345,7 @@
               "include": "#comment"
             },
             {
-              "include": "#parameters-list"
+              "include": "#parameter-list"
             },
             {
               "include": "#result-list"
@@ -1340,7 +1359,7 @@
         }
       ]
     },
-    "parameters-list": {
+    "parameter-list": {
       "name": "meta.param-list.wit",
       "begin": "(\\()",
       "beginCaptures": {
@@ -1369,9 +1388,9 @@
     },
     "result-list": {
       "name": "meta.result-list.wit",
-      "begin": "(?<=\\))\\s*(\\-\\>)",
+      "begin": "(\\-\\>)",
       "beginCaptures": {
-        "2": {
+        "1": {
           "name": "keyword.operator.arrow.skinny.wit"
         }
       },
@@ -1383,7 +1402,7 @@
           "include": "#types"
         },
         {
-          "include": "#parameters-list"
+          "include": "#parameter-list"
         },
         {
           "include": "#whitespace"

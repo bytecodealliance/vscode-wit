@@ -65,7 +65,7 @@ default world some-world {
   ) -> result
 //^    meta.function.wit punctuation.brackets.round.end.wit
 //  ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//     ^^^^^^    meta.types.result-list.wit entity.name.type.result.wit
+//     ^^^^^^    meta.result.ty.wit entity.name.type.result.wit
 
 }
 // <-    meta.world-item.wit punctuation.brackets.curly.end.wit
@@ -148,7 +148,7 @@ world another-world {
     ) -> result
 //  ^    meta.function.wit
 //    ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//       ^^^^^^    meta.types.result-list.wit entity.name.type.result.wit
+//       ^^^^^^    meta.result.ty.wit entity.name.type.result.wit
 
   }
 //^   meta.import-item.wit punctuation.brackets.curly.end.wit
