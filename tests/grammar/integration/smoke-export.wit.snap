@@ -1,0 +1,37 @@
+>package foo:foo
+#^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
+#       ^ source.wit meta.package-decl.wit
+#        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
+#           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
+#            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+>
+>world the-world {
+#^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
+#     ^ source.wit meta.world-item.wit
+#      ^^^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
+#               ^ source.wit meta.world-item.wit
+#                ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
+>  export the-name: interface {
+#^^ source.wit meta.world-item.wit meta.export-item.wit
+#  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
+#        ^ source.wit meta.world-item.wit meta.export-item.wit
+#         ^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
+#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+#                  ^ source.wit meta.world-item.wit meta.export-item.wit
+#                   ^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.other.interface.interface-type.wit
+#                            ^ source.wit meta.world-item.wit meta.export-item.wit
+#                             ^ source.wit meta.world-item.wit meta.export-item.wit ppunctuation.brackets.curly.begin.wit
+>    y: func()
+#^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit
+#    ^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#     ^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit keyword.operator.key-value.wit
+#      ^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit
+#       ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
+#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
+>  }
+#^^ source.wit meta.world-item.wit meta.export-item.wit
+#  ^ source.wit meta.world-item.wit meta.export-item.wit punctuation.brackets.curly.end.wit
+>}
+#^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
+>
