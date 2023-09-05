@@ -1,0 +1,14 @@
+package foo:foo
+
+interface foo {
+  record bar {}
+}
+
+world the-world {
+  import foo
+  import other-name: interface {
+    use foo.{bar}
+
+    a: func() -> bar
+  }
+}
