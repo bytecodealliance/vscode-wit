@@ -6,7 +6,7 @@
   },
   "Add World": {
     "prefix": "world ",
-    "body": "world ${1:my-world} {\n  import ${2:my-input}: foo.bar\n  export ${3:my-output}: func() -> u32\n}",
+    "body": "world ${1:my-world} {\n  import ${2:my-input}: foo\n  export ${3:my-output}: func() -> u32\n}",
     "description": "Adds a simple world"
   }
 }
