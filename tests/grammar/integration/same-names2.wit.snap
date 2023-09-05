@@ -12,15 +12,15 @@
 #           ^ source.wit meta.world-item.wit
 #            ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
 >  export name2: func()
-#^^ source.wit meta.world-item.wit meta.export-item.wit
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
 #              ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
-#               ^ source.wit meta.world-item.wit meta.export-item.wit
+#               ^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
 #                ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit punctuation.brackets.round.end.wit
+#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >
