@@ -1,0 +1,110 @@
+>package foo:foo
+#^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
+#       ^ source.wit meta.package-decl.wit
+#        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
+#           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
+#            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+>
+>interface math {
+#^^^^^^^^^ source.wit meta.interface-item.wit keyword.declaration.interface.interface-item.wit storage.type.wit
+#         ^ source.wit meta.interface-item.wit
+#          ^^^^ source.wit meta.interface-item.wit entity.name.type.id.interface-item.wit
+#              ^ source.wit meta.interface-item.wit
+#               ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
+>  /// Represents a 2D point.
+#^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#     ^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+>  /// 
+#^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#     ^ source.wit meta.interface-item.wit comment.line.documentation.wit
+>  /// # Notes
+#^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#     ^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#      ^^^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.heading.markdown
+>  /// 1. Not to be confused with a _circle_
+#^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#     ^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#      ^^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.list.numbered.markdown punctuation.definition.list.begin.markdown
+#        ^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.list.numbered.markdown
+#         ^^^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#                                   ^^^^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.italic.markdown
+>  /// 2. Axis `Z` can be assumed to be zero
+#^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#     ^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#      ^^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.list.numbered.markdown punctuation.definition.list.begin.markdown
+#        ^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.list.numbered.markdown
+#         ^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+#              ^^^ source.wit meta.interface-item.wit comment.line.documentation.wit markup.italic.markdown
+#                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
+>  record point {
+#^^ source.wit meta.interface-item.wit meta.whitespace.wit
+#  ^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit keyword.declaration.record.record-item.wit
+#        ^ source.wit meta.interface-item.wit meta.record-item.wit
+#         ^^^^^ source.wit meta.interface-item.wit meta.record-item.wit entity.name.type.id.record-item.wit
+#              ^ source.wit meta.interface-item.wit meta.record-item.wit
+#               ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.begin.wit
+>    x: float32,
+#^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit variable.declaration.id.record-fields.wit
+#     ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit keyword.operator.key-value.wit
+#      ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
+#       ^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit entity.name.type.numeric.wit
+#              ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit punctuation.comma.wit
+>    y: float32
+#^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit variable.declaration.id.record-fields.wit
+#     ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit keyword.operator.key-value.wit
+#      ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
+#       ^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit entity.name.type.numeric.wit
+>  }
+#^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
+#  ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
+>}
+#^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
+>
+>world example {
+#^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
+#     ^ source.wit meta.world-item.wit
+#      ^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
+#             ^ source.wit meta.world-item.wit
+#              ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
+>  /// Translate the point by `dx` horizontally and `dy` vertically
+#^^^^^ source.wit meta.world-item.wit comment.line.documentation.wit
+#     ^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.world-item.wit comment.line.documentation.wit
+#                             ^^^^ source.wit meta.world-item.wit comment.line.documentation.wit markup.italic.markdown
+#                                 ^^^^^^^^^^^^^^^^^^ source.wit meta.world-item.wit comment.line.documentation.wit
+#                                                   ^^^^ source.wit meta.world-item.wit comment.line.documentation.wit markup.italic.markdown
+#                                                       ^^^^^^^^^^^ source.wit meta.world-item.wit comment.line.documentation.wit
+>  export move: func(p: point, dx: float32, dy: float32) -> point
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
+#  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
+#        ^ source.wit meta.world-item.wit meta.export-item.wit
+#         ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
+#             ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+#              ^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
+#               ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                       ^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.id.wit
+#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit punctuation.comma.wit
+#                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.whitespace.wit
+#                              ^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                                ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                                  ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                                         ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit punctuation.comma.wit
+#                                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.whitespace.wit
+#                                           ^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                                               ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                                                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                                                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.whitespace.wit
+#                                                        ^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
+#                                                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
+#                                                           ^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+>}
+#^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
+>

@@ -11,11 +11,8 @@ interface variants {
   record empty {}
 
   variant v1 {
-    //// test
       a,
-      //test
       c(e1),
-      //test
       d(string),
       e(empty),
       f,

@@ -12,21 +12,24 @@
 #               ^ source.wit meta.interface-item.wit
 #                ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
 >  resource z {
-#^^ source.wit meta.interface-item.wit meta.resource.wit
-#  ^^^^^^^^ source.wit meta.interface-item.wit meta.resource.wit keyword.other.resource.wit
-#          ^ source.wit meta.interface-item.wit meta.resource.wit
-#           ^ source.wit meta.interface-item.wit meta.resource.wit entity.name.type.id.resource.wit
-#            ^ source.wit meta.interface-item.wit meta.resource.wit
-#             ^ source.wit meta.interface-item.wit meta.resource.wit punctuation.brackets.curly.begin.wit
+#^^ source.wit meta.interface-item.wit meta.whitespace.wit
+#  ^^^^^^^^ source.wit meta.interface-item.wit meta.resource-item.wit keyword.other.resource.wit
+#          ^ source.wit meta.interface-item.wit meta.resource-item.wit
+#           ^ source.wit meta.interface-item.wit meta.resource-item.wit entity.name.type.id.resource.wit
+#            ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.whitespace.wit
+#             ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit punctuation.brackets.curly.begin.wit
 >    constructor(a: float64)
-#^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.resource.wit
-#                ^ source.wit meta.interface-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#                 ^ source.wit meta.interface-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#                  ^ source.wit meta.interface-item.wit meta.resource.wit meta.func-item.wit
-#                   ^^^^^^^^ source.wit meta.interface-item.wit meta.resource.wit meta.func-item.wit
+#^^^^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#    ^^^^^^^^^^^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit keyword.other.constructor.constructor-type.wit
+#               ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                 ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                  ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                   ^^^^^^^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                          ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit punctuation.brackets.round.end.wit
 >  }
-#^^ source.wit meta.interface-item.wit meta.resource.wit
-#  ^ source.wit meta.interface-item.wit meta.resource.wit punctuation.brackets.curly.end.wit
+#^^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#  ^ source.wit meta.interface-item.wit meta.resource-item.wit meta.resource-methods.wit punctuation.brackets.curly.end.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -37,7 +40,7 @@
 #               ^ source.wit meta.world-item.wit
 #                ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
 >  use types.{z}
-#^^ source.wit meta.world-item.wit meta.use-item.wit
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^ source.wit meta.world-item.wit meta.use-item.wit keyword.other.use.use-item.wit
 #     ^ source.wit meta.world-item.wit meta.use-item.wit
 #      ^^^^^ source.wit meta.world-item.wit meta.use-item.wit entity.name.namespace.id.use-path.wit
@@ -47,196 +50,205 @@
 #              ^ source.wit meta.world-item.wit meta.use-item.wit punctuation.brackets.curly.end.wit
 >
 >  export add: func(a: borrow<z>, b: borrow<z>) -> own<z>
-#^^ source.wit meta.world-item.wit meta.export-item.wit
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
 #            ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
-#             ^ source.wit meta.world-item.wit meta.export-item.wit
+#             ^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
 #              ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit
-#                      ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.borrow.handle.wit
-#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.begin.wit
-#                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.id.handle.wit
-#                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.end.wit
-#                               ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit punctuation.comma.wit
-#                                ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit
-#                                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit
-#                                    ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.borrow.handle.wit
-#                                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.begin.wit
-#                                           ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.id.handle.wit
-#                                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.end.wit
-#                                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit punctuation.brackets.round.end.wit
-#                                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit
+#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                      ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.borrow.handle.wit
+#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.begin.wit
+#                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.id.handle.wit
+#                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.end.wit
+#                               ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit punctuation.comma.wit
+#                                ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.whitespace.wit
+#                                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                                    ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.borrow.handle.wit
+#                                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.begin.wit
+#                                           ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit entity.name.type.id.handle.wit
+#                                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.handle.ty.wit punctuation.brackets.angle.end.wit
+#                                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.whitespace.wit
 #                                               ^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                                                 ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.types.result-list.wit entity.name.type.id.wit
-#                                                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.types.result-list.wit
-#                                                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.types.result-list.wit entity.name.type.id.wit
-#                                                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.types.result-list.wit
+#                                                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
+#                                                  ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                                                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit
+#                                                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                                                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit
 >
 >  export exports: interface {
-#^^ source.wit meta.world-item.wit meta.export-item.wit
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
 #                ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
-#                 ^ source.wit meta.world-item.wit meta.export-item.wit
+#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
 #                  ^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.other.interface.interface-type.wit
 #                           ^ source.wit meta.world-item.wit meta.export-item.wit
 #                            ^ source.wit meta.world-item.wit meta.export-item.wit ppunctuation.brackets.curly.begin.wit
 >    resource x {
-#^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit
-#    ^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit keyword.other.resource.wit
-#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit
-#             ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit entity.name.type.id.resource.wit
-#              ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit
-#               ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit punctuation.brackets.curly.begin.wit
+#^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
+#    ^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit keyword.other.resource.wit
+#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit
+#             ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit entity.name.type.id.resource.wit
+#              ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.whitespace.wit
+#               ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit punctuation.brackets.curly.begin.wit
 >      constructor(a: float64)
-#^^^^^^^^^^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit
-#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#                     ^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
+#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit keyword.other.constructor.constructor-type.wit
+#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                     ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit punctuation.brackets.round.end.wit
 >      get-a: func() -> float64
-#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
-#          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#             ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
-#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit
-#                    ^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                      ^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.types.result-list.wit entity.name.type.numeric.wit
+#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
+#          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit keyword.operator.key-value.wit
+#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.whitespace.wit
+#             ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.whitespace.wit
+#                    ^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
+#                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
+#                       ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.numeric.wit
 >      set-a: func(a: float64)
-#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
-#          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#             ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                     ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit entity.name.type.numeric.wit
-#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
+#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
+#          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit keyword.operator.key-value.wit
+#            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.whitespace.wit
+#             ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                     ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
 >      add: static func(x: x, a: float64) -> x
-#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#           ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit
-#                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit
-#                  ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                        ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit entity.name.type.id.wit
-#                           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit punctuation.comma.wit
-#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                               ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                                ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit entity.name.type.numeric.wit
-#                                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
-#                                        ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit
-#                                         ^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                                           ^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.types.result-list.wit entity.name.type.id.wit
+#^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit keyword.operator.key-value.wit
+#          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.whitespace.wit
+#           ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit storage.modifier.static.func-item.wit
+#                  ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                      ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                        ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                         ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.id.wit
+#                           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit punctuation.comma.wit
+#                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.whitespace.wit
+#                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                              ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                               ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                                ^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                                       ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                                        ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.whitespace.wit
+#                                         ^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
+#                                           ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
+#                                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
 >    }
-#^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit
-#    ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource.wit punctuation.brackets.curly.end.wit
+#^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#    ^ source.wit meta.world-item.wit meta.export-item.wit meta.resource-item.wit meta.resource-methods.wit punctuation.brackets.curly.end.wit
 >  }
-#^^ source.wit meta.world-item.wit meta.export-item.wit
+#^^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
 #  ^ source.wit meta.world-item.wit meta.export-item.wit punctuation.brackets.curly.end.wit
 >
 >  import imports: interface {
-#^^ source.wit meta.world-item.wit meta.import-item.wit
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #        ^ source.wit meta.world-item.wit meta.import-item.wit
 #         ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit variable.other.id.import-item.wit
 #                ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
-#                 ^ source.wit meta.world-item.wit meta.import-item.wit
+#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.whitespace.wit
 #                  ^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.other.interface.interface-type.wit
 #                           ^ source.wit meta.world-item.wit meta.import-item.wit
 #                            ^ source.wit meta.world-item.wit meta.import-item.wit ppunctuation.brackets.curly.begin.wit
 >    resource y {
-#^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit
-#    ^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit keyword.other.resource.wit
-#            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit
-#             ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit entity.name.type.id.resource.wit
-#              ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit
-#               ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit punctuation.brackets.curly.begin.wit
+#^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.whitespace.wit
+#    ^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit keyword.other.resource.wit
+#            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit
+#             ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit entity.name.type.id.resource.wit
+#              ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.whitespace.wit
+#               ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit punctuation.brackets.curly.begin.wit
 >      constructor(a: float64)
-#^^^^^^^^^^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit
-#                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#                   ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#                    ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#                     ^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
+#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit keyword.other.constructor.constructor-type.wit
+#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                   ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                    ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                     ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.constructor-type.wit meta.param-list.wit punctuation.brackets.round.end.wit
 >      get-a: func() -> float64
-#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
-#          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#             ^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
-#                   ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit
-#                    ^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                      ^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.types.result-list.wit entity.name.type.numeric.wit
+#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
+#          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit keyword.operator.key-value.wit
+#            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.whitespace.wit
+#             ^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                   ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.whitespace.wit
+#                    ^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
+#                      ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
+#                       ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.numeric.wit
 >      set-a: func(a: float64)
-#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
-#          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#             ^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                   ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                    ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                     ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit entity.name.type.numeric.wit
-#                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
+#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
+#          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit keyword.operator.key-value.wit
+#            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.whitespace.wit
+#             ^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                   ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                    ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                     ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
 >      add: static func(y: y, a: float64) -> y
-#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit keyword.operator.key-value.wit
-#          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#           ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit
-#                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit
-#                  ^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                      ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.begin.wit
-#                       ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                        ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit entity.name.type.id.wit
-#                           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit punctuation.comma.wit
-#                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                             ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                              ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                               ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit
-#                                ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.named-type-list.wit entity.name.type.numeric.wit
-#                                       ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit punctuation.brackets.round.end.wit
-#                                        ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit
-#                                         ^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                                           ^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit meta.func-item.wit meta.function.wit meta.types.result-list.wit entity.name.type.id.wit
+#^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+#         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit keyword.operator.key-value.wit
+#          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.whitespace.wit
+#           ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit storage.modifier.static.func-item.wit
+#                  ^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
+#                      ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
+#                       ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                        ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                         ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                          ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.id.wit
+#                           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit punctuation.comma.wit
+#                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.whitespace.wit
+#                             ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
+#                              ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
+#                               ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
+#                                ^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.numeric.wit
+#                                       ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                                        ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.whitespace.wit
+#                                         ^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
+#                                           ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
+#                                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
 >    }
-#^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit
-#    ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource.wit punctuation.brackets.curly.end.wit
+#^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit meta.whitespace.wit
+#    ^ source.wit meta.world-item.wit meta.import-item.wit meta.resource-item.wit meta.resource-methods.wit punctuation.brackets.curly.end.wit
 >  }
-#^^ source.wit meta.world-item.wit meta.import-item.wit
+#^^ source.wit meta.world-item.wit meta.import-item.wit meta.whitespace.wit
 #  ^ source.wit meta.world-item.wit meta.import-item.wit punctuation.brackets.curly.end.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit

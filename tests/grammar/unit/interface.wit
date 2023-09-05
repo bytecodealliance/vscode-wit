@@ -59,7 +59,7 @@ interface some-interface {
   ) -> result<output-stream, string>
 //^    meta.function.wit punctuation.brackets.round.end.wit
 //  ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//     ^^^^^^    meta.types.result-list.wit entity.name.type.result.wit
+//     ^^^^^^    meta.result.ty.wit entity.name.type.result.wit
 //           ^    meta.result.ty.wit punctuation.brackets.angle.begin.wit
 //            ^^^^^^^^^^^^^    entity.name.type.id.wit
 //                         ^    meta.result.ty.wit punctuation.comma.wit

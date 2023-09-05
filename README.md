@@ -7,9 +7,13 @@ The description of the WIT format can be found at: https://github.com/WebAssembl
 
 ## Features
 
-This extension provides basic syntax highlighting of ".wit" files.
+![Screenshot](images/screenshot.png)
 
-Additionally, it provides [Snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets).
+This extension provides:
+- Basic syntax highlighting of ".wit" files.
+- [Snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets) for worlds and interfaces.
+- Basic markdown highlighting in comments.
+- Simple list-based autocomplete.
 
 ## Installation
 
