@@ -14,8 +14,8 @@
   "scripts": {
     "install-plugin": "npm run package && code --install-extension wit-idl.vsix",
     "package": "vsce package -o wit-idl.vsix",
-    "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/*'",
-    "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/*'",
+    "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/integration/*'",
+    "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/unit/*'",
     "test": "npm run test-grammar",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
