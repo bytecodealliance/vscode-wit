@@ -75,6 +75,18 @@ interface some-interface {
 //                         ^^^^^^^^^^^^^    variable.other.enummember.id.enum-cases.wit
 //                                      ^    meta.enum-items.wit
 
+  roundtrip: func(a: result) -> result;
+//^^^^^^^^^  entity.name.function.id.func-item.wit
+//         ^  meta.func-item.wit keyword.operator.key-value.wit
+//           ^^^^  keyword.other.func.func-type.wit
+//               ^  meta.function.wit punctuation.brackets.round.begin.wit
+//                ^  variable.parameter.id.named-type.wit
+//                 ^  meta.named-type-list.wit keyword.operator.key-value.wit
+//                   ^^^^^^   entity.name.type.result.wit
+//                         ^  meta.function.wit punctuation.brackets.round.end.wit
+//                           ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
+//                              ^^^^^^   entity.name.type.result.wit
+
 }
 // <-    meta.interface-item.wit punctuation.brackets.curly.end.wit
 

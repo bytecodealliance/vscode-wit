@@ -980,6 +980,9 @@
           "include": "#container"
         },
         {
+          "include": "#result-base"
+        },
+        {
           "include": "#identifier"
         }
       ]
@@ -1034,6 +1037,11 @@
           "include": "#handle"
         }
       ]
+    },
+    "result-base": {
+      "name": "entity.name.type.result.wit",
+      "comment": "Syntax for result types where both the `ok` and `err` types are `_`. This pattern must be placed after the #container pattern to correctly capture `result<...>`.",
+      "match": "\\b(result)\\b"
     },
     "tuple": {
       "name": "meta.tuple.ty.wit",
@@ -1138,7 +1146,7 @@
     "result": {
       "name": "meta.result.ty.wit",
       "comment": "Syntax for WIT types such as result",
-      "begin": "\\b(result)\\b",
+      "begin": "\\b(result)\\b(\\<)",
       "beginCaptures": {
         "1": {
           "name": "entity.name.type.result.wit"
@@ -1152,47 +1160,28 @@
           "include": "#comment"
         },
         {
-          "name": "meta.inner.result.wit",
-          "begin": "(\\<)",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.brackets.angle.begin.wit"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#comment"
-            },
-            {
-              "name": "variable.other.inferred-type.result.wit",
-              "match": "(?<!\\w)(\\_)(?!\\w)"
-            },
-            {
-              "name": "meta.types.result.wit",
-              "include": "#types"
-            },
-            {
-              "name": "punctuation.comma.wit",
-              "match": "(?<!result)\\s*(\\,)"
-            },
-            {
-              "include": "#whitespace"
-            }
-          ],
-          "end": "(\\>)",
-          "applyEndPatternLast": 1,
-          "endCaptures": {
-            "1": {
-              "name": "punctuation.brackets.angle.end.wit"
-            }
-          } 
+          "name": "variable.other.inferred-type.result.wit",
+          "match": "(?<!\\w)(\\_)(?!\\w)"
+        },
+        {
+          "name": "meta.types.list.wit",
+          "include": "#types"
+        },
+        {
+          "name": "punctuation.comma.wit",
+          "match": "(?<!result)\\s*(\\,)"
         },
         {
           "include": "#whitespace"
         }
       ],
-      "end": "((?<=\\n)|(?=\\,)|(?=\\}))",
-      "applyEndPatternLast": 1
+      "end": "(\\>)",
+      "applyEndPatternLast": 1,
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.brackets.angle.end.wit"
+        }
+      }
     },
     "handle": {
       "name": "meta.handle.ty.wit",
