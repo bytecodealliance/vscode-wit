@@ -161,7 +161,7 @@
 #          ^ source.wit meta.interface-item.wit meta.type-item.wit punctuation.equal.wit
 #           ^ source.wit meta.interface-item.wit meta.type-item.wit meta.whitespace.wit
 #            ^^^ source.wit meta.interface-item.wit meta.type-item.wit entity.name.type.numeric.wit
->  type t2 = tuple<u32, u64>
+>  type t2 = tuple<u32, u64> // tuple
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^ source.wit meta.interface-item.wit meta.type-item.wit keyword.declaration.type.type-item.wit storage.type.wit
 #      ^ source.wit meta.interface-item.wit meta.type-item.wit
@@ -176,6 +176,7 @@
 #                      ^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit meta.whitespace.wit
 #                       ^^^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit entity.name.type.numeric.wit
 #                          ^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit punctuation.brackets.angle.end.wit
+#                           ^^^^^^^^^ source.wit meta.interface-item.wit meta.type-item.wit comment.line.double-slash.wit
 >  type t3 = string
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^ source.wit meta.interface-item.wit meta.type-item.wit keyword.declaration.type.type-item.wit storage.type.wit
@@ -185,7 +186,7 @@
 #          ^ source.wit meta.interface-item.wit meta.type-item.wit punctuation.equal.wit
 #           ^ source.wit meta.interface-item.wit meta.type-item.wit meta.whitespace.wit
 #            ^^^^^^ source.wit meta.interface-item.wit meta.type-item.wit entity.name.type.string.wit
->  type t4 = option<u32>
+>  type t4 = option<u32> // option
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^ source.wit meta.interface-item.wit meta.type-item.wit keyword.declaration.type.type-item.wit storage.type.wit
 #      ^ source.wit meta.interface-item.wit meta.type-item.wit
@@ -197,6 +198,7 @@
 #                  ^ source.wit meta.interface-item.wit meta.type-item.wit meta.option.ty.wit punctuation.brackets.angle.begin.wit
 #                   ^^^ source.wit meta.interface-item.wit meta.type-item.wit meta.option.ty.wit entity.name.type.numeric.wit
 #                      ^ source.wit meta.interface-item.wit meta.type-item.wit meta.option.ty.wit punctuation.brackets.angle.end.wit
+#                       ^^^^^^^^^^ source.wit meta.interface-item.wit meta.type-item.wit comment.line.double-slash.wit
 >  /// no "ok" type
 #^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit
 #     ^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.documentation.wit

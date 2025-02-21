@@ -721,6 +721,9 @@
           "include": "#types"
         },
         {
+          "include": "#comment"
+        },
+        {
           "include": "#whitespace"
         }
       ],
