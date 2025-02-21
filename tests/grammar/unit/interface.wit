@@ -83,11 +83,12 @@ interface another-interface {
 //        ^^^^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
 //                          ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
-  type my-type = string
+  type my-type = string // comment
 //^^^^    keyword.declaration.type.type-item.wit
 //     ^^^^^^^    entity.name.type.id.type-item.wit
 //             ^    meta.type-item.wit punctuation.equal.wit
 //               ^^^^^^    entity.name.type.string.wit
+//                      ^^^^^^^^^^    comment.line.double-slash.wit
 
   record my-record {
 //^^^^^^    keyword.declaration.record.record-item.wit

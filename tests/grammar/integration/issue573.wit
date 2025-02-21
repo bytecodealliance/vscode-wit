@@ -34,9 +34,9 @@ interface types-interface {
   // type aliases are allowed to primitive types and additionally here are some
   // examples of other types
   type t1 = u32
-  type t2 = tuple<u32, u64>
+  type t2 = tuple<u32, u64> // tuple
   type t3 = string
-  type t4 = option<u32>
+  type t4 = option<u32> // option
   /// no "ok" type
   type t5 = result<_, errno>            // no "ok" type
   type t6 = result<string>              // no "err" type
