@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.1...wit-idl-v0.3.2) (2025-05-12)
+
+
+### Bug Fixes
+
+* comments on type aliases are now recognized as comments ([80c21d1](https://github.com/bytecodealliance/vscode-wit/commit/80c21d19ee4004bbcccf68c71ed13ceba6c4e7f6))
+* separate rules for `result` keyword with and without &lt;&gt; ([cf87929](https://github.com/bytecodealliance/vscode-wit/commit/cf8792998880407f31399418a964bfe43454c54f))
+
 ## [0.3.1](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.0...wit-idl-v0.3.1) (2023-09-05)
 
 
