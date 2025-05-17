@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.2...wit-idl-v0.3.3) (2025-05-17)
+
+
+### Bug Fixes
+
+* sync vscode types and engine ([482fd7d](https://github.com/bytecodealliance/vscode-wit/commit/482fd7d6b4a33ba8440560c4a9644c784fcd2ca6))
+
 ## [0.3.2](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.1...wit-idl-v0.3.2) (2025-05-12)
 
 
