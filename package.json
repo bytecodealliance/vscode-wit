@@ -1,85 +1,89 @@
 {
-  "name": "wit-idl",
-  "displayName": "WIT IDL",
-  "description": "WebAssembly Interface Type (WIT) IDL Extension for VSCode",
-  "private": true,
-  "version": "0.3.4",
-  "publisher": "bytecodealliance",
-  "icon": "images/wit-icon.png",
-  "categories": [
-    "Programming Languages",
-    "Snippets"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bytecodealliance/vscode-wit.git"
-  },
-  "license": "Apache-2.0 WITH LLVM-exception",
-  "engines": {
-    "vscode": "^1.100.0"
-  },
-  "main": "./dist/extension.js",
-  "scripts": {
-    "clean": "rimraf out dist *.vsix",
-    "install-plugin": "npm run package && code --install-extension wit-idl.vsix",
-    "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/integration/*'",
-    "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/unit/*'",
-    "build": "node esbuild.mjs",
-    "watch": "npm run build -- --watch",
-    "vscode:prepublish": "npm run build -- --production",
-    "package": "vsce package -o wit-idl.vsix",
-    "lint": "eslint src --ext ts ./*.js ./*.mjs",
-    "lint-fix": "eslint src --ext ts ./*.js ./*.mjs --fix",
-    "test": "run-s lint build package test-grammar",
-    "update": "npx npm-check-updates -u -t minor",
-    "update-major": "npx npm-check-updates -u"
-  },
-  "devDependencies": {
-    "@eslint/css": "0.8.1",
-    "@eslint/js": "9.27.0",
-    "@eslint/markdown": "6.4.0",
-    "@types/node": "22.15.24",
-    "@types/vscode": "1.100.0",
-    "@typescript-eslint/eslint-plugin": "8.33.0",
-    "@typescript-eslint/parser": "8.33.0",
-    "@vscode/vsce": "3.4.2",
-    "esbuild": "0.25.5",
-    "esbuild-node-externals": "1.18.0",
-    "eslint": "9.27.0",
-    "globals": "16.2.0",
-    "npm-run-all": "4.1.5",
-    "rimraf": "6.0.1",
-    "typescript": "5.8.3",
-    "typescript-eslint": "8.33.0",
-    "vscode-tmgrammar-test": "0.1.3"
-  },
-  "contributes": {
-    "languages": [
-      {
-        "id": "wit",
-        "aliases": [
-          "WIT",
-          "wit",
-          "WebAssembly Interface Type"
-        ],
-        "extensions": [
-          ".wit"
-        ],
-        "configuration": "./language-configuration.json"
-      }
+    "name": "wit-idl",
+    "displayName": "WIT IDL",
+    "description": "WebAssembly Interface Type (WIT) IDL Extension for VSCode",
+    "private": true,
+    "version": "0.3.4",
+    "publisher": "bytecodealliance",
+    "icon": "images/wit-icon.png",
+    "categories": [
+        "Programming Languages",
+        "Snippets"
     ],
-    "grammars": [
-      {
-        "language": "wit",
-        "scopeName": "source.wit",
-        "path": "./syntaxes/wit.tmLanguage.json"
-      }
-    ],
-    "snippets": [
-      {
-        "language": "wit",
-        "path": "./snippets.json"
-      }
-    ]
-  }
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bytecodealliance/vscode-wit.git"
+    },
+    "license": "Apache-2.0 WITH LLVM-exception",
+    "engines": {
+        "vscode": "^1.100.0"
+    },
+    "main": "./dist/extension.js",
+    "scripts": {
+        "clean": "rimraf out dist *.vsix",
+        "install-plugin": "npm run package && code --install-extension wit-idl.vsix",
+        "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/integration/*'",
+        "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/unit/*'",
+        "build": "node esbuild.mjs",
+        "watch": "npm run build -- --watch",
+        "vscode:prepublish": "npm run build -- --production",
+        "package": "vsce package -o wit-idl.vsix",
+        "fmt": "prettier . --write",
+        "fmt-check": "prettier --check .",
+        "lint": "eslint src --ext ts ./*.js ./*.mjs",
+        "lint-fix": "eslint src --ext ts ./*.js ./*.mjs --fix",
+        "test": "run-s lint fmt-check build package test-grammar",
+        "update": "npx npm-check-updates -u -t minor",
+        "update-major": "npx npm-check-updates -u"
+    },
+    "devDependencies": {
+        "@eslint/css": "0.8.1",
+        "@eslint/js": "9.27.0",
+        "@eslint/markdown": "6.4.0",
+        "@types/node": "22.15.27",
+        "@types/vscode": "1.100.0",
+        "@typescript-eslint/eslint-plugin": "8.33.0",
+        "@typescript-eslint/parser": "8.33.0",
+        "@vscode/vsce": "3.4.2",
+        "esbuild": "0.25.5",
+        "esbuild-node-externals": "1.18.0",
+        "eslint": "9.27.0",
+        "eslint-plugin-prettier": "5.4.1",
+        "globals": "16.2.0",
+        "npm-run-all": "4.1.5",
+        "prettier": "3.5.3",
+        "rimraf": "6.0.1",
+        "typescript": "5.8.3",
+        "typescript-eslint": "8.33.0",
+        "vscode-tmgrammar-test": "0.1.3"
+    },
+    "contributes": {
+        "languages": [
+            {
+                "id": "wit",
+                "aliases": [
+                    "WIT",
+                    "wit",
+                    "WebAssembly Interface Type"
+                ],
+                "extensions": [
+                    ".wit"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "wit",
+                "scopeName": "source.wit",
+                "path": "./syntaxes/wit.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "wit",
+                "path": "./snippets.json"
+            }
+        ]
+    }
 }
