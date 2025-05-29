@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 const builtinTypes = [
   "u8",
@@ -54,9 +54,9 @@ export function activate(context: vscode.ExtensionContext) {
   // But, without a proper LSP, we do want both!
   // Registering the provider directly on "wit" would disable VSCode's built-in suggestions.
   // The workaround is to register it for all languages (`*`) and then dynamically check the document type.
-  const provider = vscode.languages.registerCompletionItemProvider('*', {
+  const provider = vscode.languages.registerCompletionItemProvider("*", {
     provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
-      if (document.languageId !== 'wit') {
+      if (document.languageId !== "wit") {
         return;
       }
 
