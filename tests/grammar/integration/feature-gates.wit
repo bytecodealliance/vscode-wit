@@ -1,0 +1,50 @@
+package test:feature-gates@1.0.0;
+
+@unstable(feature = experimental-interface)
+interface experimental {
+    @since(version = 1.1.0)
+    stable-func: func(input: string) -> string;
+    
+    @unstable(feature = new-api)
+    experimental-func: func(data: list<u8>) -> result<string, string>;
+    
+    @deprecated(version = 2.0.0)
+    old-func: func();
+}
+
+@since(version = 1.0.0)
+interface stable-interface {
+    basic-func: func();
+    
+    @deprecated(version = 1.5.0)
+    deprecated-method: func(x: u32);
+}
+
+@unstable(feature = future-world)
+world feature-world {
+    @since(version = 1.0.0)
+    export stable: interface {
+        get-version: func() -> string;
+    }
+    
+    @unstable(feature = beta-import)
+    import experimental: interface {
+        @unstable(feature = alpha-feature)
+        test-method: func() -> bool;
+    }
+}
+
+@since(version = 1.2.0)
+interface resources {
+    @unstable(feature = experimental-resource)
+    resource connection {
+        @since(version = 1.2.0)
+        constructor(url: string);
+        
+        @unstable(feature = async-methods)
+        connect: func() -> result<(), string>;
+        
+        @deprecated(version = 2.0.0)
+        disconnect: func();
+    }
+}

@@ -1,0 +1,18 @@
+// SYNTAX TEST "source.wit" "This tests basic feature gate annotations"
+
+package test:basic@1.0.0;
+
+@unstable(feature = test-feature)
+interface basic {
+    test-func: func();
+}
+
+@since(version = 1.0.0)
+interface stable {
+    stable-func: func();
+}
+
+@deprecated(version = 2.0.0)
+interface old {
+    old-func: func();
+}
