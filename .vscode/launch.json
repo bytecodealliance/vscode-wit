@@ -13,7 +13,7 @@
       "args": [
         "--disable-extensions",
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "${workspaceRoot}/tests/grammar/integration"
+        "${workspaceRoot}/tests/grammar"
       ]
     }
   ]

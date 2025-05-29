@@ -13,6 +13,9 @@
       "include": "#comment"
     },
     {
+      "include": "#feature-gate"
+    },
+    {
       "include": "#package"
     },
     {
@@ -33,6 +36,112 @@
       "name": "meta.whitespace.wit",
       "comment": "whitespace token",
       "match": "\\s+"
+    },
+    "feature-gate": {
+      "name": "meta.feature-gate.wit",
+      "comment": "Feature gate annotations like @unstable, @since, @deprecated",
+      "patterns": [
+        {
+          "name": "meta.annotation.unstable.wit",
+          "begin": "(@unstable)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.unstable.wit"
+            },
+            "2": {
+              "name": "punctuation.brackets.round.begin.wit"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#feature-gate-content"
+            }
+          ],
+          "end": "(\\))",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.brackets.round.end.wit"
+            }
+          }
+        },
+        {
+          "name": "meta.annotation.since.wit",
+          "begin": "(@since)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.since.wit"
+            },
+            "2": {
+              "name": "punctuation.brackets.round.begin.wit"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#feature-gate-content"
+            }
+          ],
+          "end": "(\\))",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.brackets.round.end.wit"
+            }
+          }
+        },
+        {
+          "name": "meta.annotation.deprecated.wit",
+          "begin": "(@deprecated)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.deprecated.wit"
+            },
+            "2": {
+              "name": "punctuation.brackets.round.begin.wit"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#feature-gate-content"
+            }
+          ],
+          "end": "(\\))",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.brackets.round.end.wit"
+            }
+          }
+        }
+      ]
+    },
+    "feature-gate-content": {
+      "name": "meta.feature-gate-content.wit",
+      "comment": "Content inside feature gate annotations",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "name": "meta.feature-gate-parameter.wit",
+          "match": "\\b(feature|version)\\s*(=)\\s*([^\\s,)]+|\"[^\"]*\")",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.feature-gate.wit"
+            },
+            "2": {
+              "name": "keyword.operator.assignment.wit"
+            },
+            "3": {
+              "name": "string.quoted.feature-gate.wit"
+            }
+          }
+        },
+        {
+          "name": "punctuation.comma.wit",
+          "match": ","
+        },
+        {
+          "include": "#whitespace"
+        }
+      ]
     },
     "comment": {
       "patterns": [
@@ -320,7 +429,7 @@
     "world": {
       "name": "meta.world-item.wit",
       "comment": "Syntax for WIT like `world \"id\" {`",
-      "begin": "^\\b(default\\s+)?(world)\\s+%?((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)",
+      "begin": "^\\s*\\b(default\\s+)?(world)\\s+%?((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)",
       "beginCaptures": {
         "1": {
           "name": "storage.modifier.default.world-item.wit"
@@ -338,6 +447,9 @@
       "patterns": [
         {
           "include": "#comment"
+        },
+        {
+          "include": "#feature-gate"
         },
         {
           "name": "meta.export-item.wit",
@@ -510,7 +622,7 @@
     "interface": {
       "name": "meta.interface-item.wit",
       "comment": "Syntax for WIT like `interface \"id\" {`",
-      "begin": "^\\b(default\\s+)?(interface)\\s+%?((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)",
+      "begin": "^\\s*\\b(default\\s+)?(interface)\\s+%?((?<![\\-\\w])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*)(([\\-])([a-z][0-9a-z]*|[A-Z][0-9A-Z]*))*)\\s*(\\{)",
       "beginCaptures": {
         "1": {
           "name": "storage.modifier.default.interface-item.wit"
@@ -528,6 +640,9 @@
       "patterns": [
         {
           "include": "#comment"
+        },
+        {
+          "include": "#feature-gate"
         },
         {
           "include": "#interface-items"
@@ -593,6 +708,9 @@
       "name": "meta.interface-items.wit",
       "patterns": [
         {
+          "include": "#feature-gate"
+        },
+        {
           "include": "#typedef-item"
         },
         {
@@ -606,6 +724,9 @@
     "typedef-item": {
       "name": "meta.typedef-item.wit",
       "patterns": [
+        {
+          "include": "#feature-gate"
+        },
         {
           "include": "#resource"
         },
@@ -1246,6 +1367,9 @@
           "include": "#comment"
         },
         {
+          "include": "#feature-gate"
+        },
+        {
           "name": "meta.constructor-type.wit",
           "begin": "\\b(constructor)\\b",
           "beginCaptures": {
@@ -1307,6 +1431,9 @@
         }
       },
       "patterns": [
+        {
+          "include": "#feature-gate"
+        },
         {
           "include": "#function-definition"
         },
