@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.4](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.3...wit-idl-v0.3.4) (2025-05-29)
+
+
+### Features
+
+* add support for feature gates ([8624eb4](https://github.com/bytecodealliance/vscode-wit/commit/8624eb4af5f291bd6952a210966ff3f4865c52c5)), closes [#34](https://github.com/bytecodealliance/vscode-wit/issues/34)
+
 ## [0.3.3](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.2...wit-idl-v0.3.3) (2025-05-17)
 
 
