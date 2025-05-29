@@ -1,22 +1,51 @@
-import js from "@eslint/js";
 import globals from "globals";
+import js from "@eslint/js";
 import tseslint from "typescript-eslint";
-import markdown from "@eslint/markdown";
 import css from "@eslint/css";
-import { defineConfig } from "eslint/config";
+import prettier from "eslint-plugin-prettier";
 
-export default defineConfig([
-    { files: ["**/*.{js,mjs,cjs,ts,mts,cts}"], plugins: { js }, extends: ["js/recommended"] },
-    { files: ["**/*.{js,mjs,cjs,ts,mts,cts}"], languageOptions: { globals: { ...globals.browser, ...globals.node } } },
-    tseslint.configs.recommended,
+export default [
+    // Base JavaScript configuration
+    js.configs.recommended,
+
+    // TypeScript configuration
+    ...tseslint.configs.recommended,
+
+    // General configuration for JS/TS files
+    {
+        files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
+        languageOptions: {
+            globals: { ...globals.browser, ...globals.node },
+        },
+    },
+
+    // TypeScript and Prettier rules
     {
         files: ["**/*.{ts,tsx,js,jsx}"],
+        plugins: {
+            prettier,
+        },
         rules: {
-            // Allow unused function parameters (disable rule)
-            '@typescript-eslint/no-unused-vars': 'off',
-            'quotes': ['error', 'double']
-        }
+            // TypeScript rules
+            "@typescript-eslint/no-unused-vars": "off",
+
+            // Prettier rules
+            "prettier/prettier": "warn",
+
+            // Style rules
+            quotes: ["warn", "double"],
+        },
     },
-    { files: ["**/*.md"], plugins: { markdown }, language: "markdown/gfm", extends: ["markdown/recommended"] },
-    { files: ["**/*.css"], plugins: { css }, language: "css/css", extends: ["css/recommended"] },
-]);
+
+    // CSS configuration
+    {
+        files: ["**/*.css"],
+        plugins: {
+            css,
+        },
+        language: "css/css",
+        rules: {
+            ...css.configs.recommended.rules,
+        },
+    },
+];

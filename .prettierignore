@@ -1,0 +1,33 @@
+# Files to exclude from Prettier formatting
+
+# Keep existing exclusions
+*.md
+*.yml
+*.yaml
+
+# WIT files (custom syntax, not supported by Prettier)
+*.wit
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.vsix
+
+# Test snapshots (these are auto-generated and shouldn't be manually formatted)
+*.snap
+
+# Binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.pdf
+
+# Package lock files
+package-lock.json
+
+# Git
+.git/
