@@ -33,7 +33,7 @@ export default [
             "prettier/prettier": "warn",
 
             // Style rules
-            quotes: ["warn", "double"],
+            quotes: ["warn", "double", { avoidEscape: true }],
         },
     },
 

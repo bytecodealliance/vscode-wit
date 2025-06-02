@@ -2,8 +2,9 @@
 .vscode-test/**
 .github/
 .gitignore
+node_modules/
 tests/
-commitlint.config.js
+commitlint.config.cjs
 src/**
 .yarnrc
 **/tsconfig.json
