@@ -2,9 +2,18 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "watch",
             "type": "npm",
-            "script": "watch",
+            "label": "gen-watch",
+            "script": "gen-watch",
+            "problemMatcher": ["$tsc-watch"],
+            "presentation": {
+                "group": "build"
+            }
+        },
+        {
+            "type": "npm",
+            "label": "build-watch",
+            "script": "build-watch",
             "problemMatcher": [],
             "presentation": {
                 "group": "build"
@@ -12,7 +21,7 @@
         },
         {
             "label": "build",
-            "dependsOn": ["watch"],
+            "dependsOn": ["build-watch", "gen-watch"],
             "group": {
                 "kind": "build",
                 "isDefault": true
