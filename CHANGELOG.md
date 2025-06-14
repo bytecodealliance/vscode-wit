@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.5](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.4...wit-idl-v0.3.5) (2025-06-14)
+
+
+### Features
+
+* basic syntax checking ([57d8f5a](https://github.com/bytecodealliance/vscode-wit/commit/57d8f5a78a9869060e5ace869eb751bb7debaa4e))
+
+
+### Bug Fixes
+
+* update devDependencies to use exact versions ([abee70b](https://github.com/bytecodealliance/vscode-wit/commit/abee70b05fae6015fc7993596ef69dc96387ab54)), closes [#50](https://github.com/bytecodealliance/vscode-wit/issues/50)
+
 ## [0.3.4](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.3...wit-idl-v0.3.4) (2025-05-29)
 
 

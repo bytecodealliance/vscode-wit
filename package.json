@@ -3,7 +3,7 @@
     "displayName": "WIT IDL",
     "description": "WebAssembly Interface Type (WIT) IDL Extension for VSCode",
     "private": true,
-    "version": "0.3.4",
+    "version": "0.3.5",
     "publisher": "bytecodealliance",
     "icon": "images/wit-icon.png",
     "categories": [
