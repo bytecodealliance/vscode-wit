@@ -45,7 +45,6 @@
         "update-major": "npx npm-check-updates -u"
     },
     "dependencies": {
-        "@bytecodealliance/componentize-js": "0.18.2",
         "@bytecodealliance/jco": "1.11.2"
     },
     "devDependencies": {
