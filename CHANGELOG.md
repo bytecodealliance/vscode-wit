@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.6](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.5...wit-idl-v0.3.6) (2025-06-15)
+
+
+### Bug Fixes
+
+* automate worker + wasm resource detection ([20dda9c](https://github.com/bytecodealliance/vscode-wit/commit/20dda9c797454850d5b6586592ea7c935460ae1b))
+
 ## [0.3.5](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.4...wit-idl-v0.3.5) (2025-06-14)
 
 
