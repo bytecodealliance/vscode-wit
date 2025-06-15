@@ -1,5 +1,16 @@
-// ESBuild configuration for building the VSCode extension (sample-based)
+// ESBuild configuration for building the VSCode extension
+// Dynamically discovers and bundles WASM resources and worker files from dependencies
 // See: https://github.com/microsoft/vscode-extension-samples/blob/main/esbuild-sample/esbuild.js
+//
+// Key features:
+// - Dynamic WASM resource discovery by analyzing bundle output for URL references
+// - Dynamic worker file discovery through esbuild's import analysis + targeted entry points
+// - Enhanced error handling with emoji-based logging
+// - Constants for better maintainability
+// - Safe file operations with proper error handling
+// - Bundle analysis in development mode
+// - Tree shaking and optimization
+// - Modern Node.js target alignment with VS Code runtime
 
 import * as esbuild from "esbuild";
 import * as fs from "fs";
@@ -8,214 +19,720 @@ import * as path from "path";
 const production = process.argv.includes("--production");
 const watch = process.argv.includes("--watch");
 
+// Constants for better maintainability
+const WASM_EXTENSIONS = [".wasm"];
+const BUILD_TARGET = "node22";
+const ENTRY_POINT = "src/extension.ts";
+
 /**
- * Copy WASM and worker resources from node_modules to dist
+ * Safely reads a directory and returns files or empty array on error
+ * @param {string} dirPath - Directory path to read
+ * @returns {string[]} Array of filenames or empty array
  */
-function copyWasmResources() {
-    const distDir = path.join(process.cwd(), "dist");
-
-    // Ensure dist directory exists
-    fs.mkdirSync(distDir, { recursive: true });
-
-    // Copy WASM files from @bytecodealliance/jco/lib
-    const jcoLibDir = path.join(process.cwd(), "node_modules", "@bytecodealliance", "jco", "lib");
-    const jcoLibFiles = ["wasi_snapshot_preview1.command.wasm", "wasi_snapshot_preview1.reactor.wasm"];
-
-    jcoLibFiles.forEach((file) => {
-        const srcPath = path.join(jcoLibDir, file);
-        const destPath = path.join(distDir, file);
-
-        if (fs.existsSync(srcPath)) {
-            fs.copyFileSync(srcPath, destPath);
-            console.log(`Copied ${file} to dist/`);
-        } else {
-            console.warn(`Warning: ${srcPath} not found`);
-        }
-    });
-
-    // Copy all WASM files from jco/obj
-    const jcoObjDir = path.join(process.cwd(), "node_modules", "@bytecodealliance", "jco", "obj");
-    if (fs.existsSync(jcoObjDir)) {
-        const objFiles = fs.readdirSync(jcoObjDir).filter((file) => file.endsWith(".wasm"));
-        objFiles.forEach((file) => {
-            const srcPath = path.join(jcoObjDir, file);
-            const destPath = path.join(distDir, file);
-            fs.copyFileSync(srcPath, destPath);
-            console.log(`Copied ${file} to dist/`);
-        });
+function safeReadDir(dirPath) {
+    try {
+        return fs.readdirSync(dirPath);
+    } catch (error) {
+        console.warn(`⚠️  Could not read directory ${dirPath}: ${error.message}`);
+        return [];
     }
-
-    // Copy WASM files from @bytecodealliance/componentize-js
-    const componentizeJsLibDir = path.join(
-        process.cwd(),
-        "node_modules",
-        "@bytecodealliance",
-        "componentize-js",
-        "lib"
-    );
-
-    const componentizeJsLibFiles = [
-        "spidermonkey-embedding-splicer.core.wasm",
-        "spidermonkey-embedding-splicer.core2.wasm",
-        "starlingmonkey_embedding.wasm",
-        "starlingmonkey_embedding.debug.wasm",
-        "starlingmonkey_embedding_weval.wasm",
-    ];
-
-    componentizeJsLibFiles.forEach((file) => {
-        const srcPath = path.join(componentizeJsLibDir, file);
-        const destPath = path.join(distDir, file);
-
-        if (fs.existsSync(srcPath)) {
-            fs.copyFileSync(srcPath, destPath);
-            console.log(`Copied ${file} to dist/`);
-        } else {
-            console.warn(`Warning: ${srcPath} not found`);
-        }
-    });
-
-    // Also check nested componentize-js in jco
-    const jcoNestedComponentizeJsLibDir = path.join(
-        process.cwd(),
-        "node_modules",
-        "@bytecodealliance",
-        "jco",
-        "node_modules",
-        "@bytecodealliance",
-        "componentize-js",
-        "lib"
-    );
-
-    if (fs.existsSync(jcoNestedComponentizeJsLibDir)) {
-        componentizeJsLibFiles.forEach((file) => {
-            const srcPath = path.join(jcoNestedComponentizeJsLibDir, file);
-            const destPath = path.join(distDir, file);
-
-            if (fs.existsSync(srcPath) && !fs.existsSync(destPath)) {
-                fs.copyFileSync(srcPath, destPath);
-                console.log(`Copied ${file} from nested jco/componentize-js to dist/`);
-            }
-        });
-    }
-
-    // Copy files from @bytecodealliance/preview2-shim
-    const preview2ShimDir = path.join(process.cwd(), "node_modules", "@bytecodealliance", "preview2-shim");
-
-    if (fs.existsSync(preview2ShimDir)) {
-        // Copy the main module files
-        const shimFiles = ["lib", "src"];
-        shimFiles.forEach((item) => {
-            const srcPath = path.join(preview2ShimDir, item);
-            const destPath = path.join(distDir, "preview2-shim", item);
-
-            if (fs.existsSync(srcPath)) {
-                // Create destination directory
-                fs.mkdirSync(path.dirname(destPath), { recursive: true });
-
-                if (fs.statSync(srcPath).isDirectory()) {
-                    // Copy directory recursively
-                    fs.cpSync(srcPath, destPath, { recursive: true });
-                    console.log(`Copied ${item}/ from preview2-shim to dist/preview2-shim/`);
-                } else {
-                    // Copy file
-                    fs.copyFileSync(srcPath, destPath);
-                    console.log(`Copied ${item} from preview2-shim to dist/preview2-shim/`);
-                }
-            }
-        });
-
-        // Copy package.json for module resolution
-        const packageJsonSrc = path.join(preview2ShimDir, "package.json");
-        const packageJsonDest = path.join(distDir, "preview2-shim", "package.json");
-        if (fs.existsSync(packageJsonSrc)) {
-            fs.mkdirSync(path.dirname(packageJsonDest), { recursive: true });
-            fs.copyFileSync(packageJsonSrc, packageJsonDest);
-            console.log("Copied package.json from preview2-shim to dist/preview2-shim/");
-        }
-    }
-
-    // Note: Worker files are bundled directly into dist/ to ensure proper module resolution
-    // This prevents import errors when the extension tries to load worker threads at runtime
 }
 
 /**
- * @type {import('esbuild').Plugin}
+ * Safely checks if a path exists
+ * @param {string} filePath - Path to check
+ * @returns {boolean} True if path exists
  */
-const esbuildProblemMatcherPlugin = {
-    name: "esbuild-problem-matcher",
-    setup(build) {
-        build.onStart(() => {
-            console.log("[watch] build started");
-        });
-        build.onEnd((result) => {
-            result.errors.forEach(({ text, location }) => {
-                console.error(`✘ [ERROR] ${text}`);
-                if (location) {
-                    console.error(`    ${location.file}:${location.line}:${location.column}:`);
-                }
-            });
-            console.log("[watch] build finished");
-        });
-    },
-};
+function safeExists(filePath) {
+    try {
+        return fs.existsSync(filePath);
+    } catch (error) {
+        console.warn(`⚠️  Could not check existence of ${filePath}: ${error.message}`);
+        return false;
+    }
+}
 
-async function main() {
-    // Copy WASM resources first
-    console.log("Copying WASM resources...");
-    copyWasmResources();
+/**
+ * Clean the dist directory before building
+ * @param {string} distPath - Path to the dist directory
+ */
+function cleanDistDirectory(distPath) {
+    if (safeExists(distPath)) {
+        try {
+            fs.rmSync(distPath, { recursive: true, force: true });
+            console.log("🧹 Cleaned dist directory");
+        } catch (error) {
+            console.warn(`⚠️  Could not clean dist directory: ${error.message}`);
+        }
+    }
+}
 
-    // Find all worker files in preview2-shim
-    const preview2ShimWorkerDir = path.join(
-        process.cwd(),
-        "node_modules",
-        "@bytecodealliance",
-        "preview2-shim",
-        "lib",
-        "io"
-    );
+/**
+ * Generic function to copy files from source to destination with improved error handling
+ * @param {Object} options - Copy options
+ * @param {string} options.srcDir - Source directory path
+ * @param {string} options.destDir - Destination directory path
+ * @param {string[]|string} [options.files] - Specific files to copy, or extension filter (e.g., '.wasm')
+ * @param {string} [options.logPrefix] - Prefix for log messages
+ * @param {boolean} [options.skipIfExists] - Skip copying if destination file already exists
+ * @param {boolean} [options.warnIfMissing] - Log warning if source file doesn't exist
+ * @returns {number} Number of files successfully copied
+ */
+function copyFiles(options) {
+    const { srcDir, destDir, files, logPrefix = "", skipIfExists = false, warnIfMissing = true } = options;
 
-    const workerEntryPoints = [];
-    if (fs.existsSync(preview2ShimWorkerDir)) {
-        const workerFiles = fs
-            .readdirSync(preview2ShimWorkerDir)
-            .filter((file) => file.startsWith("worker-") && file.endsWith(".js"))
-            .map((file) => path.join(preview2ShimWorkerDir, file));
-        workerEntryPoints.push(...workerFiles);
-        console.log(
-            `Found ${workerFiles.length} worker files to bundle:`,
-            workerFiles.map((f) => path.basename(f))
-        );
+    if (!safeExists(srcDir)) {
+        if (warnIfMissing) {
+            console.warn(`⚠️  Source directory ${srcDir} not found`);
+        }
+        return 0;
     }
 
-    const ctx = await esbuild.context({
-        entryPoints: ["src/extension.ts", ...workerEntryPoints],
-        bundle: true,
-        format: "esm",
-        minify: production,
-        sourcemap: !production,
-        sourcesContent: false,
-        platform: "node",
-        target: "node18",
-        outdir: "dist",
-        entryNames: "[name]",
-        external: ["vscode"],
-        logLevel: "silent",
-        plugins: [esbuildProblemMatcherPlugin],
-        inject: ["src/node-polyfills.js"],
-        define: {
-            // Define globals to prevent bundling issues
-            "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
-        },
-        // Add banner to ensure polyfills are loaded first
-        banner: {
-            js: "// VS Code Extension - ESM Node.js Environment\n",
-        },
+    // Ensure destination directory exists
+    try {
+        fs.mkdirSync(destDir, { recursive: true });
+    } catch (error) {
+        console.error(`❌ Failed to create destination directory ${destDir}: ${error.message}`);
+        return 0;
+    }
+
+    let filesToCopy = [];
+    let copiedCount = 0;
+
+    try {
+        if (Array.isArray(files)) {
+            // Copy specific files
+            filesToCopy = files;
+        } else if (typeof files === "string" && files.startsWith(".")) {
+            // Copy all files with specific extension
+            filesToCopy = safeReadDir(srcDir).filter((file) => file.endsWith(files));
+        } else {
+            throw new Error("files parameter must be an array of filenames or a file extension string");
+        }
+
+        filesToCopy.forEach((file) => {
+            const srcPath = path.join(srcDir, file);
+            const destPath = path.join(destDir, file);
+
+            if (!safeExists(srcPath)) {
+                if (warnIfMissing) {
+                    console.warn(`⚠️  ${srcPath} not found`);
+                }
+                return;
+            }
+
+            if (skipIfExists && safeExists(destPath)) {
+                return;
+            }
+
+            try {
+                fs.copyFileSync(srcPath, destPath);
+                console.log(`✅ Copied ${file}${logPrefix ? ` ${logPrefix}` : ""} to ${path.basename(destDir)}/`);
+                copiedCount++;
+            } catch (error) {
+                console.error(`❌ Failed to copy ${file}: ${error.message}`);
+            }
+        });
+    } catch (error) {
+        console.error(`❌ Error processing files in ${srcDir}: ${error.message}`);
+    }
+
+    return copiedCount;
+}
+
+/**
+ * Read package.json dependencies to determine what WASM files need to be copied
+ * @param {string} packagePath - Path to the package directory
+ * @returns {Object} Package information including files to copy
+ */
+function readPackageInfo(packagePath) {
+    const packageJsonPath = path.join(packagePath, "package.json");
+
+    if (!safeExists(packageJsonPath)) {
+        return null;
+    }
+
+    try {
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+        const filesSection = packageJson.files || [];
+
+        return {
+            name: packageJson.name,
+            version: packageJson.version,
+            files: filesSection,
+            dependencies: packageJson.dependencies || {},
+        };
+    } catch (error) {
+        console.warn(`Warning: Could not read package.json at ${packageJsonPath}: ${error.message}`);
+        return null;
+    }
+}
+
+/**
+ * Get WASM files from a directory based on package files specification
+ * @param {string} packageDir - Package directory path
+ * @param {string[]} filesSpec - Files specification from package.json
+ * @param {string} subDir - Subdirectory to check (e.g., 'lib', 'obj')
+ * @returns {string[]} Array of WASM files found
+ */
+function getWasmFilesFromPackage(packageDir, filesSpec, subDir) {
+    const targetDir = path.join(packageDir, subDir);
+
+    if (!safeExists(targetDir)) {
+        return [];
+    }
+
+    try {
+        const allFiles = safeReadDir(targetDir);
+        const wasmFiles = allFiles.filter((file) => WASM_EXTENSIONS.some((ext) => file.endsWith(ext)));
+
+        // If package has files specification, filter based on that
+        if (filesSpec && filesSpec.length > 0) {
+            const relevantSpecs = filesSpec.filter(
+                (spec) => spec.includes(subDir) && (spec.includes("*.wasm") || spec.includes("*.core*.wasm"))
+            );
+
+            if (relevantSpecs.length > 0) {
+                // Use the files specification to determine which files to include
+                return wasmFiles.filter((file) => {
+                    return relevantSpecs.some((spec) => {
+                        if (spec.includes("*.core*.wasm")) {
+                            return file.includes(".core") && file.endsWith(".wasm");
+                        }
+                        if (spec.includes("*.wasm")) {
+                            return true; // Include all WASM files
+                        }
+                        return false;
+                    });
+                });
+            }
+        }
+
+        // Default: return all WASM files
+        return wasmFiles;
+    } catch (error) {
+        console.warn(`⚠️  Could not read directory ${targetDir}: ${error.message}`);
+        return [];
+    }
+}
+
+/**
+ * Extract directories from package.json "files" section that might contain WASM files
+ * @param {string[]|undefined} filesSpec - Files specification from package.json
+ * @returns {string[]} Array of directory names to search for WASM files
+ */
+function getWasmDirectoriesFromFiles(filesSpec) {
+    if (!filesSpec || !Array.isArray(filesSpec)) {
+        // Fallback to standard directories if no files specification
+        return [];
+    }
+
+    const directories = new Set();
+
+    filesSpec.forEach((filePattern) => {
+        if (typeof filePattern === "string") {
+            const parts = filePattern.split("/");
+            const baseDir = parts[0];
+
+            // Only include directories that might contain WASM files
+            if (baseDir && filePattern.includes(".wasm")) {
+                directories.add(baseDir);
+            }
+        }
     });
-    if (watch) {
-        await ctx.watch();
-    } else {
-        await ctx.rebuild();
-        await ctx.dispose();
+
+    // Convert Set to Array and add fallback directories if none found
+    const result = Array.from(directories);
+    if (result.length === 0) {
+        return [];
+    }
+
+    return result;
+}
+
+/**
+ * Convert package name to directory path in node_modules
+ * @param {string} packageName - Package name (e.g., "@bytecodealliance/jco")
+ * @returns {string[]} Array of path segments for the package directory
+ */
+function packageNameToPath(packageName) {
+    return packageName.startsWith("@") ? packageName.split("/") : [packageName];
+}
+
+/**
+ * Process a single package for WASM resources
+ * @param {string} packageName - Name of the package to process
+ * @param {string} packageDir - Directory path of the package
+ * @param {string} distDir - Destination directory for copied files
+ * @param {Set<string>} processedPaths - Set of already processed paths to avoid duplicates
+ * @param {string} nodeModulesDir - Root node_modules directory
+ * @param {boolean} [isNested=false] - Whether this is a nested dependency (affects file copying behavior)
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function processPackageForWasm(packageName, packageDir, distDir, processedPaths, nodeModulesDir, isNested = false) {
+    if (processedPaths.has(packageDir)) {
+        return;
+    }
+    processedPaths.add(packageDir);
+
+    const packageInfo = readPackageInfo(packageDir);
+    if (!packageInfo) {
+        return;
+    }
+
+    const nestedLabel = isNested ? " (nested)" : "";
+    console.log(`Found ${packageInfo.name}@${packageInfo.version}${nestedLabel}`);
+
+    // Get directories to search from package.json "files" section
+    const wasmDirectories = getWasmDirectoriesFromFiles(packageInfo.files);
+
+    // Process each directory that might contain WASM files
+    wasmDirectories.forEach((dirName) => {
+        const wasmFiles = getWasmFilesFromPackage(packageDir, packageInfo.files, dirName);
+        if (wasmFiles.length > 0) {
+            const logPrefix = isNested
+                ? `from nested ${packageInfo.name}/${dirName}`
+                : `from ${packageInfo.name}/${dirName}`;
+
+            copyFiles({
+                srcDir: path.join(packageDir, dirName),
+                destDir: distDir,
+                files: wasmFiles,
+                logPrefix: logPrefix,
+                skipIfExists: isNested,
+                warnIfMissing: false,
+            });
+        }
+    });
+
+    // Process dependencies from this package's package.json that might contain WASM resources
+    const allPackageDependencies = {
+        ...packageInfo.dependencies,
+        ...packageInfo.peerDependencies,
+        ...packageInfo.optionalDependencies,
+    };
+
+    Object.keys(allPackageDependencies).forEach((depName) => {
+        // First check if it's installed locally in this package's node_modules
+        const depPath = packageNameToPath(depName);
+        const localDepDir = path.join(packageDir, "node_modules", ...depPath);
+
+        if (fs.existsSync(localDepDir)) {
+            const depPackageInfo = readPackageInfo(localDepDir);
+            if (depPackageInfo) {
+                // For nested dependencies, use nested mode
+                processPackageForWasm(depName, localDepDir, distDir, processedPaths, nodeModulesDir, true);
+            }
+        } else if (!isNested) {
+            // Only check root node_modules for non-nested packages to avoid infinite recursion
+            const rootDepDir = path.join(nodeModulesDir, ...depPath);
+            if (fs.existsSync(rootDepDir) && !processedPaths.has(rootDepDir)) {
+                const depPackageInfo = readPackageInfo(rootDepDir);
+                if (depPackageInfo) {
+                    processPackageForWasm(depName, rootDepDir, distDir, processedPaths, nodeModulesDir, false);
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Creates an esbuild plugin for comprehensive resource discovery and build management
+ * @returns {import('esbuild').Plugin} An esbuild plugin
+ */
+function createResourceDiscoveryPlugin() {
+    return {
+        name: "resource-discovery",
+        setup(build) {
+            // Hook into the build start
+            build.onStart(() => {
+                console.log("🔨 [watch] build started");
+            });
+
+            // Hook into build end for comprehensive logging
+            build.onEnd((result) => {
+                if (result.errors.length > 0) {
+                    console.log("❌ Build completed with errors:");
+                    result.errors.forEach(({ text, location }) => {
+                        console.error(`   ✘ [ERROR] ${text}`);
+                        if (location) {
+                            console.error(`     ${location.file}:${location.line}:${location.column}:`);
+                        }
+                    });
+                } else {
+                    console.log("✅ Build completed successfully");
+                }
+
+                if (result.warnings.length > 0) {
+                    console.log("⚠️  Build warnings:");
+                    result.warnings.forEach(({ text, location }) => {
+                        console.warn(`   ⚠️  [WARNING] ${text}`);
+                        if (location) {
+                            console.warn(`     ${location.file}:${location.line}:${location.column}:`);
+                        }
+                    });
+                }
+
+                console.log("🔨 [watch] build finished");
+            });
+        },
+    };
+}
+
+/**
+ * Creates an esbuild plugin for dynamic WASM file discovery and copying
+ * This plugin analyzes the bundle output to find dynamic WASM references and ensures those files are copied
+ * @returns {import('esbuild').Plugin} An esbuild plugin
+ */
+function createWasmDiscoveryPlugin() {
+    const discoveredWasmFiles = new Set();
+    const nodeModulesDir = path.join(process.cwd(), "node_modules");
+    const distDir = path.join(process.cwd(), "dist");
+
+    return {
+        name: "wasm-discovery",
+        setup(build) {
+            // Hook into build end to analyze the output and discover WASM references
+            build.onEnd(async (result) => {
+                if (result.errors.length > 0) return;
+
+                // Analyze the main bundle for dynamic WASM references
+                const mainBundlePath = path.join(distDir, "extension.js");
+
+                if (safeExists(mainBundlePath)) {
+                    try {
+                        const bundleContent = fs.readFileSync(mainBundlePath, "utf8");
+
+                        // Find all dynamic WASM references using regex
+                        const wasmUrlRegex = /new URL\("\.\/([^"]+\.wasm)"[^)]*\)/g;
+                        let match;
+
+                        while ((match = wasmUrlRegex.exec(bundleContent)) !== null) {
+                            const wasmFileName = match[1];
+                            discoveredWasmFiles.add(wasmFileName);
+                        }
+
+                        // Copy discovered WASM files
+                        if (discoveredWasmFiles.size > 0) {
+                            console.log(`🔍 Discovered ${discoveredWasmFiles.size} dynamic WASM references in bundle`);
+
+                            for (const wasmFileName of discoveredWasmFiles) {
+                                // Find this WASM file in node_modules
+                                const foundPaths = await findWasmFileInNodeModules(wasmFileName, nodeModulesDir);
+
+                                if (foundPaths.length > 0) {
+                                    const srcPath = foundPaths[0]; // Use the first found path
+                                    const destPath = path.join(distDir, wasmFileName);
+
+                                    if (!safeExists(destPath)) {
+                                        try {
+                                            fs.copyFileSync(srcPath, destPath);
+                                            console.log(`✅ Copied dynamically referenced WASM: ${wasmFileName}`);
+                                        } catch (error) {
+                                            console.error(`❌ Failed to copy ${wasmFileName}: ${error.message}`);
+                                        }
+                                    }
+                                } else {
+                                    console.warn(`⚠️  Could not find WASM file in node_modules: ${wasmFileName}`);
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.warn(`⚠️  Could not analyze bundle for WASM references: ${error.message}`);
+                    }
+                }
+            });
+        },
+    };
+}
+
+/**
+ * Find a WASM file in node_modules by searching all packages
+ * @param {string} wasmFileName - Name of the WASM file to find
+ * @param {string} nodeModulesDir - Path to node_modules directory
+ * @returns {Promise<string[]>} Array of paths where the file was found
+ */
+async function findWasmFileInNodeModules(wasmFileName, nodeModulesDir) {
+    const foundPaths = [];
+
+    try {
+        // Search through all packages in node_modules
+        const packages = safeReadDir(nodeModulesDir);
+
+        for (const packageName of packages) {
+            const packageDir = path.join(nodeModulesDir, packageName);
+
+            if (packageName.startsWith("@")) {
+                // Handle scoped packages
+                const scopedPackages = safeReadDir(packageDir);
+                for (const scopedName of scopedPackages) {
+                    const scopedPackageDir = path.join(packageDir, scopedName);
+                    const found = await searchForWasmInPackage(scopedPackageDir, wasmFileName);
+                    foundPaths.push(...found);
+                }
+            } else {
+                // Handle regular packages
+                const found = await searchForWasmInPackage(packageDir, wasmFileName);
+                foundPaths.push(...found);
+            }
+        }
+    } catch (error) {
+        console.warn(`⚠️  Error searching for WASM file ${wasmFileName}: ${error.message}`);
+    }
+
+    return foundPaths;
+}
+
+/**
+ * Search for a WASM file within a specific package directory
+ * @param {string} packageDir - Package directory to search
+ * @param {string} wasmFileName - WASM file name to find
+ * @returns {Promise<string[]>} Array of paths where the file was found
+ */
+async function searchForWasmInPackage(packageDir, wasmFileName) {
+    const foundPaths = [];
+
+    // Common directories where WASM files might be located
+    const searchDirs = ["obj", "lib", "dist", "build", "wasm", ""];
+
+    for (const searchDir of searchDirs) {
+        const searchPath = searchDir ? path.join(packageDir, searchDir) : packageDir;
+        const wasmPath = path.join(searchPath, wasmFileName);
+
+        if (safeExists(wasmPath)) {
+            foundPaths.push(wasmPath);
+        }
+    }
+
+    return foundPaths;
+}
+
+/**
+ * Find a specific JavaScript file in node_modules by searching all packages
+ * @param {string} fileName - Name of the JS file to find
+ * @param {string} nodeModulesDir - Path to node_modules directory
+ * @returns {string[]} Array of paths where the file was found
+ */
+async function findJsFileInNodeModules(fileName, nodeModulesDir) {
+    const foundPaths = [];
+
+    try {
+        // Search through all packages in node_modules
+        const packages = safeReadDir(nodeModulesDir);
+
+        for (const packageName of packages) {
+            const packageDir = path.join(nodeModulesDir, packageName);
+
+            if (packageName.startsWith("@")) {
+                // Handle scoped packages
+                const scopedPackages = safeReadDir(packageDir);
+                for (const scopedName of scopedPackages) {
+                    const scopedPackageDir = path.join(packageDir, scopedName);
+                    const found = await searchForJsInPackage(scopedPackageDir, fileName);
+                    foundPaths.push(...found);
+                }
+            } else {
+                // Handle regular packages
+                const found = await searchForJsInPackage(packageDir, fileName);
+                foundPaths.push(...found);
+            }
+        }
+    } catch (error) {
+        console.warn(`⚠️  Error searching for JS file ${fileName}: ${error.message}`);
+    }
+
+    return foundPaths;
+}
+
+/**
+ * Search for a JavaScript file within a specific package directory
+ * @param {string} packageDir - Package directory to search
+ * @param {string} fileName - JS file name to find
+ * @returns {Promise<string[]>} Array of paths where the file was found
+ */
+async function searchForJsInPackage(packageDir, fileName) {
+    const foundPaths = [];
+
+    // Common directories where JS files might be located
+    const searchDirs = ["lib", "dist", "build", "src", ""];
+
+    for (const searchDir of searchDirs) {
+        const searchPath = searchDir ? path.join(packageDir, searchDir) : packageDir;
+
+        if (safeExists(searchPath)) {
+            // Search recursively for the file
+            const found = await searchRecursively(searchPath, fileName);
+            foundPaths.push(...found);
+        }
+    }
+
+    return foundPaths;
+}
+
+/**
+ * Recursively search for a file in a directory
+ * @param {string} dir - Directory to search
+ * @param {string} fileName - File name to find
+ * @returns {Promise<string[]>} Array of paths where the file was found
+ */
+async function searchRecursively(dir, fileName) {
+    const foundPaths = [];
+
+    try {
+        const entries = safeReadDir(dir);
+
+        for (const entry of entries) {
+            const fullPath = path.join(dir, entry);
+
+            try {
+                const stat = fs.statSync(fullPath);
+
+                if (stat.isDirectory()) {
+                    // Recursively search subdirectories (limit depth to avoid infinite loops)
+                    const depth = fullPath.split(path.sep).length - dir.split(path.sep).length;
+                    if (depth < 3) {
+                        // Limit recursion depth
+                        const found = await searchRecursively(fullPath, fileName);
+                        foundPaths.push(...found);
+                    }
+                } else if (stat.isFile() && entry === fileName) {
+                    foundPaths.push(fullPath);
+                }
+            } catch {
+                // Skip entries that can't be accessed
+                continue;
+            }
+        }
+    } catch {
+        // Skip directories that can't be read
+    }
+
+    return foundPaths;
+}
+
+/**
+ * Discover all entry points for the build (main extension + dynamically loaded workers)
+ * @returns {Promise<string[]>} Array of entry point paths
+ */
+async function discoverEntryPoints() {
+    const entryPoints = [ENTRY_POINT];
+    const nodeModulesDir = path.join(process.cwd(), "node_modules");
+
+    // First, do a preliminary build to discover worker file references
+    console.log("🔍 Performing preliminary analysis to discover worker files...");
+
+    try {
+        // Create a temporary build to analyze for worker references
+        const tempResult = await esbuild.build({
+            entryPoints: [ENTRY_POINT],
+            bundle: true,
+            format: "esm",
+            platform: "node",
+            target: BUILD_TARGET,
+            external: ["vscode"],
+            write: false, // Don't write to disk
+            logLevel: "silent",
+            inject: ["src/node-polyfills.js"],
+        });
+
+        if (tempResult.outputFiles && tempResult.outputFiles.length > 0) {
+            const bundleContent = tempResult.outputFiles[0].text;
+
+            // Find all dynamic file references using regex for new URL patterns
+            const urlRegex = /new URL\("\.\/([^"]+\.js)"[^)]*import\.meta\.url\)/g;
+            let match;
+
+            while ((match = urlRegex.exec(bundleContent)) !== null) {
+                const fileName = match[1];
+                console.log(`🔍 Found dynamic worker reference: ${fileName}`);
+
+                // Find this worker file in node_modules
+                const foundPaths = await findJsFileInNodeModules(fileName, nodeModulesDir);
+
+                if (foundPaths.length > 0) {
+                    const workerPath = foundPaths[0]; // Use the first found path
+                    entryPoints.push(workerPath);
+                    console.log(`🔧 Added worker entry point: ${path.relative(process.cwd(), workerPath)}`);
+                } else {
+                    console.warn(`⚠️  Could not find worker file in node_modules: ${fileName}`);
+                }
+            }
+        }
+    } catch (error) {
+        console.warn(`⚠️  Could not perform preliminary analysis: ${error.message}`);
+        console.warn("🔄 Falling back to main entry point only");
+    }
+
+    return entryPoints;
+}
+
+async function main() {
+    try {
+        // Clean dist directory before building (except in watch mode)
+        const distPath = path.join(process.cwd(), "dist");
+        if (!watch) {
+            cleanDistDirectory(distPath);
+        }
+
+        // Note: WASM resources are now discovered and copied dynamically by the WASM discovery plugin
+        console.log("📦 Dynamic WASM and worker discovery enabled...");
+
+        // Discover all entry points (extension + workers)
+        const entryPoints = await discoverEntryPoints();
+
+        // Create the resource discovery plugins
+        const resourceDiscoveryPlugin = createResourceDiscoveryPlugin();
+        const wasmDiscoveryPlugin = createWasmDiscoveryPlugin();
+
+        const ctx = await esbuild.context({
+            entryPoints: entryPoints,
+            bundle: true,
+            format: "esm",
+            minify: production,
+            sourcemap: !production,
+            sourcesContent: false,
+            platform: "node",
+            target: BUILD_TARGET,
+            outdir: "dist",
+            entryNames: "[name]",
+            external: ["vscode"],
+            logLevel: "silent",
+            plugins: [resourceDiscoveryPlugin, wasmDiscoveryPlugin],
+            inject: ["src/node-polyfills.js"],
+            define: {
+                // Define globals to prevent bundling issues
+                "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
+            },
+            // Add banner to ensure polyfills are loaded first
+            banner: {
+                js: "// VS Code Extension - ESM Node.js Environment\n",
+            },
+            // Improve tree shaking and dead code elimination
+            treeShaking: true,
+            // Enable metafile for analysis
+            metafile: !production,
+        });
+
+        if (watch) {
+            console.log("👀 Starting watch mode...");
+            await ctx.watch();
+        } else {
+            console.log("🔨 Building...");
+            const result = await ctx.rebuild();
+
+            // Log metafile info in development
+            if (!production && result.metafile) {
+                const analysis = await esbuild.analyzeMetafile(result.metafile);
+                console.log("📊 Bundle analysis:");
+                console.log(analysis);
+            }
+
+            await ctx.dispose();
+            console.log("✅ Build completed successfully");
+        }
+    } catch (error) {
+        console.error("❌ Build failed:", error);
+        throw error;
     }
 }
 
