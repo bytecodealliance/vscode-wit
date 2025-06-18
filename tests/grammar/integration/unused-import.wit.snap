@@ -1,10 +1,11 @@
->package unused:%import
+>package unused:%import;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #              ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 #                ^^^^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#                      ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >interface types {
 #^^^^^^^^^ source.wit meta.interface-item.wit keyword.declaration.interface.interface-item.wit storage.type.wit
@@ -51,7 +52,7 @@
 #                ^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.other.interface.interface-type.wit
 #                         ^ source.wit meta.world-item.wit meta.import-item.wit
 #                          ^ source.wit meta.world-item.wit meta.import-item.wit ppunctuation.brackets.curly.begin.wit
->      use types.{r}
+>      use types.{r};
 #^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.whitespace.wit
 #      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.use-item.wit keyword.other.use.use-item.wit
 #         ^ source.wit meta.world-item.wit meta.import-item.wit meta.use-item.wit
@@ -60,8 +61,9 @@
 #                ^ source.wit meta.world-item.wit meta.import-item.wit meta.use-item.wit punctuation.brackets.curly.begin.wit
 #                 ^ source.wit meta.world-item.wit meta.import-item.wit meta.use-item.wit entity.name.type.declaration.use-names-item.use-item.wit
 #                  ^ source.wit meta.world-item.wit meta.import-item.wit meta.use-item.wit punctuation.brackets.curly.end.wit
+#                   ^ source.wit meta.world-item.wit meta.import-item.wit
 >
->      foo: func(data: r)
+>      foo: func(data: r);
 #^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.whitespace.wit
 #      ^^^ source.wit meta.world-item.wit meta.import-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^ source.wit meta.world-item.wit meta.import-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -73,6 +75,7 @@
 #                     ^ source.wit meta.world-item.wit meta.import-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
 #                      ^ source.wit meta.world-item.wit meta.import-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.id.wit
 #                       ^ source.wit meta.world-item.wit meta.import-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                        ^ source.wit meta.world-item.wit meta.import-item.wit meta.func-item.wit meta.function.wit
 >    }
 #^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.whitespace.wit
 #    ^ source.wit meta.world-item.wit meta.import-item.wit punctuation.brackets.curly.end.wit
@@ -87,7 +90,7 @@
 #                ^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.other.interface.interface-type.wit
 #                         ^ source.wit meta.world-item.wit meta.export-item.wit
 #                          ^ source.wit meta.world-item.wit meta.export-item.wit ppunctuation.brackets.curly.begin.wit
->      use types.{r}
+>      use types.{r};
 #^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
 #      ^^^ source.wit meta.world-item.wit meta.export-item.wit meta.use-item.wit keyword.other.use.use-item.wit
 #         ^ source.wit meta.world-item.wit meta.export-item.wit meta.use-item.wit
@@ -96,6 +99,7 @@
 #                ^ source.wit meta.world-item.wit meta.export-item.wit meta.use-item.wit punctuation.brackets.curly.begin.wit
 #                 ^ source.wit meta.world-item.wit meta.export-item.wit meta.use-item.wit entity.name.type.declaration.use-names-item.use-item.wit
 #                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.use-item.wit punctuation.brackets.curly.end.wit
+#                   ^ source.wit meta.world-item.wit meta.export-item.wit
 >    }
 #^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.whitespace.wit
 #    ^ source.wit meta.world-item.wit meta.export-item.wit punctuation.brackets.curly.end.wit

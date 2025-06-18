@@ -1,11 +1,12 @@
 >// ./wit/issue.wit
 #^^^^^^^^^^^^^^^^^^ source.wit comment.line.double-slash.wit
->package foo:foo
+>package foo:foo;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >world issue {
 #^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
@@ -68,7 +69,7 @@
 #^^^^ source.wit meta.world-item.wit meta.record-item.wit meta.whitespace.wit
 #    ^ source.wit meta.world-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
 >
->    import func-using-list-u8-in-args: func(body: list<u8>) -> ()
+>    import func-using-list-u8-in-args: func(body: list<u8>);
 #^^^^ source.wit meta.world-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #          ^ source.wit meta.world-item.wit meta.import-item.wit
@@ -85,12 +86,8 @@
 #                                                       ^^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.list.ty.wit entity.name.type.numeric.wit
 #                                                         ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.list.ty.wit punctuation.brackets.angle.end.wit
 #                                                          ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
-#                                                           ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.whitespace.wit
-#                                                            ^^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                                                              ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
-#                                                               ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.result-list.wit meta.param-list.wit punctuation.brackets.round.begin.wit
-#                                                                ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.result-list.wit meta.param-list.wit punctuation.brackets.round.end.wit
->    export func-using-list-tuple-bool-in-return: func() -> list<tuple<bool>>
+#                                                           ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit
+>    export func-using-list-tuple-bool-in-return: func() -> list<tuple<bool>>;
 #^^^^ source.wit meta.world-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #          ^ source.wit meta.world-item.wit meta.export-item.wit
@@ -110,7 +107,8 @@
 #                                                                      ^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit meta.tuple.ty.wit entity.name.type.boolean.wit
 #                                                                          ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit meta.tuple.ty.wit punctuation.brackets.angle.end.wit
 #                                                                           ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit punctuation.brackets.angle.end.wit
->    export func-using-tuple-u8-in-return: func() -> tuple<u8>
+#                                                                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit
+>    export func-using-tuple-u8-in-return: func() -> tuple<u8>;
 #^^^^ source.wit meta.world-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #          ^ source.wit meta.world-item.wit meta.export-item.wit
@@ -127,6 +125,7 @@
 #                                                         ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.tuple.ty.wit punctuation.brackets.angle.begin.wit
 #                                                          ^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.tuple.ty.wit entity.name.type.numeric.wit
 #                                                            ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.tuple.ty.wit punctuation.brackets.angle.end.wit
+#                                                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >

@@ -1,6 +1,7 @@
 {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "vscode.typescript-language-features",
+    "files.insertFinalNewline": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
@@ -13,11 +14,11 @@
         "editor.formatOnSave": true
     },
     "[json]": {
-        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true
     },
     "[jsonc]": {
-        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true
     }
 }

@@ -1,9 +1,10 @@
->package foo:bar
+>package foo:bar;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >interface guest {
 #^^^^^^^^^ source.wit meta.interface-item.wit keyword.declaration.interface.interface-item.wit storage.type.wit
@@ -11,7 +12,7 @@
 #          ^^^^^ source.wit meta.interface-item.wit entity.name.type.id.interface-item.wit
 #               ^ source.wit meta.interface-item.wit
 #                ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
->  type guest = u32
+>  type guest = u32;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^ source.wit meta.interface-item.wit meta.type-item.wit keyword.declaration.type.type-item.wit storage.type.wit
 #      ^ source.wit meta.interface-item.wit meta.type-item.wit
@@ -20,7 +21,8 @@
 #             ^ source.wit meta.interface-item.wit meta.type-item.wit punctuation.equal.wit
 #              ^ source.wit meta.interface-item.wit meta.type-item.wit meta.whitespace.wit
 #               ^^^ source.wit meta.interface-item.wit meta.type-item.wit entity.name.type.numeric.wit
->  x: func() -> guest
+#                  ^ source.wit meta.interface-item.wit meta.type-item.wit
+>  x: func() -> guest;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #   ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -32,6 +34,7 @@
 #            ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #               ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -41,7 +44,7 @@
 #          ^^^^^^^^^^^ source.wit meta.interface-item.wit entity.name.type.id.interface-item.wit
 #                     ^ source.wit meta.interface-item.wit
 #                      ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
->  guest: func()
+>  guest: func();
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #       ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -49,6 +52,7 @@
 #         ^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
 #             ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
 #              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#               ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -58,47 +62,55 @@
 #      ^^^^^^^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #                   ^ source.wit meta.world-item.wit
 #                    ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->  import guest
+>  import guest;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #        ^ source.wit meta.world-item.wit meta.import-item.wit
 #         ^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit variable.other.id.import-item.wit
->  export guest
+#              ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
+>  export guest;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
->  import other-guest
+#              ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+>  import other-guest;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #        ^ source.wit meta.world-item.wit meta.import-item.wit
 #         ^^^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit variable.other.id.import-item.wit
->  export other-guest
+#                    ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
+>  export other-guest;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
+#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
 >
->  export i1
+>  export i1;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
->  export i2
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+>  export i2;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
->  export i3
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+>  export i3;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
->  export i4
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+>  export i4;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
+#           ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >
@@ -128,7 +140,7 @@
 >  }
 #^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.end.wit
->  x: func() -> guest
+>  x: func() -> guest;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #   ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -140,6 +152,7 @@
 #            ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #               ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -149,7 +162,7 @@
 #          ^^ source.wit meta.interface-item.wit entity.name.type.id.interface-item.wit
 #            ^ source.wit meta.interface-item.wit
 #             ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
->  use i1.{guest}
+>  use i1.{guest};
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^ source.wit meta.interface-item.wit meta.use-item.wit keyword.other.use.use-item.wit
 #     ^ source.wit meta.interface-item.wit meta.use-item.wit
@@ -158,7 +171,8 @@
 #         ^ source.wit meta.interface-item.wit meta.use-item.wit punctuation.brackets.curly.begin.wit
 #          ^^^^^ source.wit meta.interface-item.wit meta.use-item.wit entity.name.type.declaration.use-names-item.use-item.wit
 #               ^ source.wit meta.interface-item.wit meta.use-item.wit punctuation.brackets.curly.end.wit
->  x: func() -> guest
+#                ^ source.wit meta.interface-item.wit
+>  x: func() -> guest;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #   ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -170,6 +184,7 @@
 #            ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #               ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -196,7 +211,7 @@
 >  }
 #^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
->  x: func() -> guest
+>  x: func() -> guest;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #   ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -208,6 +223,7 @@
 #            ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #               ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -234,7 +250,7 @@
 >  }
 #^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.variant.wit punctuation.brackets.curly.end.wit
->  x: func() -> guest
+>  x: func() -> guest;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #   ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
@@ -246,6 +262,7 @@
 #            ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #               ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >

@@ -1,9 +1,10 @@
->package foo:foo
+>package foo:foo;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >interface %flags {
 #^^^^^^^^^ source.wit meta.interface-item.wit keyword.declaration.interface.interface-item.wit storage.type.wit
@@ -276,218 +277,22 @@
 #^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.brackets.curly.end.wit
 >
->  flags flag64 {
+>  flags withdashes {
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^ source.wit meta.interface-item.wit meta.flags-items.wit keyword.other.flags.flags-items.wit
 #       ^ source.wit meta.interface-item.wit meta.flags-items.wit
-#        ^^^^^^ source.wit meta.interface-item.wit meta.flags-items.wit entity.name.type.id.flags-items.wit
-#              ^ source.wit meta.interface-item.wit meta.flags-items.wit
-#               ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.brackets.curly.begin.wit
->    b0, b1, b2, b3, b4, b5, b6, b7,
+#        ^^^^^^^^^^ source.wit meta.interface-item.wit meta.flags-items.wit entity.name.type.id.flags-items.wit
+#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit
+#                   ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.brackets.curly.begin.wit
+>    with-dashes,
 #^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#        ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#           ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#            ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#              ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#               ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                   ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                    ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                            ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                              ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                               ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                  ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b8, b9, b10, b11, b12, b13, b14, b15,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#        ^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#           ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#            ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
+#    ^^^^^^^^^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
 #               ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                 ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                    ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                     ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                      ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                         ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                          ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                           ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                              ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                               ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                   ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                    ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                     ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                        ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b16, b17, b18, b19, b20, b21, b22, b23,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#        ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#         ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#            ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#             ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#              ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                 ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                   ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                            ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                             ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                 ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                  ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                     ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                      ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                       ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b24, b25, b26, b27, b28, b29, b30, b31,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#        ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#         ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#            ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#             ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#              ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                 ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                   ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                            ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                             ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                 ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                  ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                     ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                      ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                       ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b32, b33, b34, b35, b36, b37, b38, b39,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#        ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#         ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#            ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#             ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#              ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                 ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                   ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                            ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                             ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                 ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                  ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                     ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                      ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                       ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b40, b41, b42, b43, b44, b45, b46, b47,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#        ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#         ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#            ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#             ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#              ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                 ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                   ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                            ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                             ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                 ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                  ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                     ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                      ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                       ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b48, b49, b50, b51, b52, b53, b54, b55,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#        ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#         ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#            ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#             ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#              ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                 ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                   ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                            ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                             ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                 ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                  ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                     ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                      ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                       ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
->    b56, b57, b58, b59, b60, b61, b62, b63,
-#^^^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#    ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#       ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#        ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#         ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#            ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#             ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#              ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                 ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                  ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                   ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                      ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                       ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                        ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                           ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                            ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                             ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                 ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                  ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                     ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
-#                                      ^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
-#                                       ^^^ source.wit meta.interface-item.wit meta.flags-items.wit variable.other.enummember.id.flags-fields.wit
-#                                          ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.comma.wit
 >  }
 #^^ source.wit meta.interface-item.wit meta.flags-items.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.flags-items.wit punctuation.brackets.curly.end.wit
 >
->  roundtrip-flag1: func(x: flag1) -> flag1
+>  roundtrip-flag1: func(x: flag1) -> flag1;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -505,7 +310,8 @@
 #                                  ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                     ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
->  roundtrip-flag2: func(x: flag2) -> flag2
+#                                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>  roundtrip-flag2: func(x: flag2) -> flag2;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -523,7 +329,8 @@
 #                                  ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                     ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
->  roundtrip-flag4: func(x: flag4) -> flag4
+#                                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>  roundtrip-flag4: func(x: flag4) -> flag4;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -541,7 +348,8 @@
 #                                  ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                     ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
->  roundtrip-flag8: func(x: flag8) -> flag8
+#                                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>  roundtrip-flag8: func(x: flag8) -> flag8;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -559,7 +367,8 @@
 #                                  ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                     ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
->  roundtrip-flag16: func(x: flag16) -> flag16
+#                                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>  roundtrip-flag16: func(x: flag16) -> flag16;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -577,7 +386,8 @@
 #                                    ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                      ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                       ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
->  roundtrip-flag32: func(x: flag32) -> flag32
+#                                             ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>  roundtrip-flag32: func(x: flag32) -> flag32;
 #^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -595,24 +405,7 @@
 #                                    ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                      ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                       ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
->  roundtrip-flag64: func(x: flag64) -> flag64
-#^^ source.wit meta.interface-item.wit meta.whitespace.wit
-#  ^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#           ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
-#            ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#                  ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
-#                   ^ source.wit meta.interface-item.wit meta.func-item.wit meta.whitespace.wit
-#                    ^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                        ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
-#                         ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
-#                            ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.id.wit
-#                                  ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
-#                                   ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.whitespace.wit
-#                                    ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                                      ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
-#                                       ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                                             ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -622,18 +415,20 @@
 #      ^^^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #               ^ source.wit meta.world-item.wit
 #                ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->  import %flags
+>  import %flags;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #        ^ source.wit meta.world-item.wit meta.import-item.wit
 #         ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
 #          ^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit variable.other.id.import-item.wit
->  export %flags
+#               ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
+>  export %flags;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
 #         ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
 #          ^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
+#               ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >

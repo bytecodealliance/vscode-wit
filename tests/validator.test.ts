@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as vscode from "vscode";
-import { WitSyntaxValidator } from "../src/witValidator.js";
+import { WitSyntaxValidator } from "../src/validator.js";
 
 // Mock VS Code API
 vi.mock("vscode", () => ({
