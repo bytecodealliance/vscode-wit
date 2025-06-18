@@ -1,14 +1,16 @@
-package foo:foo
+package foo:foo;
 
 interface foo {
-  record bar {}
+  record bar {
+    r: bool,
+  }
 }
 
 world the-world {
-  import foo
+  import foo;
   import other-name: interface {
-    use foo.{bar}
+    use foo.{bar};
 
-    a: func() -> bar
+    a: func() -> bar;
   }
 }

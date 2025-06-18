@@ -1,9 +1,10 @@
->package foo:bar
+>package foo:bar;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >world x {
 #^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
@@ -11,11 +12,12 @@
 #      ^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #       ^ source.wit meta.world-item.wit
 #        ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->  resource y
+>  resource y;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^^^ source.wit meta.world-item.wit meta.resource-item.wit keyword.other.resource.wit
 #          ^ source.wit meta.world-item.wit meta.resource-item.wit
 #           ^ source.wit meta.world-item.wit meta.resource-item.wit entity.name.type.id.resource.wit
+#            ^ source.wit meta.world-item.wit meta.resource-item.wit
 >
 >  record r {
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
@@ -37,7 +39,7 @@
 #^^ source.wit meta.world-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
 #  ^ source.wit meta.world-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
 >
->  import f: func(a: list<r>)
+>  import f: func(a: list<r>);
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #        ^ source.wit meta.world-item.wit meta.import-item.wit
@@ -54,6 +56,7 @@
 #                         ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.list.ty.wit entity.name.type.id.wit
 #                          ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.list.ty.wit punctuation.brackets.angle.end.wit
 #                           ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
+#                            ^ source.wit meta.world-item.wit meta.import-item.wit meta.function.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >

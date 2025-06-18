@@ -1,9 +1,10 @@
->package local:demo
+>package local:demo;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #             ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #              ^^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#                  ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >interface my-interface {
 #^^^^^^^^^ source.wit meta.interface-item.wit keyword.declaration.interface.interface-item.wit storage.type.wit
@@ -29,6 +30,10 @@
 #^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
 #    ^ source.wit meta.interface-item.wit meta.variant.wit punctuation.brackets.curly.end.wit
 >
+>    // NB: this record used to be empty, but that's no longer valid, so now it's
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.double-slash.wit
+>    // non-empty. Don't want to delete the whole test however.
+#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.double-slash.wit
 >    record empty {
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit keyword.declaration.record.record-item.wit
@@ -36,11 +41,18 @@
 #           ^^^^^ source.wit meta.interface-item.wit meta.record-item.wit entity.name.type.id.record-item.wit
 #                ^ source.wit meta.interface-item.wit meta.record-item.wit
 #                 ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.begin.wit
+>        not-empty-anymore: bool,
+#^^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
+#        ^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit variable.declaration.id.record-fields.wit
+#                         ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit keyword.operator.key-value.wit
+#                          ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
+#                           ^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit entity.name.type.boolean.wit
+#                               ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit punctuation.comma.wit
 >    }
 #^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
 #    ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
 >
->    stuff-or-stuff: func() -> result<stuff, stuff>
+>    stuff-or-stuff: func() -> result<stuff, stuff>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -61,7 +73,8 @@
 #                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                            ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                                 ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
->    stuff-or-empty: func() -> result<stuff, empty>
+#                                                  ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>    stuff-or-empty: func() -> result<stuff, empty>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -82,7 +95,8 @@
 #                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                            ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                                 ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
->    empty-or-stuff: func() -> result<empty, stuff>
+#                                                  ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>    empty-or-stuff: func() -> result<empty, stuff>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -103,7 +117,8 @@
 #                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                            ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                                 ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
->    empty-or-empty: func() -> result<empty, empty>
+#                                                  ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>    empty-or-empty: func() -> result<empty, empty>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -124,8 +139,9 @@
 #                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                            ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                                 ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
+#                                                  ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >
->    stuff-or-absent: func() -> result<stuff>
+>    stuff-or-absent: func() -> result<stuff>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -143,7 +159,8 @@
 #                                     ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.begin.wit
 #                                      ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
->    absent-or-stuff: func() -> result<_, stuff>
+#                                            ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>    absent-or-stuff: func() -> result<_, stuff>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #          ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -164,8 +181,9 @@
 #                                        ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                         ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
+#                                               ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >
->    empty-or-absent: func() -> result<empty>
+>    empty-or-absent: func() -> result<empty>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -183,7 +201,8 @@
 #                                     ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.begin.wit
 #                                      ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
->    absent-or-empty: func() -> result<_, empty>
+#                                            ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
+>    absent-or-empty: func() -> result<_, empty>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #          ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -204,27 +223,9 @@
 #                                        ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                         ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.id.wit
 #                                              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
+#                                               ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >
->    absent-or-absent-param: func(x: result) -> result
-#^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
-#    ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#          ^^^^^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
-#                    ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
-#                     ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-#                          ^ source.wit meta.interface-item.wit meta.func-item.wit keyword.operator.key-value.wit
-#                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.whitespace.wit
-#                            ^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit keyword.other.func.func-type.wit
-#                                ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.begin.wit
-#                                 ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit variable.parameter.id.named-type.wit
-#                                  ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit keyword.operator.key-value.wit
-#                                   ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.whitespace.wit
-#                                    ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit entity.name.type.result.wit
-#                                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
-#                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.whitespace.wit
-#                                            ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
-#                                              ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
-#                                               ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.result.wit
->    absent-or-absent: func() -> result
+>    absent-or-absent: func() -> result;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #          ^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit
@@ -239,6 +240,7 @@
 #                             ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                               ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                ^^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit entity.name.type.result.wit
+#                                      ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >
@@ -249,11 +251,12 @@
 #      ^^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #              ^ source.wit meta.world-item.wit
 #               ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->    import my-interface
+>    import my-interface;
 #^^^^ source.wit meta.world-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #          ^ source.wit meta.world-item.wit meta.import-item.wit
 #           ^^^^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit variable.other.id.import-item.wit
+#                       ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >

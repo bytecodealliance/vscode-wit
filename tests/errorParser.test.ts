@@ -32,6 +32,29 @@ Caused by:
 	at async syntaxCheckCurrentFile (/home/gordon/vscode-wit/dist/extension.js:152:21)
 	at async /home/gordon/vscode-wit/dist/extension.js:142:5
 	at async Xb.h (file:///home/gordon/.vscode-server/bin/dfaf44141ea9deb3b4096f7cd6d24e00c147a4b1/out/vs/workbench/api/node/extensionHostProcess.js:120:41516)`,
+    `Error: The main package \`test:comments\` contains no worlds
+	at generateTypes (file:///home/gordon/vscode-wit/dist/extension.js:28632:11)
+	at typesComponent (file:///home/gordon/vscode-wit/dist/extension.js:28853:14)
+	at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+	at async WitSyntaxValidator.validate (file:///home/gordon/vscode-wit/dist/extension.js:28933:7)
+	at async syntaxCheckCurrentFile (file:///home/gordon/vscode-wit/dist/extension.js:29078:23)
+	at async file:///home/gordon/vscode-wit/dist/extension.js:29046:9`,
+    `RuntimeError: unreachable
+	at wasm://wasm/01e6e7ee:wasm-function[14967]:0x695217
+	at wasm://wasm/01e6e7ee:wasm-function[14959]:0x694931
+	at wasm://wasm/01e6e7ee:wasm-function[15077]:0x6a55c8
+	at wasm://wasm/01e6e7ee:wasm-function[896]:0xeed9e
+	at wasm://wasm/01e6e7ee:wasm-function[893]:0xed7fe
+	at wasm://wasm/01e6e7ee:wasm-function[891]:0xec85c
+	at wasm://wasm/01e6e7ee:wasm-function[874]:0xe6623
+	at wasm://wasm/01e6e7ee:wasm-function[16]:0x50a91
+	at wasm://wasm/01e6e7ee:wasm-function[21]:0x554ac
+	at generateTypes (file:///home/gordon/vscode-wit/dist/extension.js:28592:15)
+	at typesComponent (file:///home/gordon/vscode-wit/dist/extension.js:28853:14)
+	at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+	at async WitSyntaxValidator.validate (file:///home/gordon/vscode-wit/dist/extension.js:28946:7)
+	at async syntaxCheckCurrentFile (file:///home/gordon/vscode-wit/dist/extension.js:29094:23)
+	at async file:///home/gordon/vscode-wit/dist/extension.js:29062:9`,
 ];
 
 describe("WIT Error Parser", () => {
@@ -60,6 +83,28 @@ describe("WIT Error Parser", () => {
             expect(result?.filePath).toBe("/home/gordon/vscode-wit/tests/grammar/integration/integers.wit");
             expect(result?.row).toBe(3);
             expect(result?.column).toBe(1);
+        });
+
+        it("should extract error info from third sample stack (error without file location)", () => {
+            const result = extractErrorInfo(testSampleStacks[2]);
+
+            expect(result).not.toBeNull();
+            expect(result?.mainError).toBe("The main package `test:comments` contains no worlds");
+            expect(result?.detailedError).toBeUndefined();
+            expect(result?.filePath).toBeUndefined();
+            expect(result?.row).toBeUndefined();
+            expect(result?.column).toBeUndefined();
+        });
+
+        it("should extract error info from fourth sample stack (RuntimeError)", () => {
+            const result = extractErrorInfo(testSampleStacks[3]);
+
+            expect(result).not.toBeNull();
+            expect(result?.mainError).toBe("unreachable");
+            expect(result?.detailedError).toBeUndefined();
+            expect(result?.filePath).toBeUndefined();
+            expect(result?.row).toBeUndefined();
+            expect(result?.column).toBeUndefined();
         });
 
         it("should return null for invalid error stack", () => {
@@ -153,20 +198,30 @@ Caused by:
 
                 // Verify the extracted information is reasonable
                 expect(result?.mainError?.length, "Main error should not be empty").toBeGreaterThan(0);
-                expect(result?.detailedError?.length, "Detailed error should not be empty").toBeGreaterThan(0);
-                expect(result?.filePath, "File path should contain .wit").toContain(".wit");
-                expect(result?.row, "Row should be positive").toBeGreaterThan(0);
-                expect(result?.column, "Column should be positive").toBeGreaterThan(0);
 
-                // Check specific expected values
-                if (index === 0) {
-                    expect(result?.filePath).toContain("floats.wit");
-                } else if (index === 1) {
-                    expect(result?.filePath).toContain("integers.wit");
+                if (index < 2) {
+                    // First two samples have detailed error and file location
+                    expect(result?.detailedError?.length, "Detailed error should not be empty").toBeGreaterThan(0);
+                    expect(result?.filePath, "File path should contain .wit").toContain(".wit");
+                    expect(result?.row, "Row should be positive").toBeGreaterThan(0);
+                    expect(result?.column, "Column should be positive").toBeGreaterThan(0);
+
+                    // Check specific expected values
+                    if (index === 0) {
+                        expect(result?.filePath).toContain("floats.wit");
+                    } else if (index === 1) {
+                        expect(result?.filePath).toContain("integers.wit");
+                    }
+
+                    expect(result?.row).toBe(3);
+                    expect(result?.column).toBe(1);
+                } else {
+                    // Third and fourth samples have no detailed error or file location
+                    expect(result?.detailedError).toBeUndefined();
+                    expect(result?.filePath).toBeUndefined();
+                    expect(result?.row).toBeUndefined();
+                    expect(result?.column).toBeUndefined();
                 }
-
-                expect(result?.row).toBe(3);
-                expect(result?.column).toBe(1);
             });
         });
     });

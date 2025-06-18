@@ -1,9 +1,10 @@
->package foo:foo
+>package foo:foo;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >world bindings {
 #^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
@@ -11,11 +12,12 @@
 #      ^^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #              ^ source.wit meta.world-item.wit
 #               ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->    import component
+>    import component;
 #^^^^ source.wit meta.world-item.wit meta.whitespace.wit
 #    ^^^^^^ source.wit meta.world-item.wit meta.import-item.wit keyword.control.import.import-item.wit
 #          ^ source.wit meta.world-item.wit meta.import-item.wit
 #           ^^^^^^^^^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit variable.other.id.import-item.wit
+#                    ^ source.wit meta.world-item.wit meta.import-item.wit meta.id.import-item.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >
@@ -25,7 +27,7 @@
 #          ^^^^^^^^^ source.wit meta.interface-item.wit entity.name.type.id.interface-item.wit
 #                   ^ source.wit meta.interface-item.wit
 #                    ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
->    type value = tuple<>
+>    type value = tuple<u32>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^ source.wit meta.interface-item.wit meta.type-item.wit keyword.declaration.type.type-item.wit storage.type.wit
 #        ^ source.wit meta.interface-item.wit meta.type-item.wit
@@ -35,8 +37,10 @@
 #                ^ source.wit meta.interface-item.wit meta.type-item.wit meta.whitespace.wit
 #                 ^^^^^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit entity.name.type.tuple.wit
 #                      ^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit punctuation.brackets.angle.begin.wit
-#                       ^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit punctuation.brackets.angle.end.wit
->    query-eval: func(q: u64) -> list<value>
+#                       ^^^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit entity.name.type.numeric.wit
+#                          ^ source.wit meta.interface-item.wit meta.type-item.wit meta.tuple.ty.wit punctuation.brackets.angle.end.wit
+#                           ^ source.wit meta.interface-item.wit meta.type-item.wit
+>    query-eval: func(q: u64) -> list<value>;
 #^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
 #    ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
 #         ^ source.wit meta.interface-item.wit meta.func-item.wit entity.name.function.id.func-item.wit meta.word-separator.wit
@@ -57,6 +61,7 @@
 #                                    ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit punctuation.brackets.angle.begin.wit
 #                                     ^^^^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit entity.name.type.id.wit
 #                                          ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit punctuation.brackets.angle.end.wit
+#                                           ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >

@@ -1,9 +1,10 @@
->package test:test
+>package test:test;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #            ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #             ^^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#                 ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >
 >world foo {
 #^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
@@ -11,13 +12,14 @@
 #      ^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #         ^ source.wit meta.world-item.wit
 #          ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->  resource x
+>  resource x;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^^^ source.wit meta.world-item.wit meta.resource-item.wit keyword.other.resource.wit
 #          ^ source.wit meta.world-item.wit meta.resource-item.wit
 #           ^ source.wit meta.world-item.wit meta.resource-item.wit entity.name.type.id.resource.wit
+#            ^ source.wit meta.world-item.wit meta.resource-item.wit
 >
->  export return-resource: func() -> x
+>  export return-resource: func() -> x;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
@@ -31,6 +33,7 @@
 #                                 ^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit keyword.operator.arrow.skinny.wit
 #                                   ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.whitespace.wit
 #                                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit entity.name.type.id.wit
+#                                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >

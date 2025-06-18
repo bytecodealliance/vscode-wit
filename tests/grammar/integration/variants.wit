@@ -1,14 +1,18 @@
-package foo:foo
+package foo:foo;
 
 interface variants {
   enum e1 {
       a,
   }
 
-  e1-arg: func(x: e1)
-  e1-result: func() -> e1
+  e1-arg: func(x: e1);
+  e1-result: func() -> e1;
 
-  record empty {}
+  // NB: this record used to be empty, but that's no longer valid, so now it's
+  // non-empty. Don't want to delete the whole test however.
+  record empty {
+    not-empty-anymore: bool,
+  }
 
   variant v1 {
       a,
@@ -17,43 +21,44 @@ interface variants {
       e(empty),
       f,
       g(u32),
+      h(f32),
   }
 
-  v1-arg: func(x: v1)
-  v1-result: func() -> v1
+  v1-arg: func(x: v1);
+  v1-result: func() -> v1;
 
-  bool-arg: func(x: bool)
-  bool-result: func() -> bool
+  bool-arg: func(x: bool);
+  bool-result: func() -> bool;
 
   option-arg: func(
     a: option<bool>,
-    b: option<tuple<>>,
+    b: option<tuple<u32>>,
     c: option<u32>,
     d: option<e1>,
-    e: option<float32>,
+    e: option<f32>,
     g: option<option<bool>>,
-  )
+  );
   option-result: func() -> tuple<
     option<bool>,
-    option<tuple<>>,
+    option<tuple<u32>>,
     option<u32>,
     option<e1>,
-    option<float32>,
+    option<f32>,
     option<option<bool>>,
-  >
+  >;
 
   variant casts1 {
     a(s32),
-    b(float32),
+    b(f32),
   }
 
   variant casts2 {
-    a(float64),
-    b(float32),
+    a(f64),
+    b(f32),
   }
 
   variant casts3 {
-    a(float64),
+    a(f64),
     b(u64),
   }
 
@@ -63,12 +68,12 @@ interface variants {
   }
 
   variant casts5 {
-    a(float32),
+    a(f32),
     b(s64),
   }
 
   variant casts6 {
-    a(tuple<float32, u32>),
+    a(tuple<f32, u32>),
     b(tuple<u32, u32>),
   }
 
@@ -86,51 +91,56 @@ interface variants {
     casts4,
     casts5,
     casts6,
-  >
+  >;
 
   result-arg: func(
     a: result,
     b: result<_, e1>,
     c: result<e1>,
-    d: result<tuple<>, tuple<>>,
+    d: result<tuple<u32>, tuple<u32>>,
     e: result<u32, v1>,
     f: result<string, list<u8>>,
-  )
+  );
   result-result: func() -> tuple<
     result,
     result<_, e1>,
     result<e1>,
-    result<tuple<>, tuple<>>,
+    result<tuple<u32>, tuple<u32>>,
     result<u32, v1>,
     result<string, list<u8>>,
-  >
+  >;
 
   enum my-errno {
     bad1,
     bad2,
   }
 
-  return-result-sugar: func() -> result<s32, my-errno>
-  return-result-sugar2: func() -> result<_, my-errno>
-  return-result-sugar3: func() -> result<my-errno, my-errno>
-  return-result-sugar4: func() -> result<tuple<s32, u32>, my-errno>
-  return-option-sugar: func() -> option<s32>
-  return-option-sugar2: func() -> option<my-errno>
+  return-result-sugar: func() -> result<s32, my-errno>;
+  return-result-sugar2: func() -> result<_, my-errno>;
+  return-result-sugar3: func() -> result<my-errno, my-errno>;
+  return-result-sugar4: func() -> result<tuple<s32, u32>, my-errno>;
+  return-option-sugar: func() -> option<s32>;
+  return-option-sugar2: func() -> option<my-errno>;
 
-  result-simple: func() -> result<u32, s32>
+  result-simple: func() -> result<u32, s32>;
 
   record is-clone {
     v1: v1,
   }
 
-  is-clone-arg: func(a: is-clone)
-  is-clone-return: func() -> is-clone
+  is-clone-arg: func(a: is-clone);
+  is-clone-return: func() -> is-clone;
 
-  return-named-option: func() -> (a: option<u8>)
-  return-named-result: func() -> (a: result<u8, my-errno>)
+  variant no-data {
+    a,
+    b,
+  }
+
+  consumes-no-data: func(x: no-data);
+  produces-no-data: func() -> no-data;
 }
 
 world my-world {
-  import variants
-  export variants
+  import variants;
+  export variants;
 }

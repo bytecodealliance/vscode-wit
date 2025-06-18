@@ -1,16 +1,17 @@
->package foo:foo
+>package foo:foo;
 #^^^^^^^ source.wit meta.package-decl.wit storage.modifier.package-decl.wit
 #       ^ source.wit meta.package-decl.wit
 #        ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.namespace.package-identifier.wit entity.name.type.id.wit
 #           ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit keyword.operator.namespace.package-identifier.wit
 #            ^^^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit entity.name.type.id.wit
+#               ^ source.wit meta.package-decl.wit meta.id.package-decl.wit meta.package-identifier.wit entity.name.type.package-identifier.wit
 >world foo {
 #^^^^^ source.wit meta.world-item.wit keyword.declaration.world.world-item.wit storage.type.wit
 #     ^ source.wit meta.world-item.wit
 #      ^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #         ^ source.wit meta.world-item.wit
 #          ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->  export generate: func(name: string, wit: list<u8>) -> result<list<tuple<string, list<u8>>>, string>
+>  export generate: func(name: string, wit: list<u8>) -> result<list<tuple<string, list<u8>>>, string>;
 #^^ source.wit meta.world-item.wit meta.whitespace.wit
 #  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
 #        ^ source.wit meta.world-item.wit meta.export-item.wit
@@ -55,6 +56,7 @@
 #                                                                                             ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit meta.whitespace.wit
 #                                                                                              ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit entity.name.type.string.wit
 #                                                                                                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit meta.result.ty.wit punctuation.brackets.angle.end.wit
+#                                                                                                     ^ source.wit meta.world-item.wit meta.export-item.wit meta.function.wit meta.result-list.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >
