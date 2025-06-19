@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.6...wit-idl-v0.3.7) (2025-06-19)
+
+
+### Bug Fixes
+
+* missing world error failing to parse ([dbf1fd3](https://github.com/bytecodealliance/vscode-wit/commit/dbf1fd35c3812fc3da2da554c84625a4120276c6))
+
 ## [0.3.6](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.5...wit-idl-v0.3.6) (2025-06-15)
 
 
