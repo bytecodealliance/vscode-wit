@@ -134,6 +134,17 @@
                     "command": "wit-idl.syntaxCheckWorkspace"
                 }
             ]
-        }
+        },
+        "keybindings": [
+            {
+                "command": "wit-idl.syntaxCheck",
+                "key": "f7",
+                "when": "editorTextFocus && editorLangId == wit"
+            },
+            {
+                "command": "wit-idl.syntaxCheckWorkspace",
+                "key": "shift+f7"
+            }
+        ]
     }
 }
