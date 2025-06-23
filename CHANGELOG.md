@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.7](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.6...wit-idl-v0.3.7) (2025-06-23)
+
+
+### Features
+
+* add keybindings for syntax checking commands ([55f1b46](https://github.com/bytecodealliance/vscode-wit/commit/55f1b469c69783ae5567a1a4eee205aabc353c22))
+
+
+### Bug Fixes
+
+* missing world error failing to parse ([dbf1fd3](https://github.com/bytecodealliance/vscode-wit/commit/dbf1fd35c3812fc3da2da554c84625a4120276c6))
+
 ## [0.3.6](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.5...wit-idl-v0.3.6) (2025-06-15)
 
 
