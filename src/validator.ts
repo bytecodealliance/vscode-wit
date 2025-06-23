@@ -1,52 +1,75 @@
 import * as vscode from "vscode";
-import { types } from "@bytecodealliance/jco";
+import { validateWitSyntaxDetailedFromWasm, type WitValidationResult } from "./wasmUtils.js";
 import { extractErrorInfo } from "./errorParser.js";
 
 export { extractErrorInfo };
 
-// Example usage with the sample stack:
-// const errorInfo = extractErrorInfo(sampleStack);
-// Result would be:
-// {
-//     mainError: "reading WIT file at [/home/gordon/vscode-wit/tests/grammar/integration/floats.wit]",
-//     detailedError: "expected '{', found keyword `interface`",
-//     filePath: "/home/gordon/vscode-wit/tests/grammar/integration/floats.wit",
-//     row: 3,
-//     column: 1
-// }
-
+/**
+ * WIT Syntax Validator using WASM-based wit-parser
+ *
+ * This validator uses the enhanced WASM-based wit-parser implementation
+ * that follows wit-parser best practices for accurate WIT syntax validation.
+ * It provides both single-file and workspace-wide validation capabilities.
+ */
 export class WitSyntaxValidator {
     private readonly diagnosticCollection = vscode.languages.createDiagnosticCollection("wit");
 
     workspaceCheck: boolean = false;
 
-    /**
-     * Get the diagnostic collection for managing error display
-     */
     public getDiagnosticCollection(): vscode.DiagnosticCollection {
         return this.diagnosticCollection;
     }
 
     /**
      * Validate a WIT file and return error information
-     * @param path - File path
-     * @param content - File content
+     *
+     * Uses the WASM-based wit-parser for accurate validation following
+     * wit-parser best practices. Returns null if validation succeeds,
+     * or error information if validation fails.
+     *
+     * @param path - File path (used for error reporting)
+     * @param content - File content to validate
      * @returns Error information if validation fails, null if validation succeeds
      */
     public async validate(path: string, content: string): Promise<ReturnType<typeof extractErrorInfo> | null> {
         try {
-            await types(path, {});
-            return null; // Validation succeeded
+            // Use the enhanced WASM-based WIT validation with detailed error reporting
+            const validationResult = await validateWitSyntaxDetailedFromWasm(content);
+
+            if (validationResult.valid) {
+                return null;
+            } else {
+                const errorMessage = validationResult.error || "Unknown WIT validation error";
+
+                const errorInfo = this.parseWitParserError(errorMessage, path);
+                if (errorInfo) {
+                    return errorInfo;
+                }
+
+                return {
+                    mainError: "WIT syntax validation failed",
+                    detailedError: errorMessage,
+                    filePath: path,
+                    row: 1,
+                    column: 1,
+                };
+            }
         } catch (error: unknown) {
             if (error && typeof error === "object" && "stack" in error) {
                 const errorInfo = extractErrorInfo(error.stack as string);
-                if (errorInfo === null) {
-                    throw new Error("Failed to parse error stack trace. Validation failed.");
+                if (errorInfo !== null) {
+                    return errorInfo;
                 }
-                return errorInfo;
             }
+
+            return {
+                mainError: "WIT validation error",
+                detailedError: error instanceof Error ? error.message : String(error),
+                filePath: path,
+                row: 1,
+                column: 1,
+            };
         }
-        return null;
     }
 
     /**
@@ -58,35 +81,20 @@ export class WitSyntaxValidator {
         const content = document.getText();
 
         try {
-            // Clear existing diagnostics for this file
             this.clearDiagnostics(document.uri);
 
-            // Validate the file
             const errorInfo = await this.validate(document.uri.fsPath, content);
 
             if (errorInfo) {
-                // Create a diagnostic from the error information
                 const diagnostic = this.createDiagnosticFromError(errorInfo, document);
 
-                // Set the diagnostic for this file
                 this.diagnosticCollection.set(document.uri, [diagnostic]);
-
-                // Show error message
-                vscode.window.showErrorMessage(
-                    `WIT Syntax Error in ${vscode.workspace.asRelativePath(document.uri)}: ${errorInfo.mainError}`
-                );
             } else {
-                // Validation succeeded - show success message
-                vscode.window.showInformationMessage(
-                    `WIT file ${vscode.workspace.asRelativePath(document.uri)} is valid`
-                );
+                // File is valid - errors are cleared and reported in problems pane
             }
         } catch (error) {
-            // Handle unexpected errors
             console.error("Error during WIT validation:", error);
-            vscode.window.showErrorMessage(
-                `Failed to validate WIT file: ${error instanceof Error ? error.message : String(error)}`
-            );
+            // Log error to console, diagnostics are already in problems pane
         }
     }
 
@@ -96,17 +104,15 @@ export class WitSyntaxValidator {
      * @param document - The text document
      * @returns A VS Code diagnostic
      */
-    private createDiagnosticFromError(
+    public createDiagnosticFromError(
         errorInfo: NonNullable<ReturnType<typeof extractErrorInfo>>,
         document: vscode.TextDocument
     ): vscode.Diagnostic {
-        // Convert 1-based row/column to 0-based for VS Code
         const line = Math.max(0, (errorInfo.row || 1) - 1);
         const character = Math.max(0, (errorInfo.column || 1) - 1);
 
-        // Try to get the actual line length for better range highlighting
         const documentLine = document.lineAt(Math.min(line, document.lineCount - 1));
-        const endCharacter = Math.min(character + 10, documentLine.text.length); // Highlight ~10 characters or to end of line
+        const endCharacter = Math.min(character + 10, documentLine.text.length);
 
         const range = new vscode.Range(new vscode.Position(line, character), new vscode.Position(line, endCharacter));
 
@@ -114,7 +120,6 @@ export class WitSyntaxValidator {
 
         const diagnostic = new vscode.Diagnostic(range, message, vscode.DiagnosticSeverity.Error);
 
-        // Add additional information
         diagnostic.source = "wit-syntax";
         diagnostic.code = "wit-parse-error";
 
@@ -137,11 +142,10 @@ export class WitSyntaxValidator {
         const witFiles = await vscode.workspace.findFiles("**/*.wit", "**/node_modules/**");
 
         if (witFiles.length === 0) {
-            vscode.window.showInformationMessage("No WIT files found in workspace");
+            console.log("No WIT files found in workspace");
             return;
         }
 
-        // Clear all existing diagnostics
         this.clearAllDiagnostics();
 
         let totalErrors = 0;
@@ -197,14 +201,12 @@ export class WitSyntaxValidator {
             this.workspaceCheck = false;
         }
 
-        // Show summary
         const validCount = totalFiles - totalErrors;
         const message = `WIT Syntax Check Complete: ${validCount}/${totalFiles} files valid, ${totalErrors} error(s)`;
 
         if (totalErrors > 0) {
-            vscode.window.showErrorMessage(message);
+            // Don't show dialog, but create output channel for detailed results
 
-            // Show details in output channel
             const outputChannel = vscode.window.createOutputChannel("WIT Syntax Check");
             outputChannel.appendLine("WIT Syntax Check Results:");
             outputChannel.appendLine(`Total files checked: ${totalFiles}`);
@@ -223,31 +225,151 @@ export class WitSyntaxValidator {
 
             outputChannel.show();
         } else {
-            vscode.window.showInformationMessage(message);
+            // All files valid - results are shown in problems pane
+            console.log(message);
         }
     }
 
-    /**
-     * Clear all diagnostics for a specific file
-     * @param uri - File URI
-     */
     public clearDiagnostics(uri: vscode.Uri): void {
         if (!this.workspaceCheck) {
             this.diagnosticCollection.delete(uri);
         }
     }
 
-    /**
-     * Clear all diagnostics
-     */
     public clearAllDiagnostics(): void {
         this.diagnosticCollection.clear();
     }
 
-    /**
-     * Dispose of the diagnostic collection
-     */
     public dispose(): void {
         this.diagnosticCollection.dispose();
+    }
+
+    /**
+     * Parse wit-parser error messages to extract location information
+     * @param errorMessage - The error message from wit-parser
+     * @param filePath - The file path for the error
+     * @returns Parsed error information or null if parsing fails
+     */
+    private parseWitParserError(errorMessage: string, filePath: string): ReturnType<typeof extractErrorInfo> | null {
+        // Handle undefined type errors specifically
+        const undefinedTypeMatch = errorMessage.match(/undefined type `([^`]+)`/);
+        if (undefinedTypeMatch) {
+            const typeName = undefinedTypeMatch[1];
+            const locationMatch = errorMessage.match(/-->\s*(.+?):\s*(\d+):\s*(\d+)/);
+            const row = locationMatch ? parseInt(locationMatch[2], 10) : 1;
+            const column = locationMatch ? parseInt(locationMatch[3], 10) : 1;
+
+            return {
+                mainError: "Undefined type error",
+                detailedError: `Undefined type '${typeName}' - check if the type is defined or imported correctly`,
+                filePath,
+                row,
+                column,
+            };
+        }
+
+        const locationMatch = errorMessage.match(/-->\s*(.+?):\s*(\d+):\s*(\d+)/);
+        if (locationMatch) {
+            const row = parseInt(locationMatch[2], 10);
+            const column = parseInt(locationMatch[3], 10);
+
+            const mainError = errorMessage.split("\n")[0]?.trim() || "Unknown error";
+
+            return {
+                mainError: "WIT parser error",
+                detailedError: mainError,
+                filePath,
+                row,
+                column,
+            };
+        }
+
+        const fallbackError = extractErrorInfo(errorMessage, filePath);
+        return fallbackError || null;
+    }
+
+    /**
+     * Parse wit-bindgen error messages to extract location information
+     * @param errorMessage - The error message from wit-bindgen
+     * @param filePath - The file path for the error
+     * @returns Parsed error information or null if parsing fails
+     */
+    public parseWitBindgenError(errorMessage: string, filePath: string): ReturnType<typeof extractErrorInfo> | null {
+        // Remove comment markers from the error message
+        const cleanMessage = errorMessage
+            .replace(/^\/\/\s*/, "")
+            .replace(/\n\/\/\s*/g, "\n")
+            .trim();
+
+        // Try to extract location information similar to wit-parser errors
+        const locationMatch = cleanMessage.match(/-->\s*(.*?):(\d+):(\d+)/);
+        if (locationMatch) {
+            const row = parseInt(locationMatch[2], 10);
+            const column = parseInt(locationMatch[3], 10);
+
+            const lines = cleanMessage.split("\n");
+            const mainError = lines[0] || cleanMessage;
+
+            return {
+                mainError: "WIT binding generation error",
+                detailedError: mainError.trim(),
+                filePath,
+                row,
+                column,
+            };
+        }
+
+        // Check for specific wit-bindgen error patterns
+        if (cleanMessage.includes("undefined type")) {
+            const typeMatch = cleanMessage.match(/undefined type `([^`]+)`/);
+            const typeName = typeMatch ? typeMatch[1] : "unknown";
+
+            return {
+                mainError: "Undefined type in bindings",
+                detailedError: `Undefined type '${typeName}' - ensure type is properly defined in WIT file`,
+                filePath,
+                row: 1,
+                column: 1,
+            };
+        }
+
+        if (cleanMessage.includes("failed to resolve")) {
+            return {
+                mainError: "Binding resolution error",
+                detailedError: cleanMessage,
+                filePath,
+                row: 1,
+                column: 1,
+            };
+        }
+
+        if (cleanMessage.includes("expected") && cleanMessage.includes("found")) {
+            return {
+                mainError: "Binding syntax error",
+                detailedError: cleanMessage,
+                filePath,
+                row: 1,
+                column: 1,
+            };
+        }
+
+        if (cleanMessage.includes("unsupported")) {
+            return {
+                mainError: "Unsupported feature",
+                detailedError: cleanMessage,
+                filePath,
+                row: 1,
+                column: 1,
+            };
+        }
+
+        // Return parsed info for any other error
+        return {
+            mainError: "Binding generation failed",
+            detailedError: cleanMessage,
+            filePath,
+            row: 1,
+            column: 1,
+        };
     }
 }

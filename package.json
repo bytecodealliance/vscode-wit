@@ -21,31 +21,44 @@
     "type": "module",
     "main": "./dist/extension.js",
     "scripts": {
-        "clean": "rimraf out dist *.vsix",
-        "install-plugin": "npm run package && code --install-extension wit-idl.vsix",
+        "clean": "rimraf out dist types *.vsix",
+        "clean-wasm": "rimraf wit-bindgen-wasm/pkg wit-bindgen-wasm/target",
+        "clean-deps": "rimraf node_modules package-lock.json",
+        "clean-all": "npm run clean && npm run clean-wasm",
+        "clean-full": "npm run clean-all && npm run clean-deps",
+        "setup-wasm": "./scripts/setup-wasm.sh",
+        "install-extension": "npm run package && code --install-extension wit-idl.vsix",
         "update-snapshot": "vscode-tmgrammar-snap --updateSnapshot --scope 'source.wit' 'tests/grammar/integration/*'",
         "test-grammar": "vscode-tmgrammar-test -c --grammar syntaxes/wit.tmLanguage.json 'tests/grammar/unit/*'",
-        "test:unit": "vitest run",
-        "test:unit:watch": "vitest",
-        "test:unit:ui": "vitest --ui",
-        "test:build-resources": "vitest run tests/build-resources.test.ts",
-        "test:navigator-polyfill": "vitest run tests/navigator-polyfill.test.ts",
+        "test-unit": "vitest run",
+        "test-unit-watch": "vitest",
+        "test-unit-ui": "vitest --ui",
+        "test-build-resources": "vitest run tests/build-resources.test.ts",
+        "test-navigator-polyfill": "vitest run tests/navigator-polyfill.test.ts",
         "gen-types": "tsc --project tsconfig.json --emitDeclarationOnly",
         "gen-watch": "npm run gen-types -- -w",
-        "build": "node esbuild.mjs",
-        "build-watch": "npm run build -- --watch",
-        "vscode:prepublish": "npm run build -- --production",
+        "build-wasm-prod": "cd wit-bindgen-wasm && && wasm-pack build --target web --out-dir pkg --release",
+        "build-wasm": "cd wit-bindgen-wasm && wasm-pack build --target web --out-dir pkg",
+        "build-extension-prod": "node esbuild.mjs -- --production",
+        "build-extension": "node esbuild.mjs",
+        "build-extension-watch": "node esbuild.mjs --watch",
+        "build": "run-s build-wasm build-extension",
+        "vscode-prepublish": "run-s build-wasm-prod build-extension-prod",
         "package": "vsce package -o wit-idl.vsix",
         "fmt": "prettier . --write",
         "fmt-check": "prettier --check .",
         "lint": "eslint src --ext ts ./*.mjs",
         "lint-fix": "eslint src --ext ts ./*.mjs --fix",
-        "test": "run-s lint fmt-check build package test-grammar test:unit",
+        "test": "run-s lint fmt-check build package test-grammar test-unit",
+        "test-wasm": "cd wit-bindgen-wasm && cargo test",
+        "check-wasm": "cd wit-bindgen-wasm && cargo check",
+        "verify-wasm": "node -e \"console.log('Verifying WASM build...'); const fs = require('fs'); const path = 'wit-bindgen-wasm/pkg/wit_bindgen_wasm_bg.wasm'; if (fs.existsSync(path)) { console.log('✅ WASM file exists:', path); console.log('📏 Size:', Math.round(fs.statSync(path).size / 1024), 'KB'); } else { console.error('❌ WASM file not found:', path); process.exit(1); }\"",
+        "dev": "run-p gen-watch build-extension-watch",
         "update": "npx npm-check-updates -u -t minor",
         "update-major": "npx npm-check-updates -u"
     },
     "dependencies": {
-        "@bytecodealliance/jco": "1.11.2"
+        "wit-bindgen-wasm": "file:wit-bindgen-wasm/pkg"
     },
     "devDependencies": {
         "@eslint/css": "0.9.0",
@@ -55,7 +68,7 @@
         "@types/vscode": "1.100.0",
         "@typescript-eslint/eslint-plugin": "8.34.0",
         "@typescript-eslint/parser": "8.34.0",
-        "@vitest/ui": "^3.2.3",
+        "@vitest/ui": "3.2.3",
         "@vscode/vsce": "3.5.0",
         "esbuild": "0.25.5",
         "esbuild-node-externals": "1.18.0",
@@ -67,8 +80,9 @@
         "rimraf": "6.0.1",
         "typescript": "5.8.3",
         "typescript-eslint": "8.34.0",
-        "vitest": "^3.2.3",
-        "vscode-tmgrammar-test": "0.1.3"
+        "vitest": "3.2.3",
+        "vscode-tmgrammar-test": "0.1.3",
+        "wasm-pack": "0.13.1"
     },
     "contributes": {
         "languages": [
@@ -108,12 +122,58 @@
                 "command": "wit-idl.syntaxCheckWorkspace",
                 "title": "Check WIT Syntax in Workspace",
                 "category": "WIT"
+            },
+            {
+                "command": "wit-idl.showVersion",
+                "title": "Show WIT Bindgen Version",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateBindings",
+                "title": "Generate Language Bindings",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateBindingsRust",
+                "title": "Generate Rust Bindings",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateBindingsC",
+                "title": "Generate C Bindings",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateBindingsCSharp",
+                "title": "Generate C# Bindings",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateBindingsGo",
+                "title": "Generate Go Bindings",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateBindingsMoonBit",
+                "title": "Generate MoonBit Bindings",
+                "category": "WIT"
+            }
+        ],
+        "submenus": [
+            {
+                "id": "wit-idl.generateBindings.submenu",
+                "label": "Generate Bindings"
             }
         ],
         "menus": {
             "editor/context": [
                 {
                     "command": "wit-idl.syntaxCheck",
+                    "when": "resourceExtname == .wit",
+                    "group": "navigation"
+                },
+                {
+                    "submenu": "wit-idl.generateBindings.submenu",
                     "when": "resourceExtname == .wit",
                     "group": "navigation"
                 }
@@ -123,6 +183,28 @@
                     "command": "wit-idl.syntaxCheck",
                     "when": "resourceExtname == .wit",
                     "group": "navigation"
+                },
+                {
+                    "submenu": "wit-idl.generateBindings.submenu",
+                    "when": "resourceExtname == .wit",
+                    "group": "navigation"
+                }
+            ],
+            "wit-idl.generateBindings.submenu": [
+                {
+                    "command": "wit-idl.generateBindingsRust"
+                },
+                {
+                    "command": "wit-idl.generateBindingsC"
+                },
+                {
+                    "command": "wit-idl.generateBindingsCSharp"
+                },
+                {
+                    "command": "wit-idl.generateBindingsGo"
+                },
+                {
+                    "command": "wit-idl.generateBindingsMoonBit"
                 }
             ],
             "commandPalette": [
@@ -132,6 +214,29 @@
                 },
                 {
                     "command": "wit-idl.syntaxCheckWorkspace"
+                },
+                {
+                    "command": "wit-idl.showVersion"
+                },
+                {
+                    "command": "wit-idl.generateBindingsRust",
+                    "when": "editorLangId == wit"
+                },
+                {
+                    "command": "wit-idl.generateBindingsC",
+                    "when": "editorLangId == wit"
+                },
+                {
+                    "command": "wit-idl.generateBindingsCSharp",
+                    "when": "editorLangId == wit"
+                },
+                {
+                    "command": "wit-idl.generateBindingsGo",
+                    "when": "editorLangId == wit"
+                },
+                {
+                    "command": "wit-idl.generateBindingsMoonBit",
+                    "when": "editorLangId == wit"
                 }
             ]
         },

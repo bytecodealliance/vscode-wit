@@ -403,13 +403,25 @@ function createWasmDiscoveryPlugin() {
                     try {
                         const bundleContent = fs.readFileSync(mainBundlePath, "utf8");
 
-                        // Find all dynamic WASM references using regex
-                        const wasmUrlRegex = /new URL\("\.\/([^"]+\.wasm)"[^)]*\)/g;
+                        // Find all dynamic WASM references using the unified regex utility
+                        const wasmUrlRegex = createUrlRegex("wasm");
                         let match;
 
+                        // Find all WASM file references
                         while ((match = wasmUrlRegex.exec(bundleContent)) !== null) {
                             const wasmFileName = match[1];
-                            discoveredWasmFiles.add(wasmFileName);
+                            // Only add if it's a valid simple filename without path separators (for direct references)
+                            // Normalize the filename and ensure it is not empty or malformed
+                            const normalizedFileName = wasmFileName.trim();
+                            const isValidFileName =
+                                normalizedFileName !== "" &&
+                                !normalizedFileName.includes("/") &&
+                                !normalizedFileName.includes("\\") &&
+                                /^[a-zA-Z0-9._-]+$/.test(normalizedFileName); // Allow alphanumeric, dots, underscores, and hyphens
+
+                            if (isValidFileName) {
+                                discoveredWasmFiles.add(normalizedFileName);
+                            }
                         }
 
                         // Copy discovered WASM files
@@ -611,6 +623,17 @@ async function searchRecursively(dir, fileName) {
 }
 
 /**
+ * Creates a regex pattern for matching new URL() patterns with specific file extensions
+ * @param {string} extension - File extension to match (e.g., 'wasm', 'js')
+ * @param {boolean} [requireImportMeta=false] - Whether to require import.meta.url in the pattern
+ * @returns {RegExp} Compiled regex pattern with global flag
+ */
+function createUrlRegex(extension, requireImportMeta = false) {
+    const importMetaPart = requireImportMeta ? "[^)]*import\\.meta\\.url" : "[^)]*";
+    return new RegExp(`new URL\\(['"](?:\\.\\/)?([^'"]+\\.${extension})['"]${importMetaPart}\\)`, "g");
+}
+
+/**
  * Discover all entry points for the build (main extension + dynamically loaded workers)
  * @returns {Promise<string[]>} Array of entry point paths
  */
@@ -638,11 +661,11 @@ async function discoverEntryPoints() {
         if (tempResult.outputFiles && tempResult.outputFiles.length > 0) {
             const bundleContent = tempResult.outputFiles[0].text;
 
-            // Find all dynamic file references using regex for new URL patterns
-            const urlRegex = /new URL\("\.\/([^"]+\.js)"[^)]*import\.meta\.url\)/g;
+            // Find all dynamic JS worker file references using the unified regex utility
+            const jsUrlRegex = createUrlRegex("js", true);
             let match;
 
-            while ((match = urlRegex.exec(bundleContent)) !== null) {
+            while ((match = jsUrlRegex.exec(bundleContent)) !== null) {
                 const fileName = match[1];
                 console.log(`🔍 Found dynamic worker reference: ${fileName}`);
 

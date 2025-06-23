@@ -12,8 +12,8 @@
         },
         {
             "type": "npm",
-            "label": "build-watch",
-            "script": "build-watch",
+            "label": "build-extension-watch",
+            "script": "build-extension-watch",
             "problemMatcher": [],
             "presentation": {
                 "group": "build"
@@ -21,7 +21,7 @@
         },
         {
             "label": "build",
-            "dependsOn": ["build-watch", "gen-watch"],
+            "dependsOn": ["build-extension-watch", "gen-watch"],
             "group": {
                 "kind": "build",
                 "isDefault": true

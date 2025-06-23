@@ -7,11 +7,12 @@ interface i {
 world foo {
   use i.{type1};
 
+  type type0 = u32;
   type type2 = u32;
 
   record type3 {
     r: u32,
   }
 
-  export foo: func() -> tuple<type1, type2, type3>;
+  export foo: func() -> tuple<type0, type1, type2, type3, type4>;
 }

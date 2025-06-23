@@ -11,3 +11,4 @@ src/**
 **/.eslintrc.json
 **/*.map
 **/*.ts
+wit-bindgen-wasm/**

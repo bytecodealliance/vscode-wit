@@ -13,11 +13,16 @@ vi.mock("vscode", () => ({
         })),
     },
     DiagnosticCollection: vi.fn(),
+    extensions: {
+        getExtension: vi.fn(() => ({
+            extensionPath: "/mock/extension/path",
+        })),
+    },
 }));
 
-// Mock the @bytecodealliance/jco types function
-vi.mock("@bytecodealliance/jco", () => ({
-    types: vi.fn(),
+// Mock the WASM utilities
+vi.mock("../src/wasmUtils.js", () => ({
+    validateWitSyntaxDetailedFromWasm: vi.fn(),
 }));
 
 describe("WitSyntaxValidator", () => {
@@ -40,16 +45,36 @@ describe("WitSyntaxValidator", () => {
 
     describe("validate", () => {
         it("should return null for valid WIT files", async () => {
-            const { types } = await import("@bytecodealliance/jco");
-            vi.mocked(types).mockResolvedValueOnce({} as any);
+            const { validateWitSyntaxDetailedFromWasm } = await import("../src/wasmUtils.js");
+            vi.mocked(validateWitSyntaxDetailedFromWasm).mockResolvedValueOnce({ valid: true });
 
             const result = await validator.validate("/test/file.wit", "valid content");
             expect(result).toBeNull();
         });
 
         it("should return error info for invalid WIT files", async () => {
-            const { types } = await import("@bytecodealliance/jco");
-            const mockError = new Error("Test error");
+            const { validateWitSyntaxDetailedFromWasm } = await import("../src/wasmUtils.js");
+            vi.mocked(validateWitSyntaxDetailedFromWasm).mockResolvedValueOnce({
+                valid: false,
+                error: "undefined type `type4`",
+                errorType: "resolution",
+            });
+
+            const result = await validator.validate("/test/file.wit", "invalid content");
+
+            expect(result).not.toBeNull();
+            expect(result?.mainError).toBe("Undefined type error");
+            expect(result?.detailedError).toBe(
+                "Undefined type 'type4' - check if the type is defined or imported correctly"
+            );
+            expect(result?.filePath).toBe("/test/file.wit");
+            expect(result?.row).toBe(1);
+            expect(result?.column).toBe(1);
+        });
+
+        it("should handle WASM validation errors", async () => {
+            const { validateWitSyntaxDetailedFromWasm } = await import("../src/wasmUtils.js");
+            const mockError = new Error("WASM validation error");
             mockError.stack = `Error: reading WIT file at [/test/file.wit]
 
 Caused by:
@@ -59,7 +84,7 @@ Caused by:
         3 | interface test {
           | ^`;
 
-            vi.mocked(types).mockRejectedValueOnce(mockError);
+            vi.mocked(validateWitSyntaxDetailedFromWasm).mockRejectedValueOnce(mockError);
 
             const result = await validator.validate("/test/file.wit", "invalid content");
 
@@ -69,6 +94,43 @@ Caused by:
             expect(result?.filePath).toBe("/test/file.wit");
             expect(result?.row).toBe(3);
             expect(result?.column).toBe(1);
+        });
+
+        it("should detect undefined types in WIT files", async () => {
+            const { validateWitSyntaxDetailedFromWasm } = await import("../src/wasmUtils.js");
+            // Simulate the WASM validator returning false for invalid content with undefined types
+            vi.mocked(validateWitSyntaxDetailedFromWasm).mockResolvedValueOnce({
+                valid: false,
+                error: "undefined type `type4`",
+                errorType: "resolution",
+            });
+
+            const invalidWitContent = `package foo:foo;
+
+interface i {
+  type type1 = u32;
+}
+
+world foo {
+  use i.{type1};
+
+  type type2 = u32;
+
+  record type3 {
+    r: u32,
+  }
+
+  export foo: func() -> tuple<type1, type2, type3, type4>;
+}`;
+
+            const result = await validator.validate("/test/worlds-with-types.wit", invalidWitContent);
+
+            expect(result).not.toBeNull();
+            expect(result?.mainError).toBe("Undefined type error");
+            expect(result?.detailedError).toBe(
+                "Undefined type 'type4' - check if the type is defined or imported correctly"
+            );
+            expect(result?.filePath).toBe("/test/worlds-with-types.wit");
         });
     });
 
