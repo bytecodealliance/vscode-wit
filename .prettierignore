@@ -14,6 +14,8 @@ node_modules/
 # Build outputs
 dist/
 *.vsix
+wit-bindgen-wasm/pkg/
+wit-bindgen-wasm/target/
 
 # Test snapshots (these are auto-generated and shouldn't be manually formatted)
 *.snap

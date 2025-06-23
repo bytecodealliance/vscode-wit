@@ -68,7 +68,26 @@ Easily access extension features through the Command Palette:
 
 ## Installation
 
+### Prerequisites
+
+This extension includes a WebAssembly component that requires the following tools for building:
+
+- **Rust** (with `cargo`): Required for building the WebAssembly module
+- **wasm-pack v0.13.1**: Used specifically for the `wit-bindgen-wasm` subproject
+
+You can install these dependencies by running:
+```bash
+# Install Rust (if not already installed)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+# Run the setup script to install build tools
+npm run setup-wasm
+```
+
+### From Source
+
 To install from source, follow these steps:
 * Clone the repository: `git clone https://github.com/bytecodealliance/vscode-wit.git && cd vscode-wit`
+* Install build dependencies: `npm run setup-wasm`
 * Run npm commands to install:
 `npm ci && npm run install-plugin`
