@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.8](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.7...wit-idl-v0.3.8) (2025-06-30)
+
+
+### Features
+
+* implement sized list syntax support (list&lt;type, size&gt;) ([ae26b28](https://github.com/bytecodealliance/vscode-wit/commit/ae26b28f5df856d4a1b0087033ed5f5403402d53)), closes [#57](https://github.com/bytecodealliance/vscode-wit/issues/57)
+
 ## [0.3.7](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.6...wit-idl-v0.3.7) (2025-06-25)
 
 
