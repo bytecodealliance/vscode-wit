@@ -1200,7 +1200,7 @@
         },
         "list": {
             "name": "meta.list.ty.wit",
-            "comment": "Syntax for WIT types such as list",
+            "comment": "Syntax for WIT types such as list with optional size parameter",
             "begin": "\\b(list)\\b(\\<)",
             "beginCaptures": {
                 "1": {
@@ -1217,6 +1217,24 @@
                 {
                     "name": "meta.types.list.wit",
                     "include": "#types"
+                },
+                {
+                    "name": "meta.list-size-separator.wit",
+                    "match": "\\s*(,)\\s*",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.comma.wit"
+                        }
+                    }
+                },
+                {
+                    "name": "meta.list-size.wit",
+                    "match": "\\b([0-9]+)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "constant.numeric.integer.list-size.wit"
+                        }
+                    }
                 },
                 {
                     "include": "#whitespace"

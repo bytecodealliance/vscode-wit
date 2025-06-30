@@ -434,4 +434,23 @@ world foo {
         let result = wit_bindgen.validate_wit_syntax("   \n  \t  ");
         assert!(!result, "Whitespace-only content should be invalid");
     }
+
+    #[test]
+    fn test_validate_wit_syntax_with_sized_lists() {
+        let wit_bindgen = WitBindgen::new();
+        
+        let valid_content = r#"package foo:foo;
+
+interface test {
+  get-ipv4-address1: func() -> list<u8, 4>;
+  get-ipv4-address2: func() -> tuple<u8, u8, u8, u8>;
+}
+
+world test-world {
+  export test;
+}"#;
+
+        let result = wit_bindgen.validate_wit_syntax(valid_content);
+        assert!(result, "Should validate sized list syntax as valid");
+    }
 }
