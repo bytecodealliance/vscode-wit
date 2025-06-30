@@ -1,0 +1,44 @@
+// SYNTAX TEST "source.wit" "List types"
+
+package test:test;
+
+interface lists {
+
+// Regular lists
+  func1: func() -> list<u8>;
+//                 ^^^^        entity.name.type.list.wit
+//                     ^       punctuation.brackets.angle.begin.wit
+//                      ^^     entity.name.type.numeric.wit
+//                        ^    punctuation.brackets.angle.end.wit
+
+  func2: func() -> list<string>;
+//                 ^^^^          entity.name.type.list.wit
+//                     ^         punctuation.brackets.angle.begin.wit
+//                      ^^^^^^   entity.name.type.string.wit
+//                            ^  punctuation.brackets.angle.end.wit
+
+// Sized lists
+  func3: func() -> list<u8, 4>;
+//                 ^^^^          entity.name.type.list.wit
+//                     ^         punctuation.brackets.angle.begin.wit
+//                      ^^       entity.name.type.numeric.wit
+//                        ^      punctuation.comma.wit
+//                          ^    constant.numeric.integer.list-size.wit
+//                           ^   punctuation.brackets.angle.end.wit
+
+  func4: func() -> list<u32, 16>;
+//                 ^^^^           entity.name.type.list.wit
+//                     ^          punctuation.brackets.angle.begin.wit
+//                      ^^^       entity.name.type.numeric.wit
+//                         ^      punctuation.comma.wit
+//                           ^^   constant.numeric.integer.list-size.wit
+//                             ^  punctuation.brackets.angle.end.wit
+
+  func5: func() -> list<string, 10>;
+//                 ^^^^              entity.name.type.list.wit
+//                     ^             punctuation.brackets.angle.begin.wit
+//                      ^^^^^^       entity.name.type.string.wit
+//                            ^      punctuation.comma.wit
+//                              ^^   constant.numeric.integer.list-size.wit
+//                                ^  punctuation.brackets.angle.end.wit
+}
