@@ -39,8 +39,9 @@ jobs:
           echo "tag_name=${TAG_NAME}" >> $GITHUB_OUTPUT
           echo "version=${TAG_NAME##*-v}" >> $GITHUB_OUTPUT
           echo "package_name=${RELEASE_NAME%:*}" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           ref: ${{ steps.event_details.outputs.tag_name }}
       - name: Add files and publish release
         env:
