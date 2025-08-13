@@ -2,7 +2,10 @@ use wasm_bindgen::prelude::*;
 use std::collections::HashMap;
 use std::path::Path;
 
-use wit_parser::Resolve;
+use wit_parser::{Resolve, PackageId};
+use anyhow::Context;
+// For component decoding (no text printing here; CLI fallback will be used)
+use wit_component as wcomp;
 use wit_bindgen_core::Files;
 use wit_bindgen_rust as rust;
 use wit_bindgen_c as c;
@@ -55,6 +58,62 @@ impl WitBindgen {
         WitBindgen {
             inner: String::new(),
         }
+    }
+
+    /// Extract WIT text from a WebAssembly component (bytes)
+    /// Returns an empty string on error (JS side will fall back to CLI)
+    #[wasm_bindgen(js_name = extractWitFromComponent)]
+    pub fn extract_wit_from_component(&self, bytes: &[u8]) -> String {
+        match Self::extract_wit_from_component_impl(bytes) {
+            Ok(s) => s,
+            Err(e) => {
+                console_error(&format!("WIT extraction failed: {}", e));
+                String::new()
+            }
+        }
+    }
+
+    fn extract_wit_from_component_impl(bytes: &[u8]) -> anyhow::Result<String> {
+        // Decode component/package and render WIT using wit-component printing utilities
+        let decoded = wcomp::decode(bytes)
+            .with_context(|| "failed to decode component metadata to WIT")?;
+
+        // Prepare printer
+        let mut printer = wcomp::WitPrinter::new(wcomp::OutputToString::default());
+        // Keep docs in output (default true); call emit_docs(true) explicitly for clarity
+        let _ = printer.emit_docs(true);
+
+        // Build the list of nested packages: all dependencies of the main package
+        let resolve: &Resolve = decoded.resolve();
+        let main_pkg: PackageId = decoded.package();
+
+        // Collect transitive deps of main_pkg
+        use std::collections::{HashSet, VecDeque};
+        let mut visited: HashSet<PackageId> = HashSet::new();
+        let mut queue: VecDeque<PackageId> = VecDeque::new();
+        queue.push_back(main_pkg);
+        visited.insert(main_pkg);
+        while let Some(pkg) = queue.pop_front() {
+            for dep in resolve.package_direct_deps(pkg) {
+                if !visited.contains(&dep) {
+                    visited.insert(dep);
+                    queue.push_back(dep);
+                }
+            }
+        }
+        // Order nested by topo order, excluding main package
+        let nested: Vec<PackageId> = resolve
+            .topological_packages()
+            .into_iter()
+            .filter(|p| *p != main_pkg && visited.contains(p))
+            .collect();
+
+        // Print into a string
+        printer
+            .print(resolve, main_pkg, &nested)
+            .with_context(|| "failed to render WIT text from decoded component")?;
+        let out: String = printer.output.into();
+        Ok(out)
     }
 
     /// Validate WIT syntax using wit-parser

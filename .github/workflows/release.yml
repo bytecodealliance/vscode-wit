@@ -41,7 +41,6 @@ jobs:
           echo "package_name=${RELEASE_NAME%:*}" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           ref: ${{ steps.event_details.outputs.tag_name }}
       - name: Add files and publish release
         env:

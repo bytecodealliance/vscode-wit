@@ -3,7 +3,7 @@
     "displayName": "WIT IDL",
     "description": "WebAssembly Interface Type (WIT) IDL Extension for VSCode",
     "private": true,
-    "version": "0.3.9",
+    "version": "0.3.10",
     "publisher": "bytecodealliance",
     "icon": "images/wit-icon.png",
     "categories": [
@@ -52,7 +52,7 @@
         "test": "run-s lint fmt-check build package test-grammar test-unit",
         "test-wasm": "cd wit-bindgen-wasm && cargo test",
         "check-wasm": "cd wit-bindgen-wasm && cargo check",
-        "verify-wasm": "node -e \"console.log('Verifying WASM build...'); const fs = require('fs'); const path = 'wit-bindgen-wasm/pkg/wit_bindgen_wasm_bg.wasm'; if (fs.existsSync(path)) { console.log('✅ WASM file exists:', path); console.log('📏 Size:', Math.round(fs.statSync(path).size / 1024), 'KB'); } else { console.error('❌ WASM file not found:', path); process.exit(1); }\"",
+        "verify-wasm": "node -e \"console.log('Verifying WASM build...'); const fs = require('fs'); const path = 'wit-bindgen-wasm/pkg/wit_bindgen_wasm_bg.wasm'; if (fs.existsSync(path)) { console.log('✅ WASM file exists:', path); const size = Math.round(fs.statSync(path).size / 1024); console.log('📏 Size:', size, 'KB'); try { const fd = fs.openSync(path, 'r'); const header = Buffer.alloc(8); fs.readSync(fd, header, 0, 8, 0); fs.closeSync(fd); const magicOk = header[0] === 0x00 && header[1] === 0x61 && header[2] === 0x73 && header[3] === 0x6D; if (!magicOk) { console.warn('⚠️ Not a WebAssembly binary (bad magic).'); process.exit(1); } const version = header.readUInt32LE(4); if (version === 1) { console.log('🧩 Type: Core WebAssembly module (vanilla wasm)'); } else if (version === 0x0A) { console.log('🧩 Type: WebAssembly component'); } else { console.log('🧩 Type: Unknown/other (version ' + version + ')'); } } catch (e) { console.error('❌ Error reading header:', e.message); process.exit(1); } } else { console.error('❌ WASM file not found:', path); process.exit(1); }\"",
         "dev": "run-p gen-watch build-extension-watch",
         "update": "npx npm-check-updates -u -t minor",
         "update-major": "npx npm-check-updates -u"
@@ -85,6 +85,17 @@
         "wasm-pack": "0.13.1"
     },
     "contributes": {
+        "colors": [
+            {
+                "id": "witIdl.componentColor",
+                "description": "Color used to decorate WebAssembly component files (.wasm) in the explorer",
+                "defaults": {
+                    "light": "#5043b3",
+                    "dark": "#7c5eff",
+                    "highContrast": "#b15eff"
+                }
+            }
+        ],
         "languages": [
             {
                 "id": "wit",
@@ -157,6 +168,11 @@
                 "command": "wit-idl.generateBindingsMoonBit",
                 "title": "Generate MoonBit Bindings",
                 "category": "WIT"
+            },
+            {
+                "command": "wit-idl.extractWit",
+                "title": "Extract WIT",
+                "category": "WIT"
             }
         ],
         "submenus": [
@@ -174,7 +190,12 @@
                 },
                 {
                     "submenu": "wit-idl.generateBindings.submenu",
-                    "when": "resourceExtname == .wit",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "navigation"
+                },
+                {
+                    "command": "wit-idl.extractWit",
+                    "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
                     "group": "navigation"
                 }
             ],
@@ -186,7 +207,12 @@
                 },
                 {
                     "submenu": "wit-idl.generateBindings.submenu",
-                    "when": "resourceExtname == .wit",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "navigation"
+                },
+                {
+                    "command": "wit-idl.extractWit",
+                    "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
                     "group": "navigation"
                 }
             ],
@@ -220,23 +246,27 @@
                 },
                 {
                     "command": "wit-idl.generateBindingsRust",
-                    "when": "editorLangId == wit"
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
                     "command": "wit-idl.generateBindingsC",
-                    "when": "editorLangId == wit"
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
                     "command": "wit-idl.generateBindingsCSharp",
-                    "when": "editorLangId == wit"
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
                     "command": "wit-idl.generateBindingsGo",
-                    "when": "editorLangId == wit"
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
                     "command": "wit-idl.generateBindingsMoonBit",
-                    "when": "editorLangId == wit"
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
+                },
+                {
+                    "command": "wit-idl.extractWit",
+                    "when": "witIdl.isWasmComponent"
                 }
             ]
         },
@@ -249,6 +279,18 @@
             {
                 "command": "wit-idl.syntaxCheckWorkspace",
                 "key": "shift+f7"
+            }
+        ],
+        "customEditors": [
+            {
+                "viewType": "wit-idl.wasmToWit",
+                "displayName": "WIT from WebAssembly Component",
+                "selector": [
+                    {
+                        "filenamePattern": "**/*.wasm"
+                    }
+                ],
+                "priority": "default"
             }
         ]
     }

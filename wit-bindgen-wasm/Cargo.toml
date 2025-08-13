@@ -24,6 +24,7 @@ wit-bindgen-c = "0.43"
 wit-bindgen-rust = "0.43"
 wit-bindgen-csharp = "0.43"
 wit-bindgen-moonbit = "0.43"
+wit-component = "0.235"
 anyhow = "1.0.98"
 
 [dependencies.web-sys]

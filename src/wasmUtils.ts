@@ -1,6 +1,4 @@
 import * as vscode from "vscode";
-import * as path from "path";
-import * as fs from "fs";
 
 // Import the WASM module types
 import type { WitBindgen } from "wit-bindgen-wasm";
@@ -24,18 +22,20 @@ export async function initializeWasm(): Promise<void> {
         const module = await import("wit-bindgen-wasm");
 
         // Initialize the WASM module with the binary
-        const extensionPath = vscode.extensions.getExtension("bytecodealliance.wit-idl")?.extensionPath;
-        if (!extensionPath) {
+        const ext = vscode.extensions.getExtension("bytecodealliance.wit-idl");
+        if (!ext) {
             throw new Error("Extension path not found");
         }
 
         // Look for the WASM file in the extension's dist directory (bundled location)
-        const wasmPath = path.join(extensionPath, "dist", "wit_bindgen_wasm_bg.wasm");
+        const wasmUri = vscode.Uri.joinPath(ext.extensionUri, "dist", "wit_bindgen_wasm_bg.wasm");
 
-        if (fs.existsSync(wasmPath)) {
-            const wasmBuffer = fs.readFileSync(wasmPath);
+        try {
+            // Check if the file exists; stat will throw if it doesn't
+            await vscode.workspace.fs.stat(wasmUri);
+            const wasmBuffer = await vscode.workspace.fs.readFile(wasmUri);
             await module.default(wasmBuffer);
-        } else {
+        } catch {
             // Fallback: try to initialize without explicit path
             await module.default();
         }
@@ -106,6 +106,44 @@ export async function validateWitSyntaxFromWasm(content: string): Promise<boolea
     const instance = await createWitBindgenInstance();
     try {
         return instance.validateWitSyntax(content);
+    } finally {
+        instance.free();
+    }
+}
+
+/**
+ * Extract WIT text from a WebAssembly component using the WASM module.
+ * The underlying WASM must implement `extractWitFromComponent(bytes: Uint8Array): string`.
+ * @param bytes - The WebAssembly component bytes
+ * @returns Promise resolving to extracted WIT text
+ */
+export async function extractWitFromComponent(bytes: Uint8Array): Promise<string> {
+    if (!wasmModule) {
+        await initializeWasm();
+    }
+
+    if (!wasmModule) {
+        throw new Error("WASM module not initialized");
+    }
+
+    // Type guard for extractWitFromComponent method
+    function hasExtractWitFromComponent(
+        obj: unknown
+    ): obj is { extractWitFromComponent: (data: Uint8Array) => string } {
+        return typeof (obj as { extractWitFromComponent?: unknown }).extractWitFromComponent === "function";
+    }
+
+    // Create instance and call the optional method via a type-guarded access
+    const instance = new wasmModule.WitBindgen();
+    try {
+        if (!hasExtractWitFromComponent(instance)) {
+            throw new Error("extractWitFromComponent not available in wit-bindgen-wasm module");
+        }
+        const witText = instance.extractWitFromComponent(bytes);
+        if (!witText || typeof witText !== "string") {
+            throw new Error("WIT extraction returned no data");
+        }
+        return witText;
     } finally {
         instance.free();
     }
