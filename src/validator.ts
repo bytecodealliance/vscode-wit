@@ -284,7 +284,7 @@ export class WitSyntaxValidator {
             };
         }
 
-        const fallbackError = extractErrorInfo(errorMessage, filePath);
+        const fallbackError = extractErrorInfo(errorMessage);
         return fallbackError || null;
     }
 
