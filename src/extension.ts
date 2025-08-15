@@ -3,7 +3,12 @@ import * as path from "path";
 import * as fs from "fs";
 import { WitSyntaxValidator } from "./validator.js";
 import { isWasmComponentFile } from "./wasmDetection.js";
-import { getWitBindgenVersionFromWasm, extractWitFromComponent, generateBindingsFromWasm } from "./wasmUtils.js";
+import {
+    getWitBindgenVersionFromWasm,
+    extractWitFromComponent,
+    generateBindingsFromWasm,
+    extractCoreWasmFromComponent,
+} from "./wasmUtils.js";
 
 // Removed: openExtractedWitDocument - we now render a readonly view in a custom editor
 
@@ -369,6 +374,105 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    // Implement extractCoreWasm command
+    const extractCoreWasmCommand = vscode.commands.registerCommand(
+        "wit-idl.extractCoreWasm",
+        async (resource?: vscode.Uri) => {
+            try {
+                const targetUri: vscode.Uri | undefined = resource ?? vscode.window.activeTextEditor?.document.uri;
+                if (!targetUri) {
+                    vscode.window.showErrorMessage("No file selected.");
+                    return;
+                }
+
+                const filePath: string = targetUri.fsPath;
+                if (!filePath.toLowerCase().endsWith(".wasm")) {
+                    vscode.window.showErrorMessage("Selected file is not a .wasm file.");
+                    return;
+                }
+
+                const isComp: boolean = await isWasmComponent(filePath);
+                if (!isComp) {
+                    vscode.window.showWarningMessage("The selected .wasm is not a WebAssembly component.");
+                    return;
+                }
+
+                // Extract using embedded wasm-utils (no external CLI dependency)
+                const bytes = await vscode.workspace.fs.readFile(targetUri);
+                const fileMap = await extractCoreWasmFromComponent(bytes);
+                const entries = Object.entries(fileMap).sort(([a], [b]) =>
+                    a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
+                );
+                if (entries.length === 0) {
+                    vscode.window.showWarningMessage("No core wasm modules found in this component.");
+                    return;
+                }
+
+                let [chosenName, chosenContent] = entries[0];
+                if (entries.length > 1) {
+                    const pick = await vscode.window.showQuickPick(
+                        entries.map(([name]) => name),
+                        {
+                            placeHolder: "Multiple core wasm modules found. Select one to save.",
+                        }
+                    );
+                    if (!pick) {
+                        return;
+                    }
+                    const found = entries.find(([name]) => name === pick);
+                    if (found) {
+                        [chosenName, chosenContent] = found;
+                    }
+                }
+
+                // Now we know which core module is selected, propose a default filename that includes it
+                const baseName: string = path.basename(filePath, ".wasm");
+                const defaultFileName: string = `${baseName}.${chosenName}`; // e.g., mycomp.core0.wasm
+                const defaultDir: string = path.dirname(filePath);
+                const saveUri = await vscode.window.showSaveDialog({
+                    title: "Save extracted Core Wasm",
+                    defaultUri: vscode.Uri.file(path.join(defaultDir, defaultFileName)),
+                    filters: { WebAssembly: ["wasm"], "All Files": ["*"] },
+                });
+                if (!saveUri) {
+                    return;
+                }
+
+                // Write selected core wasm to the chosen path
+                const data = chosenContent; // already Uint8Array
+                try {
+                    await vscode.workspace.fs.stat(saveUri);
+                    const choice = await vscode.window.showWarningMessage(
+                        `File already exists: ${saveUri.fsPath}. Overwrite?`,
+                        { modal: true },
+                        "Overwrite",
+                        "Cancel"
+                    );
+                    if (choice !== "Overwrite") {
+                        return;
+                    }
+                } catch {
+                    // stat throws if file doesn't exist; continue
+                }
+                await vscode.workspace.fs.writeFile(saveUri, data);
+
+                vscode.window.showInformationMessage(`Core wasm extracted to ${saveUri.fsPath}`);
+                try {
+                    await vscode.commands.executeCommand("vscode.open", saveUri);
+                } catch (openError) {
+                    vscode.window.showWarningMessage(
+                        `Core wasm was extracted and saved to ${saveUri.fsPath}, but could not be opened automatically. You can open it manually (e.g., with "Open With... Hex Editor").`
+                    );
+                }
+            } catch (error) {
+                console.error("extractCoreWasm failed:", error);
+                vscode.window.showErrorMessage(
+                    `Failed to extract core wasm: ${error instanceof Error ? error.message : String(error)}`
+                );
+            }
+        }
+    );
+
     /**
      * Create a binding generation command for a specific language
      * @param language - The target language for bindings
@@ -625,6 +729,7 @@ export function activate(context: vscode.ExtensionContext) {
         syntaxCheckWorkspaceCommand,
         showVersionCommand,
         extractWitCommand,
+        extractCoreWasmCommand,
         generateRustBindingsCommand,
         generateCBindingsCommand,
         generateCSharpBindingsCommand,

@@ -18,6 +18,7 @@ wasm-bindgen = "0.2.100"
 wee_alloc = { version = "0.4.5", optional = true }
 console_error_panic_hook = { version = "0.1.6", optional = true }
 serde_json = "1.0"
+wasmparser = { version = "0.224", features = ["component-model"] }
 wit-parser = "0.236"
 wit-bindgen-core = "0.44"
 wit-bindgen-c = "0.44"
