@@ -6,6 +6,7 @@ use wit_parser::{Resolve, PackageId};
 use anyhow::Context;
 // For component decoding (no text printing here; CLI fallback will be used)
 use wit_component as wcomp;
+use wasmparser::{Parser, Payload};
 use wit_bindgen_core::Files;
 use wit_bindgen_rust as rust;
 use wit_bindgen_c as c;
@@ -114,6 +115,46 @@ impl WitBindgen {
             .with_context(|| "failed to render WIT text from decoded component")?;
         let out: String = printer.output.into();
         Ok(out)
+    }
+
+    /// Extract core WebAssembly modules from a component.
+    /// Returns a JSON object mapping filename -> latin1 content.
+    /// If no core modules are found, returns an empty JSON object.
+    #[wasm_bindgen(js_name = extractCoreWasmFromComponent)]
+    pub fn extract_core_wasm_from_component(&self, bytes: &[u8]) -> String {
+        match Self::extract_core_wasm_impl(bytes) {
+            Ok(map) => serde_json::to_string(&map).unwrap_or_else(|_| "{}".to_string()),
+            Err(e) => {
+                console_error(&format!("Core wasm extraction failed: {}", e));
+                "{}".to_string()
+            }
+        }
+    }
+
+    fn extract_core_wasm_impl(bytes: &[u8]) -> anyhow::Result<std::collections::HashMap<String, String>> {
+        let mut map = std::collections::HashMap::new();
+
+        // Use wasmparser's incremental Parser with component-model feature enabled.
+        // This will iterate payloads and yield ModuleSection for embedded core modules.
+        let parser = Parser::new(0);
+        let mut index: usize = 0;
+        for payload in parser.parse_all(bytes) {
+            let payload = payload?;
+            match payload {
+                // Embedded core module inside a component
+                Payload::ModuleSection { unchecked_range, .. } => {
+                    let module_bytes = &bytes[unchecked_range.start..unchecked_range.end];
+                    let filename = format!("core{index}.wasm");
+                    map.insert(filename, bytes_to_latin1_string(module_bytes));
+                    index += 1;
+                }
+                // Nested component: continue; parse_all already iterates it
+                Payload::ComponentSection { .. } => {}
+                _ => {}
+            }
+        }
+
+        Ok(map)
     }
 
     /// Validate WIT syntax using wit-parser

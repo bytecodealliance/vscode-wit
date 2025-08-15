@@ -150,6 +150,41 @@ export async function extractWitFromComponent(bytes: Uint8Array): Promise<string
 }
 
 /**
+ * Extract core wasm module(s) from a WebAssembly component using the WASM module.
+ * Returns a filename -> binary bytes map. Empty map on failure or none found.
+ */
+export async function extractCoreWasmFromComponent(bytes: Uint8Array): Promise<Record<string, Uint8Array>> {
+    if (!wasmModule) {
+        await initializeWasm();
+    }
+    if (!wasmModule) {
+        throw new Error("WASM module not initialized");
+    }
+
+    function hasExtractCore(obj: unknown): obj is { extractCoreWasmFromComponent: (data: Uint8Array) => string } {
+        return typeof (obj as { extractCoreWasmFromComponent?: unknown }).extractCoreWasmFromComponent === "function";
+    }
+
+    const instance = new wasmModule.WitBindgen();
+    try {
+        if (!hasExtractCore(instance)) {
+            throw new Error("extractCoreWasmFromComponent not available in wit-bindgen-wasm module");
+        }
+        const json = instance.extractCoreWasmFromComponent(bytes);
+        const textMap = JSON.parse(json || "{}") as Record<string, string>;
+        // Decode into binary bytes (latin1-to-bytes convention from WASM side)
+        const result: Record<string, Uint8Array> = {};
+        for (const [name, content] of Object.entries(textMap)) {
+            // Buffer.from with 'latin1' yields the original byte values 0..255
+            result[name] = Buffer.from(content, "latin1");
+        }
+        return result;
+    } finally {
+        instance.free();
+    }
+}
+
+/**
  * Extract interfaces from WIT content using the WASM module
  * @param content - The WIT content to parse
  * @returns Promise that resolves to a comma-separated list of interface names
