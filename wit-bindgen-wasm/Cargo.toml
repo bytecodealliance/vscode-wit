@@ -18,13 +18,13 @@ wasm-bindgen = "0.2.100"
 wee_alloc = { version = "0.4.5", optional = true }
 console_error_panic_hook = { version = "0.1.6", optional = true }
 serde_json = "1.0"
-wit-parser = "0.235"
-wit-bindgen-core = "0.43"
-wit-bindgen-c = "0.43"
-wit-bindgen-rust = "0.43"
-wit-bindgen-csharp = "0.43"
-wit-bindgen-moonbit = "0.43"
-wit-component = "0.235"
+wit-parser = "0.236"
+wit-bindgen-core = "0.44"
+wit-bindgen-c = "0.44"
+wit-bindgen-rust = "0.44"
+wit-bindgen-csharp = "0.44"
+wit-bindgen-moonbit = "0.44"
+wit-component = "0.236"
 anyhow = "1.0.98"
 
 [dependencies.web-sys]
@@ -34,7 +34,7 @@ features = [
 ]
 
 [build-dependencies]
-toml = "0.8.23"
+toml = "0.9.5"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
