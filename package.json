@@ -54,6 +54,7 @@
         "check-wasm": "cd wit-bindgen-wasm && cargo check",
         "verify-wasm": "node -e \"console.log('Verifying WASM build...'); const fs = require('fs'); const path = 'wit-bindgen-wasm/pkg/wit_bindgen_wasm_bg.wasm'; if (fs.existsSync(path)) { console.log('✅ WASM file exists:', path); const size = Math.round(fs.statSync(path).size / 1024); console.log('📏 Size:', size, 'KB'); try { const fd = fs.openSync(path, 'r'); const header = Buffer.alloc(8); fs.readSync(fd, header, 0, 8, 0); fs.closeSync(fd); const magicOk = header[0] === 0x00 && header[1] === 0x61 && header[2] === 0x73 && header[3] === 0x6D; if (!magicOk) { console.warn('⚠️ Not a WebAssembly binary (bad magic).'); process.exit(1); } const version = header.readUInt32LE(4); if (version === 1) { console.log('🧩 Type: Core WebAssembly module (vanilla wasm)'); } else if (version === 0x0A) { console.log('🧩 Type: WebAssembly component'); } else { console.log('🧩 Type: Unknown/other (version ' + version + ')'); } } catch (e) { console.error('❌ Error reading header:', e.message); process.exit(1); } } else { console.error('❌ WASM file not found:', path); process.exit(1); }\"",
         "dev": "run-p gen-watch build-extension-watch",
+        "release": "npx release-please release-pr --repo-url bytecodealliance/vscode-wit --config-file .github/release-please-config.json --manifest-file .github/release-please-manifest.json --token",
         "update": "npx npm-check-updates -u -t minor",
         "update-major": "npx npm-check-updates -u"
     },
