@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.11](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.10...wit-idl-v0.3.11) (2025-08-16)
+
+
+### Features
+
+* add extract core wasm command ([b39c03c](https://github.com/bytecodealliance/vscode-wit/commit/b39c03c3cfc2ea6ef541191fb23604797618d31d))
+* bump dependency versions to latests ([a374c58](https://github.com/bytecodealliance/vscode-wit/commit/a374c581e5f65092e2143b6f3e0ee4d7cff83ff0))
+
 ## [0.3.9](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.8...wit-idl-v0.3.9) (2025-07-02)
 
 
