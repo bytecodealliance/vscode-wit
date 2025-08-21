@@ -7,62 +7,68 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "22"
+    build:
+      strategy:
+        fail-fast: false
+        matrix:
+          os: [ubuntu-latest, windows-latest, macos-latest]
+          node-version: [20, 22, 24]
+      runs-on: ${{ matrix.os }}
+      permissions:
+        contents: read
+        issues: write
+        pull-requests: write
+      steps:
+        - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm ci
+        - uses: actions/setup-node@v3
+          with:
+            node-version: ${{ matrix.node-version }}
 
-      - name: Run tests
-        run: npm test
+        - name: Install dependencies
+          run: npm ci
 
-      - name: Update snapshot
-        run: npm run update-snapshot && git add --all
+        - name: Run tests
+          run: npm test
 
-      - name: Prepare diff for comment
-        id: diff
-        continue-on-error: true
-        run: |
-          set +e
-          body=$(git diff --exit-code --diff-filter=AM $GITHUB_SHA -- '*.snap' 2>&1)
-          echo "exitcode=$?" >> $GITHUB_OUTPUT
-          body="${body//'<'/'&lt;'}"
-          body="${body//'>'/'&gt;'}"
-          delimiter="$(openssl rand -hex 8)"
-          echo "body<<${delimiter}" >> $GITHUB_OUTPUT
-          echo "${body:0:64000}" >> $GITHUB_OUTPUT
-          echo "${delimiter}" >> $GITHUB_OUTPUT
+        - name: Update snapshot
+          run: npm run update-snapshot && git add --all
 
-      - uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request' && steps.diff.outputs.exitcode == '1'
-        with:
-          header: sticky-comment-for-git-diff
-          hide_and_recreate: true
-          hide_classify: "OUTDATED"
-          message: |
-            **Found changes in the snapshot tests. Please review.**
-            <details>
-            <summary>Diff 📖</summary>
+        - name: Prepare diff for comment
+          id: diff
+          continue-on-error: true
+          run: |
+            set +e
+            body=$(git diff --exit-code --diff-filter=AM $GITHUB_SHA -- '*.snap' 2>&1)
+            echo "exitcode=$?" >> $GITHUB_OUTPUT
+            body="${body//'<'/'&lt;'}"
+            body="${body//'>'/'&gt;'}"
+            delimiter="$(openssl rand -hex 8)"
+            echo "body<<${delimiter}" >> $GITHUB_OUTPUT
+            echo "${body:0:64000}" >> $GITHUB_OUTPUT
+            echo "${delimiter}" >> $GITHUB_OUTPUT
 
-            <pre lang="diff"><code>
-            ${{ steps.diff.outputs.body }}
-            </code></pre>
+        - uses: marocchino/sticky-pull-request-comment@v2
+          if: github.event_name == 'pull_request' && steps.diff.outputs.exitcode == '1'
+          with:
+            header: sticky-comment-for-git-diff
+            hide_and_recreate: true
+            hide_classify: "OUTDATED"
+            message: |
+              **Found changes in the snapshot tests. Please review.**
+              <details>
+              <summary>Diff 📖</summary>
 
-            </details>
+              <pre lang="diff"><code>
+              ${{ steps.diff.outputs.body }}
+              </code></pre>
 
-      - uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request' && steps.diff.outputs.exitcode == '0'
-        with:
-          header: sticky-comment-for-git-diff
-          hide: true
-          hide_classify: "OUTDATED"
+              </details>
+
+        - uses: marocchino/sticky-pull-request-comment@v2
+          if: github.event_name == 'pull_request' && steps.diff.outputs.exitcode == '0'
+          with:
+            header: sticky-comment-for-git-diff
+            hide: true
+            hide_classify: "OUTDATED"
