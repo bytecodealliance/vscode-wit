@@ -655,7 +655,6 @@ async function discoverEntryPoints() {
             external: ["vscode"],
             write: false, // Don't write to disk
             logLevel: "silent",
-            inject: ["src/node-polyfills.js"],
         });
 
         if (tempResult.outputFiles && tempResult.outputFiles.length > 0) {
@@ -721,7 +720,6 @@ async function main() {
             external: ["vscode"],
             logLevel: "silent",
             plugins: [resourceDiscoveryPlugin, wasmDiscoveryPlugin],
-            inject: ["src/node-polyfills.js"],
             define: {
                 // Define globals to prevent bundling issues
                 "process.env.NODE_ENV": JSON.stringify(production ? "production" : "development"),
