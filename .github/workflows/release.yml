@@ -12,8 +12,8 @@ on:
         type: string
         default: "wit-idl-v0.0.1"
   release:
-    types:
-      - released
+    types: 
+      - published
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -63,8 +63,7 @@ jobs:
       pull-requests: write
       repository-projects: read
     steps:
-      - uses: actions/checkout@v3
-
+      - uses: actions/checkout@v4
       - name: Add label to PR
         env:
           GITHUB_TOKEN: ${{ github.token }}
