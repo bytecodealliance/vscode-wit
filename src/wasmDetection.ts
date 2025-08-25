@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 
 /**
  * Read the first 8 bytes of a WebAssembly file and return header info.
