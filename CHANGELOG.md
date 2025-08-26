@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.14](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.13...wit-idl-v0.3.14) (2025-08-26)
+
+
+### Bug Fixes
+
+* default formatter to this extension ([4dbf472](https://github.com/bytecodealliance/vscode-wit/commit/4dbf47255081ada912ff89ee5d93e5daf053b8a8))
+
 ## [0.3.13](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.12...wit-idl-v0.3.13) (2025-08-26)
 
 
