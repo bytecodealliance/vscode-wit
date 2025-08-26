@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.13](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.12...wit-idl-v0.3.13) (2025-08-26)
+
+
+### Features
+
+* add pretty print support ([cc5b753](https://github.com/bytecodealliance/vscode-wit/commit/cc5b75363e9ae3703e26d5b61fdfb1d7f985579c))
+
+
+### Bug Fixes
+
+* release-please fails to update issues ([b9042ce](https://github.com/bytecodealliance/vscode-wit/commit/b9042ce96d6ede18a533312abb2bea4f4f5c18e9))
+
 ## [0.3.12](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.11...wit-idl-v0.3.12) (2025-08-24)
 
 
