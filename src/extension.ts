@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as path from "node:path";
 import * as fs from "node:fs";
 import { WitSyntaxValidator } from "./validator.js";
+import { WitFormatter } from "./formatter.js";
 import { isWasmComponentFile } from "./wasmDetection.js";
 import {
     getWitBindgenVersionFromWasm,
@@ -315,6 +316,34 @@ export function activate(context: vscode.ExtensionContext) {
             console.error("Failed to get WIT bindgen version:", error);
             vscode.window.showErrorMessage(
                 `Failed to get WIT bindgen version: ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    });
+
+    // Register WIT formatter
+    const witFormatter = new WitFormatter();
+    const formattingProvider = vscode.languages.registerDocumentFormattingEditProvider("wit", witFormatter);
+
+    // Register format document command
+    const formatDocumentCommand = vscode.commands.registerCommand("wit-idl.formatDocument", async () => {
+        const activeEditor = vscode.window.activeTextEditor;
+
+        if (!activeEditor) {
+            vscode.window.showWarningMessage("No active editor found");
+            return;
+        }
+
+        if (activeEditor.document.languageId !== "wit") {
+            vscode.window.showWarningMessage("Active file is not a WIT file");
+            return;
+        }
+
+        try {
+            await vscode.commands.executeCommand("editor.action.formatDocument");
+        } catch (error) {
+            console.error("Failed to format document:", error);
+            vscode.window.showErrorMessage(
+                `Failed to format document: ${error instanceof Error ? error.message : String(error)}`
             );
         }
     });
@@ -725,9 +754,11 @@ export function activate(context: vscode.ExtensionContext) {
         providerDisposable,
         witExtractProvider,
         provider,
+        formattingProvider,
         syntaxCheckCommand,
         syntaxCheckWorkspaceCommand,
         showVersionCommand,
+        formatDocumentCommand,
         extractWitCommand,
         extractCoreWasmCommand,
         generateRustBindingsCommand,

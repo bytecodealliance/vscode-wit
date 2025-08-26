@@ -181,6 +181,11 @@
                 "command": "wit-idl.extractCoreWasm",
                 "title": "Extract Core Wasm",
                 "category": "WIT"
+            },
+            {
+                "command": "wit-idl.formatDocument",
+                "title": "Format Document",
+                "category": "WIT"
             }
         ],
         "submenus": [
@@ -195,6 +200,11 @@
                     "command": "wit-idl.syntaxCheck",
                     "when": "resourceExtname == .wit",
                     "group": "navigation"
+                },
+                {
+                    "command": "wit-idl.formatDocument",
+                    "when": "resourceExtname == .wit",
+                    "group": "1_modification@10"
                 },
                 {
                     "submenu": "wit-idl.generateBindings.submenu",
@@ -289,6 +299,10 @@
                 {
                     "command": "wit-idl.extractCoreWasm",
                     "when": "witIdl.isWasmComponent"
+                },
+                {
+                    "command": "wit-idl.formatDocument",
+                    "when": "editorLangId == wit"
                 }
             ]
         },
@@ -301,6 +315,11 @@
             {
                 "command": "wit-idl.syntaxCheckWorkspace",
                 "key": "shift+f7"
+            },
+            {
+                "command": "wit-idl.formatDocument",
+                "key": "shift+alt+f",
+                "when": "editorTextFocus && editorLangId == wit"
             }
         ],
         "customEditors": [
