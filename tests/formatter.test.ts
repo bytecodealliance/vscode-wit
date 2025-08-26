@@ -24,18 +24,15 @@ describe("WitFormatter", () => {
     const formatter = new WitFormatter();
     const options = {
         insertSpaces: true,
-        tabSize: 4
+        tabSize: 4,
     };
 
     it("should format package declaration correctly", () => {
         const input = "package   foo:bar   ;";
         const expected = "package foo:bar;";
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -48,7 +45,7 @@ f1:func();
 f2:func(a:u32);
 f3:func()->u32;
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
@@ -56,12 +53,9 @@ interface test {
     f2: func(a: u32);
     f3: func() -> u32;
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -73,19 +67,16 @@ world   test{
 import   test-interface;
 export   run:func();
 }`;
-        
+
         const expected = `package foo:bar;
 
 world test {
     import test-interface;
     export run: func();
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -100,7 +91,7 @@ age:u32,
 active:bool,
 }
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
@@ -110,12 +101,9 @@ interface test {
         active: bool,
     }
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -129,7 +117,7 @@ ok(string),
 error(u32),
 }
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
@@ -138,12 +126,9 @@ interface test {
         error(u32),
     }
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -154,18 +139,15 @@ interface test {
 interface test{
 complex-func:func(a:u32,b:string,c:bool)->tuple<u32,string>;
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
     complex-func: func(a: u32, b: string, c: bool) -> tuple<u32, string>;
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -180,7 +162,7 @@ f1:func();
 /* Block comment */
 f2:func();
 }`;
-        
+
         const expected = `package foo:bar;
 
 // This is a line comment
@@ -190,12 +172,9 @@ interface test {
     /* Block comment */
     f2: func();
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -211,7 +190,7 @@ completed,
 failed,
 }
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
@@ -222,12 +201,9 @@ interface test {
         failed,
     }
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -239,19 +215,16 @@ interface test{
 type   my-string=string;
 type   my-list=list<u32>;
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
     type my-string = string;
     type my-list = list<u32>;
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -263,19 +236,16 @@ interface test{
 use   other:interface/types.{my-type};
 use   another   as   alias;
 }`;
-        
+
         const expected = `package foo:bar;
 
 interface test {
     use other:interface/types.{my-type};
     use another as alias;
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -283,12 +253,9 @@ interface test {
     it("should handle empty document", () => {
         const input = "";
         const expected = "";
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         const formatted = applyEdits(input, result);
         expect(formatted).toBe(expected);
     });
@@ -305,12 +272,9 @@ world test-world {
     import test;
     export test;
 }`;
-        
-        const result = formatter.provideDocumentFormattingEdits(
-            createMockDocument(input),
-            options
-        );
-        
+
+        const result = formatter.provideDocumentFormattingEdits(createMockDocument(input), options);
+
         // Should return no edits for already formatted content
         expect(result).toEqual([]);
     });
@@ -320,7 +284,7 @@ function createMockDocument(content: string) {
     return {
         getText: () => content,
         positionAt: (offset: number) => {
-            const lines = content.substring(0, offset).split('\n');
+            const lines = content.substring(0, offset).split("\n");
             return { line: lines.length - 1, character: lines[lines.length - 1].length };
         },
         languageId: "wit",
@@ -332,21 +296,21 @@ function createMockDocument(content: string) {
         save: async () => true,
         eol: 1, // LF
         version: 1,
-        lineCount: content.split('\n').length,
+        lineCount: content.split("\n").length,
         lineAt: (line: number) => {
-            const lines = content.split('\n');
-            const text = lines[line] || '';
+            const lines = content.split("\n");
+            const text = lines[line] || "";
             return {
                 lineNumber: line,
                 text,
                 range: { start: { line, character: 0 }, end: { line, character: text.length } },
                 rangeIncludingLineBreak: { start: { line, character: 0 }, end: { line: line + 1, character: 0 } },
                 firstNonWhitespaceCharacterIndex: text.search(/\S/),
-                isEmptyOrWhitespace: text.trim().length === 0
+                isEmptyOrWhitespace: text.trim().length === 0,
             };
         },
-        offsetAt: (position: { line: number, character: number }) => {
-            const lines = content.split('\n');
+        offsetAt: (position: { line: number; character: number }) => {
+            const lines = content.split("\n");
             let offset = 0;
             for (let i = 0; i < position.line; i++) {
                 offset += lines[i].length + 1; // +1 for newline
@@ -355,7 +319,7 @@ function createMockDocument(content: string) {
         },
         getWordRangeAtPosition: () => undefined,
         validateRange: (range: any) => range,
-        validatePosition: (position: any) => position
+        validatePosition: (position: any) => position,
     };
 }
 
@@ -363,7 +327,7 @@ function applyEdits(original: string, edits: any[]): string {
     if (edits.length === 0) {
         return original;
     }
-    
+
     // For simplicity, assume single replacement edit (which is what our formatter returns)
     const edit = edits[0];
     return edit.newText;

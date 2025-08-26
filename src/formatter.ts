@@ -14,16 +14,13 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
     ): vscode.TextEdit[] {
         const text = document.getText();
         const formatted = this.formatWitContent(text, options);
-        
+
         if (formatted === text) {
             return []; // No changes needed
         }
-        
-        const fullRange = new vscode.Range(
-            document.positionAt(0),
-            document.positionAt(text.length)
-        );
-        
+
+        const fullRange = new vscode.Range(document.positionAt(0), document.positionAt(text.length));
+
         return [vscode.TextEdit.replace(fullRange, formatted)];
     }
 
@@ -35,32 +32,32 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
         const formatted: string[] = [];
         let indentLevel = 0;
         const indentString = options.insertSpaces ? " ".repeat(options.tabSize) : "\t";
-        
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
             const trimmed = line.trim();
-            
+
             // Skip empty lines and preserve them
             if (trimmed === "") {
                 formatted.push("");
                 continue;
             }
-            
+
             // Handle closing braces - decrease indent before processing
             if (trimmed === "}" || trimmed === "},") {
                 indentLevel = Math.max(0, indentLevel - 1);
             }
-            
+
             // Format the line with proper indentation and spacing
             const formattedLine = this.formatLine(trimmed, indentLevel, indentString);
             formatted.push(formattedLine);
-            
+
             // Handle opening braces - increase indent after processing
             if (this.isOpeningBrace(trimmed)) {
                 indentLevel++;
             }
         }
-        
+
         return formatted.join("\n");
     }
 
@@ -69,20 +66,20 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private formatLine(line: string, indentLevel: number, indentString: string): string {
         const indent = indentString.repeat(indentLevel);
-        
+
         // Handle comments - preserve as-is but with proper indentation
         if (line.startsWith("//") || line.startsWith("/*") || line.startsWith("*") || line.startsWith("*/")) {
             return indent + line;
         }
-        
+
         // Handle doc comments
         if (line.startsWith("///")) {
             return indent + line;
         }
-        
+
         // Format different WIT constructs
         let formatted = line;
-        
+
         // Package declaration
         if (line.startsWith("package ")) {
             formatted = this.formatPackageDeclaration(line);
@@ -119,7 +116,7 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
         else if (this.isFieldDeclaration(line)) {
             formatted = this.formatFieldDeclaration(line);
         }
-        
+
         return indent + formatted;
     }
 
@@ -177,12 +174,17 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
         if (line.startsWith("import ") || line.startsWith("export ")) {
             return false;
         }
-        
-        return line.includes(":func(") || line.includes(": func(") || 
-               line.includes(":func()") || line.includes(": func()") ||
-               line.includes(": func ") || line.endsWith(": func;") ||
-               line.includes("->") || // Return type indicator
-               /:\s*func\b/.test(line); // More general func detection
+
+        return (
+            line.includes(":func(") ||
+            line.includes(": func(") ||
+            line.includes(":func()") ||
+            line.includes(": func()") ||
+            line.includes(": func ") ||
+            line.endsWith(": func;") ||
+            line.includes("->") || // Return type indicator
+            /:\s*func\b/.test(line)
+        ); // More general func detection
     }
 
     /**
@@ -190,11 +192,11 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private formatFunctionDeclaration(line: string): string {
         let formatted = line;
-        
+
         // Add space after colon if missing
         formatted = formatted.replace(/:func/, ": func");
         formatted = formatted.replace(/:\s*func/, ": func");
-        
+
         // Format function parameters and return types
         formatted = formatted.replace(/func\s*\(/, "func(");
         formatted = formatted.replace(/\)\s*->\s*/, ") -> ");
@@ -202,10 +204,10 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
         formatted = formatted.replace(/\)->/, ") -> ");
         formatted = formatted.replace(/,\s*/g, ", ");
         formatted = formatted.replace(/:\s*/g, ": ");
-        
+
         // Handle trailing semicolon
         formatted = formatted.replace(/\s*;\s*$/, ";");
-        
+
         return formatted;
     }
 
@@ -214,8 +216,10 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private isFieldDeclaration(line: string): boolean {
         // Field declarations typically have: name: type, or name(type), or just name,
-        return /^\s*[a-zA-Z][a-zA-Z0-9-]*\s*[:,(]/.test(line.trim()) || 
-               /^\s*[a-zA-Z][a-zA-Z0-9-]*\s*,?\s*$/.test(line.trim());
+        return (
+            /^\s*[a-zA-Z][a-zA-Z0-9-]*\s*[:,(]/.test(line.trim()) ||
+            /^\s*[a-zA-Z][a-zA-Z0-9-]*\s*,?\s*$/.test(line.trim())
+        );
     }
 
     /**
@@ -223,16 +227,16 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private formatFieldDeclaration(line: string): string {
         let formatted = line;
-        
+
         // Add space after colon
         formatted = formatted.replace(/:\s*/g, ": ");
-        
+
         // Add space after comma
         formatted = formatted.replace(/,\s*/g, ", ");
-        
+
         // Handle trailing comma
         formatted = formatted.replace(/,\s*$/, ",");
-        
+
         return formatted;
     }
 
@@ -241,16 +245,16 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private formatImportExport(line: string): string {
         let formatted = line;
-        
+
         // Normalize spaces after import/export keyword
         formatted = formatted.replace(/^(import|export)\s+/, "$1 ");
-        
+
         // If this is a function export/import, format it completely here
         if (formatted.includes(": func") || formatted.includes(":func")) {
             // Add space after colon if missing
             formatted = formatted.replace(/:func/, ": func");
             formatted = formatted.replace(/:\s*func/, ": func");
-            
+
             // Format function parameters and return types
             formatted = formatted.replace(/func\s*\(/, "func(");
             formatted = formatted.replace(/\)\s*->\s*/, ") -> ");
@@ -258,10 +262,10 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
             formatted = formatted.replace(/\)->/, ") -> ");
             formatted = formatted.replace(/,\s*/g, ", ");
         }
-        
+
         // Handle trailing semicolon
         formatted = formatted.replace(/\s*;\s*$/, ";");
-        
+
         return formatted;
     }
 
@@ -270,17 +274,17 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private formatUseStatement(line: string): string {
         let formatted = line;
-        
+
         // Add space after use
         formatted = formatted.replace(/^use\s+/, "use ");
-        
+
         // Format as/from keywords
         formatted = formatted.replace(/\s+as\s+/, " as ");
         formatted = formatted.replace(/\s+from\s+/, " from ");
-        
+
         // Handle trailing semicolon
         formatted = formatted.replace(/\s*;\s*$/, ";");
-        
+
         return formatted;
     }
 
@@ -289,18 +293,18 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
      */
     private formatTypeAlias(line: string): string {
         let formatted = line;
-        
+
         // Format type keyword
         if (formatted.startsWith("type ")) {
             formatted = formatted.replace(/^type\s+/, "type ");
         }
-        
+
         // Format equals sign
         formatted = formatted.replace(/\s*=\s*/, " = ");
-        
+
         // Handle trailing semicolon
         formatted = formatted.replace(/\s*;\s*$/, ";");
-        
+
         return formatted;
     }
 }
