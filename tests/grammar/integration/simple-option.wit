@@ -20,20 +20,20 @@ interface option-simple {
   type o4 = option<option<o-nested>>;
 
 
-   oint-arg: func(x: option<s32>);
-   oint-result: func() -> option<s32>;
+  oint-arg: func(x: option<s32>);
+  oint-result: func() -> option<s32>;
 
-   o1-arg: func(x: o1);
-   o1-result: func() -> o1;
+  o1-arg: func(x: o1);
+  o1-result: func() -> o1;
 
-   o2-arg: func(x: o2);
-   o2-result: func() -> o2;
+  o2-arg: func(x: o2);
+  o2-result: func() -> o2;
 
-   o3-arg: func(x: o3);
-   o3-result: func() -> o3;
+  o3-arg: func(x: o3);
+  o3-result: func() -> o3;
 
-   o4-arg: func(x: o4);
-   o4-result: func() -> o4;
+  o4-arg: func(x: o4);
+  o4-result: func() -> o4;
 }
 
 world my-world {

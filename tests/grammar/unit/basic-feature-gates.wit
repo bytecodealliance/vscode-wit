@@ -4,16 +4,16 @@ package test:basic@1.0.0;
 
 @unstable(feature = test-feature)
 interface basic {
-    test-func: func();
+  test-func: func();
 }
 
 @since(version = 1.0.0)
 interface stable {
-    stable-func: func();
+  stable-func: func();
 }
 
 @deprecated(version = 2.0.0)
 @since(version = 1.0.0)
 interface old {
-    old-func: func();
+  old-func: func();
 }

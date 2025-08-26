@@ -2,14 +2,14 @@ package foo:foo;
 
 interface enums {
   enum e1 {
-      a,
-      b,
-      c
+    a,
+    b,
+    c
   }
 
   enum e2 {
-      something,
-      else
+    something,
+    else
   }
 
   e1-arg: func(x: e1);

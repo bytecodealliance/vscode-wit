@@ -6,85 +6,85 @@ package example:feature-gates@1.0.0;
 /// Interface with unstable feature gate
 @unstable(feature = wasi-io)
 interface io {
-    /// Function with since annotation
-    @since(version = 1.2.0)
-    read: func(fd: u32) -> result<list<u8>, error>;
-    
-    /// Function with deprecated annotation
-    @deprecated(version = 2.0.0)
-    write-old: func(fd: u32, data: list<u8>) -> result<_, error>;
+  /// Function with since annotation
+  @since(version = 1.2.0)
+  read: func(fd: u32) -> result<list<u8>, error>;
+
+  /// Function with deprecated annotation
+  @deprecated(version = 2.0.0)
+  write-old: func(fd: u32, data: list<u8>) -> result<_, error>;
 }
 
 /// World with feature gates
 @unstable(feature = experimental-world)
 world example {
-    /// Export with since annotation
+  /// Export with since annotation
+  @since(version = 1.1.0)
+  export log: interface {
     @since(version = 1.1.0)
-    export log: interface {
-        @since(version = 1.1.0)
-        info: func(msg: string);
-        
-        @deprecated(version = 2.0.0)
-        debug: func(msg: string);
-    }
-    
-    /// Import with unstable feature
-    @unstable(feature = network-io)
-    import socket: interface {
-        connect: func(addr: string) -> result<u32, error>;
-    }
+    info: func(msg: string);
+
+    @deprecated(version = 2.0.0)
+    debug: func(msg: string);
+  }
+
+  /// Import with unstable feature
+  @unstable(feature = network-io)
+  import socket: interface {
+    connect: func(addr: string) -> result<u32, error>;
+  }
 }
 
 /// Types with feature gates
 @since(version = 1.0.0)
 interface types {
-    /// Record with unstable annotation
-    @unstable(feature = advanced-types)
-    record config {
-        name: string,
-        @since(version = 1.1.0)
-        timeout: option<u32>,
-    }
-    
-    /// Enum with deprecation
-    @deprecated(version = 2.0.0)
-    enum status {
-        ok,
-        error,
-        @unstable(feature = new-status)
-        pending,
-    }
-    
-    /// Variant with feature gates
-    @since(version = 1.0.0)
-    variant result-type {
-        success(string),
-        @deprecated(version = 1.5.0)
-        failure(string),
-    }
-    
-    /// Flags with annotations
-    @unstable(feature = flag-extensions)
-    flags permissions {
-        read,
-        write,
-        @since(version = 1.2.0)
-        execute,
-    }
-    
-    /// Type alias with feature gate
+  /// Record with unstable annotation
+  @unstable(feature = advanced-types)
+  record config {
+    name: string,
     @since(version = 1.1.0)
-    type user-id = u32;
-    
-    /// Resource with feature gate
-    @unstable(feature = resource-management)
-    resource file {
-        constructor(path: string);
-        
-        @since(version = 1.1.0)
-        read: func() -> string;
-        
-        @deprecated(version = 2.0.0)
-        write-sync: func(data: string);
-    }
+    timeout: option<u32>,
+  }
+
+  /// Enum with deprecation
+  @deprecated(version = 2.0.0)
+  enum status {
+    ok,
+    error,
+    @unstable(feature = new-status)
+    pending,
+  }
+
+  /// Variant with feature gates
+  @since(version = 1.0.0)
+  variant result-type {
+    success(string),
+    @deprecated(version = 1.5.0)
+    failure(string),
+  }
+
+  /// Flags with annotations
+  @unstable(feature = flag-extensions)
+  flags permissions {
+    read,
+    write,
+    @since(version = 1.2.0)
+    execute,
+  }
+
+  /// Type alias with feature gate
+  @since(version = 1.1.0)
+  type user-id = u32;
+
+  /// Resource with feature gate
+  @unstable(feature = resource-management)
+  resource file {
+    constructor(path: string);
+
+    @since(version = 1.1.0)
+    read: func() -> string;
+
+    @deprecated(version = 2.0.0)
+    write-sync: func(data: string);
+  }
 }

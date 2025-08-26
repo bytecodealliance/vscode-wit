@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as path from "node:path";
 import * as fs from "node:fs";
 import { WitSyntaxValidator } from "./validator.js";
+import { WitFormatter } from "./formatter.js";
 import { isWasmComponentFile } from "./wasmDetection.js";
 import {
     getWitBindgenVersionFromWasm,
@@ -9,8 +10,6 @@ import {
     generateBindingsFromWasm,
     extractCoreWasmFromComponent,
 } from "./wasmUtils.js";
-
-// Removed: openExtractedWitDocument - we now render a readonly view in a custom editor
 
 class WitExtractContentProvider implements vscode.TextDocumentContentProvider, vscode.Disposable {
     private readonly _onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
@@ -27,7 +26,6 @@ class WitExtractContentProvider implements vscode.TextDocumentContentProvider, v
     }
 
     private getSourceFileUri(virtualUri: vscode.Uri): vscode.Uri {
-        // We reuse the original file path encoded in the URI path
         return virtualUri.with({ scheme: "file" });
     }
 
@@ -94,7 +92,6 @@ class WasmToWitOpenRedirectProvider implements vscode.CustomReadonlyEditorProvid
     async openCustomDocument(uri: vscode.Uri): Promise<vscode.CustomDocument & { isComponent?: boolean }> {
         let isComponent: boolean | undefined;
         try {
-            // Do the quick header check here to avoid spinning up a webview for non-components
             isComponent = await isWasmComponentFile(uri.fsPath);
         } catch {
             isComponent = undefined;
@@ -113,14 +110,12 @@ class WasmToWitOpenRedirectProvider implements vscode.CustomReadonlyEditorProvid
         webviewPanel: vscode.WebviewPanel
     ): Promise<void> {
         const filePath: string = document.uri.fsPath;
-        // Only handle component files; otherwise fall back to default editor
         if (document.isComponent === false) {
             await vscode.commands.executeCommand("vscode.openWith", document.uri, "default");
             webviewPanel.dispose();
             return;
         }
         if (document.isComponent !== true) {
-            // Unknown => best-effort re-check
             try {
                 const headerIsComponent = await isWasmComponentFile(filePath);
                 if (!headerIsComponent) {
@@ -135,7 +130,6 @@ class WasmToWitOpenRedirectProvider implements vscode.CustomReadonlyEditorProvid
             }
         }
 
-        // Open a virtual readonly document using the built-in editor with WIT language features
         const witUri = document.uri.with({ scheme: "wit-extract" });
         const doc = await vscode.workspace.openTextDocument(witUri);
         if (doc.languageId !== "wit") {
@@ -199,15 +193,12 @@ const staticCompletions = new vscode.CompletionList(
 
 export function activate(context: vscode.ExtensionContext) {
     const validator = new WitSyntaxValidator();
-    // Register provider for virtual extracted WIT documents
     const witExtractProvider = new WitExtractContentProvider();
     const providerDisposable = vscode.workspace.registerTextDocumentContentProvider("wit-extract", witExtractProvider);
     const componentDecoProvider = new ComponentDecorationProvider();
     context.subscriptions.push(vscode.window.registerFileDecorationProvider(componentDecoProvider));
-    // Kick an initial refresh so Explorer asks for decorations immediately
     componentDecoProvider.refresh();
 
-    // Watch for .wasm file changes to keep decorations fresh
     const wasmWatcher = vscode.workspace.createFileSystemWatcher("**/*.wasm");
     const onCreate = wasmWatcher.onDidCreate((uri) => componentDecoProvider.refresh(uri));
     const onChange = wasmWatcher.onDidChange((uri) => componentDecoProvider.refresh(uri));
@@ -215,16 +206,12 @@ export function activate(context: vscode.ExtensionContext) {
     const onWorkspaceFolders = vscode.workspace.onDidChangeWorkspaceFolders(() => componentDecoProvider.refresh());
     context.subscriptions.push(wasmWatcher, onCreate, onChange, onDelete, onWorkspaceFolders);
 
-    // Set default context for wasm component presence
     void vscode.commands.executeCommand("setContext", "witIdl.isWasmComponent", false);
 
-    // Helper: check if a wasm file is a component (reusable util)
     const isWasmComponent = async (filePath: string): Promise<boolean> => isWasmComponentFile(filePath);
-    // Helper: case-insensitive check for .wasm extension (type guard)
     const isWasmPath = (filePath: string | undefined): filePath is string =>
         !!filePath && filePath.toLowerCase().endsWith(".wasm");
 
-    // Helper: update the context key based on the current active editor's file
     const updateWasmComponentContext = async (uri: vscode.Uri | undefined): Promise<void> => {
         const filePath: string | undefined = uri?.fsPath;
         if (!isWasmPath(filePath)) {
@@ -235,13 +222,7 @@ export function activate(context: vscode.ExtensionContext) {
         await vscode.commands.executeCommand("setContext", "witIdl.isWasmComponent", isComp);
     };
 
-    // (helper is defined at module scope)
-
-    // Note: opening behavior is handled by the custom editor provider below.
-
-    // Update context at activation for the current editor
     void updateWasmComponentContext(vscode.window.activeTextEditor?.document.uri);
-    // Also when the window gains focus
     const onWindowFocus = vscode.window.onDidChangeWindowState(async (state) => {
         if (state.focused) {
             const editor = vscode.window.activeTextEditor;
@@ -251,7 +232,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    // React to editor changes and document events for .wasm files
     const onActiveEditorChange = vscode.window.onDidChangeActiveTextEditor(async (editor) => {
         if (editor && isWasmPath(editor.document.uri.fsPath)) {
             await updateWasmComponentContext(editor.document.uri);
@@ -319,7 +299,32 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    // Implement extractWit command
+    const witFormatter = new WitFormatter();
+    const formattingProvider = vscode.languages.registerDocumentFormattingEditProvider("wit", witFormatter);
+
+    const formatDocumentCommand = vscode.commands.registerCommand("wit-idl.formatDocument", async () => {
+        const activeEditor = vscode.window.activeTextEditor;
+
+        if (!activeEditor) {
+            vscode.window.showWarningMessage("No active editor found");
+            return;
+        }
+
+        if (activeEditor.document.languageId !== "wit") {
+            vscode.window.showWarningMessage("Active file is not a WIT file");
+            return;
+        }
+
+        try {
+            await vscode.commands.executeCommand("editor.action.formatDocument");
+        } catch (error) {
+            console.error("Failed to format document:", error);
+            vscode.window.showErrorMessage(
+                `Failed to format document: ${error instanceof Error ? error.message : String(error)}`
+            );
+        }
+    });
+
     const extractWitCommand = vscode.commands.registerCommand("wit-idl.extractWit", async (resource?: vscode.Uri) => {
         try {
             const targetUri: vscode.Uri | undefined = resource ?? vscode.window.activeTextEditor?.document.uri;
@@ -374,7 +379,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    // Implement extractCoreWasm command
     const extractCoreWasmCommand = vscode.commands.registerCommand(
         "wit-idl.extractCoreWasm",
         async (resource?: vscode.Uri) => {
@@ -397,7 +401,6 @@ export function activate(context: vscode.ExtensionContext) {
                     return;
                 }
 
-                // Extract using embedded wasm-utils (no external CLI dependency)
                 const bytes = await vscode.workspace.fs.readFile(targetUri);
                 const fileMap = await extractCoreWasmFromComponent(bytes);
                 const entries = Object.entries(fileMap).sort(([a], [b]) =>
@@ -425,7 +428,6 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                 }
 
-                // Now we know which core module is selected, propose a default filename that includes it
                 const baseName: string = path.basename(filePath, ".wasm");
                 const defaultFileName: string = `${baseName}.${chosenName}`; // e.g., mycomp.core0.wasm
                 const defaultDir: string = path.dirname(filePath);
@@ -438,7 +440,6 @@ export function activate(context: vscode.ExtensionContext) {
                     return;
                 }
 
-                // Write selected core wasm to the chosen path
                 const data = chosenContent; // already Uint8Array
                 try {
                     await vscode.workspace.fs.stat(saveUri);
@@ -452,7 +453,7 @@ export function activate(context: vscode.ExtensionContext) {
                         return;
                     }
                 } catch {
-                    // stat throws if file doesn't exist; continue
+                    // ignored: file does not exist
                 }
                 await vscode.workspace.fs.writeFile(saveUri, data);
 
@@ -473,18 +474,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    /**
-     * Create a binding generation command for a specific language
-     * @param language - The target language for bindings
-     * @param languageLabel - The display label for the language
-     * @returns The command registration
-     */
     const createGenerateBindingsCommand = (language: string, languageLabel: string) => {
         return vscode.commands.registerCommand(
             `wit-idl.generateBindings${languageLabel}`,
             async (resource?: vscode.Uri) => {
                 try {
-                    // Determine source: explicit resource (from explorer), active editor, or bail
                     const active = vscode.window.activeTextEditor;
                     const targetUri: vscode.Uri | undefined = resource ?? active?.document.uri;
                     if (!targetUri) {
@@ -492,7 +486,6 @@ export function activate(context: vscode.ExtensionContext) {
                         return;
                     }
 
-                    // Prepare WIT content and a document for diagnostics
                     let witContent: string;
                     let diagDoc: vscode.TextDocument | undefined;
 
@@ -508,7 +501,6 @@ export function activate(context: vscode.ExtensionContext) {
                             return;
                         }
                     } else if (targetUri.fsPath.toLowerCase().endsWith(".wasm")) {
-                        // Only proceed for components
                         const comp = await isWasmComponentFile(targetUri.fsPath);
                         if (!comp) {
                             vscode.window.showWarningMessage("The selected .wasm is not a WebAssembly component.");
@@ -521,7 +513,6 @@ export function activate(context: vscode.ExtensionContext) {
                             return;
                         }
                         witContent = extracted;
-                        // Write to a temp .wit file for better diagnostics anchoring
                         const os = await import("os");
                         const tmpDir = os.tmpdir();
                         const base = path.basename(targetUri.fsPath, ".wasm");
@@ -533,7 +524,6 @@ export function activate(context: vscode.ExtensionContext) {
                         return;
                     }
 
-                    // Optional: world selection placeholder (not yet used)
                     const worldMatch = witContent.match(/world\s+([a-zA-Z][a-zA-Z0-9-_]*)/g);
                     let selectedWorld: string | undefined;
 
@@ -557,12 +547,10 @@ export function activate(context: vscode.ExtensionContext) {
 
                     const bindingFiles = await generateBindingsFromWasm(witContent, language, selectedWorld);
 
-                    // Check if generation failed or returned error files
                     const fileEntries = Object.entries(bindingFiles);
                     const errorFile = fileEntries.find(([filename]) => filename === "error.txt");
 
                     if (errorFile) {
-                        // There's an explicit error file - parse and report error to problems pane
                         const errorMessage = errorFile[1];
                         const docPath = diagDoc?.uri.fsPath ?? targetUri.fsPath;
                         const parsedError = validator.parseWitBindgenError(errorMessage, docPath);
@@ -571,7 +559,6 @@ export function activate(context: vscode.ExtensionContext) {
                             const diagnostic = validator.createDiagnosticFromError(parsedError, diagDoc);
                             validator.getDiagnosticCollection().set(diagDoc.uri, [diagnostic]);
                         } else {
-                            // Fallback if parsing fails
                             const cleanMessage = errorMessage.replace(/^\/\/\s*/, "").replace(/\n\/\/\s*/g, "\n");
                             const diagnostic = new vscode.Diagnostic(
                                 new vscode.Range(0, 0, 0, 1),
@@ -587,7 +574,6 @@ export function activate(context: vscode.ExtensionContext) {
                     }
 
                     if (fileEntries.length === 0) {
-                        // No files generated and no explicit error - parse and report to problems pane
                         const errorMessage =
                             "No files were generated. This may be due to invalid WIT syntax or unsupported features.";
                         const docPath = diagDoc?.uri.fsPath ?? targetUri.fsPath;
@@ -597,7 +583,6 @@ export function activate(context: vscode.ExtensionContext) {
                             const diagnostic = validator.createDiagnosticFromError(parsedError, diagDoc);
                             validator.getDiagnosticCollection().set(diagDoc.uri, [diagnostic]);
                         } else {
-                            // Fallback if parsing fails
                             const diagnostic = new vscode.Diagnostic(
                                 new vscode.Range(0, 0, 0, 1),
                                 `Failed to generate ${languageLabel} bindings: ${errorMessage}`,
@@ -611,7 +596,6 @@ export function activate(context: vscode.ExtensionContext) {
                         return;
                     }
 
-                    // Clear any existing binding generation errors since we're about to succeed
                     if (diagDoc) {
                         const existingDiagnostics = validator.getDiagnosticCollection().get(diagDoc.uri) || [];
                         const filteredDiagnostics = existingDiagnostics.filter((d) => d.source !== "wit-bindgen");
@@ -648,7 +632,6 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                 } catch (error) {
                     console.error("Failed to generate bindings:", error);
-                    // Parse and report error to problems pane instead of dialog
                     const errorMessage = error instanceof Error ? error.message : String(error);
                     const uriForDiag = (vscode.window.activeTextEditor?.document ?? undefined)?.uri;
                     const docPath = uriForDiag?.fsPath ?? "";
@@ -663,7 +646,6 @@ export function activate(context: vscode.ExtensionContext) {
                             .getDiagnosticCollection()
                             .set(vscode.window.activeTextEditor.document.uri, [diagnostic]);
                     } else {
-                        // Fallback if parsing fails
                         const diagnostic = new vscode.Diagnostic(
                             new vscode.Range(0, 0, 0, 1),
                             `Failed to generate bindings: ${errorMessage}`,
@@ -725,9 +707,11 @@ export function activate(context: vscode.ExtensionContext) {
         providerDisposable,
         witExtractProvider,
         provider,
+        formattingProvider,
         syntaxCheckCommand,
         syntaxCheckWorkspaceCommand,
         showVersionCommand,
+        formatDocumentCommand,
         extractWitCommand,
         extractCoreWasmCommand,
         generateRustBindingsCommand,
@@ -747,6 +731,4 @@ export function activate(context: vscode.ExtensionContext) {
     );
 }
 
-export function deactivate() {
-    // Extension cleanup is handled by context.subscriptions
-}
+export function deactivate() {}

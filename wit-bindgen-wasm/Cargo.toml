@@ -40,3 +40,8 @@ toml = "0.9.5"
 [profile.release]
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"
+
+# Disable Binaryen optimization step; avoids failures on Windows CI environments
+# where the bundled/expected `wasm-opt` binary may be unavailable.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

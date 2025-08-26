@@ -17,105 +17,105 @@ use wasi:http/types@1.0.0 as http-types
 //                           ^^^^^^^^^^    entity.name.type.toplevel-use-item.wit
 
 interface some-interface {
-// <---------    keyword.declaration.interface.interface-item.wit storage.type.wit
-//        ^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
-//                       ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
+  // <---------    keyword.declaration.interface.interface-item.wit storage.type.wit
+  //        ^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
+  //                       ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
   use self.io.level-L1.level-L2.{
-//^^^    keyword.other.use.use-item.wit
-//    ^^^^    entity.name.namespace.id.use-path.wit
-//        ^    keyword.operator.namespace-separator.use-path.wit
-//         ^^    entity.name.namespace.id.use-path.wit
-//           ^    keyword.operator.namespace-separator.use-path.wit
-//            ^^^^^^^^    entity.name.namespace.id.use-path.wit
-//                    ^    keyword.operator.namespace-separator.use-path.wit
-//                     ^^^^^^^^    entity.name.namespace.id.use-path.wit
-//                             ^    keyword.operator.namespace-separator.use-item.wit
-//                              ^    meta.use-item.wit punctuation.brackets.curly.begin.wit
+    //^^^    keyword.other.use.use-item.wit
+    //    ^^^^    entity.name.namespace.id.use-path.wit
+    //        ^    keyword.operator.namespace-separator.use-path.wit
+    //         ^^    entity.name.namespace.id.use-path.wit
+    //           ^    keyword.operator.namespace-separator.use-path.wit
+    //            ^^^^^^^^    entity.name.namespace.id.use-path.wit
+    //                    ^    keyword.operator.namespace-separator.use-path.wit
+    //                     ^^^^^^^^    entity.name.namespace.id.use-path.wit
+    //                             ^    keyword.operator.namespace-separator.use-item.wit
+    //                              ^    meta.use-item.wit punctuation.brackets.curly.begin.wit
 
     input-stream,
-//  ^^^^^^^^^^^^    entity.name.type.declaration.use-names-item.use-item.wit
-//              ^    meta.use-item.wit punctuation.comma.wit
+    //  ^^^^^^^^^^^^    entity.name.type.declaration.use-names-item.use-item.wit
+    //              ^    meta.use-item.wit punctuation.comma.wit
 
     output-stream
-//  ^^^^^^^^^^^^^^    entity.name.type.declaration.use-names-item.use-item.wit
+    //  ^^^^^^^^^^^^^^    entity.name.type.declaration.use-names-item.use-item.wit
 
   }
-//^    meta.use-item.wit punctuation.brackets.curly.end.wit
+  //^    meta.use-item.wit punctuation.brackets.curly.end.wit
 
   make-request: func(
-//^^^^^^^^^^^^    entity.name.function.id.func-item.wit
-//            ^    meta.func-item.wit keyword.operator.key-value.wit
-//              ^^^^    keyword.other.func.func-type.wit
-//                  ^    meta.function.wit punctuation.brackets.round.begin.wit
+  //^^^^^^^^^^^^    entity.name.function.id.func-item.wit
+  //            ^    meta.func-item.wit keyword.operator.key-value.wit
+  //              ^^^^    keyword.other.func.func-type.wit
+  //                  ^    meta.function.wit punctuation.brackets.round.begin.wit
 
-    url: method,
-//  ^^^    variable.parameter.id.named-type.wit
-//     ^    meta.named-type-list.wit keyword.operator.key-value.wit
-//       ^^^^^^    entity.name.type.id.wit
-//             ^    meta.named-type-list.wit punctuation.comma.wit
+  url: method,
+  //  ^^^    variable.parameter.id.named-type.wit
+  //     ^    meta.named-type-list.wit keyword.operator.key-value.wit
+  //       ^^^^^^    entity.name.type.id.wit
+  //             ^    meta.named-type-list.wit punctuation.comma.wit
 
-    headers: headers
+  headers: headers
   ) -> result<output-stream, string>
-//^    meta.function.wit punctuation.brackets.round.end.wit
-//  ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//     ^^^^^^    meta.result.ty.wit entity.name.type.result.wit
-//           ^    meta.result.ty.wit punctuation.brackets.angle.begin.wit
-//            ^^^^^^^^^^^^^    entity.name.type.id.wit
-//                         ^    meta.result.ty.wit punctuation.comma.wit
-//                           ^^^^^^    entity.name.type.string.wit
-//                                 ^    meta.result.ty.wit punctuation.brackets.angle.end.wit
+  //^    meta.function.wit punctuation.brackets.round.end.wit
+  //  ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
+  //     ^^^^^^    meta.result.ty.wit entity.name.type.result.wit
+  //           ^    meta.result.ty.wit punctuation.brackets.angle.begin.wit
+  //            ^^^^^^^^^^^^^    entity.name.type.id.wit
+  //                         ^    meta.result.ty.wit punctuation.comma.wit
+  //                           ^^^^^^    entity.name.type.string.wit
+  //                                 ^    meta.result.ty.wit punctuation.brackets.angle.end.wit
 
   enum others{input-stream,output-stream}
-//^^^^    keyword.other.enum.enum-items.wit
-//     ^^^^^^    entity.name.type.id.enum-items.wit
-//           ^    meta.enum-items.wit punctuation.brackets.curly.begin.wit
-//            ^^^^^^^^^^^^    variable.other.enummember.id.enum-cases.wit
-//                        ^    meta.enum-items.wit punctuation.comma.wit
-//                         ^^^^^^^^^^^^^    variable.other.enummember.id.enum-cases.wit
-//                                      ^    meta.enum-items.wit
+  //^^^^    keyword.other.enum.enum-items.wit
+  //     ^^^^^^    entity.name.type.id.enum-items.wit
+  //           ^    meta.enum-items.wit punctuation.brackets.curly.begin.wit
+  //            ^^^^^^^^^^^^    variable.other.enummember.id.enum-cases.wit
+  //                        ^    meta.enum-items.wit punctuation.comma.wit
+  //                         ^^^^^^^^^^^^^    variable.other.enummember.id.enum-cases.wit
+  //                                      ^    meta.enum-items.wit
 
   roundtrip: func(a: result) -> result;
-//^^^^^^^^^  entity.name.function.id.func-item.wit
-//         ^  meta.func-item.wit keyword.operator.key-value.wit
-//           ^^^^  keyword.other.func.func-type.wit
-//               ^  meta.function.wit punctuation.brackets.round.begin.wit
-//                ^  variable.parameter.id.named-type.wit
-//                 ^  meta.named-type-list.wit keyword.operator.key-value.wit
-//                   ^^^^^^   entity.name.type.result.wit
-//                         ^  meta.function.wit punctuation.brackets.round.end.wit
-//                           ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//                              ^^^^^^   entity.name.type.result.wit
+  //^^^^^^^^^  entity.name.function.id.func-item.wit
+  //         ^  meta.func-item.wit keyword.operator.key-value.wit
+  //           ^^^^  keyword.other.func.func-type.wit
+  //               ^  meta.function.wit punctuation.brackets.round.begin.wit
+  //                ^  variable.parameter.id.named-type.wit
+  //                 ^  meta.named-type-list.wit keyword.operator.key-value.wit
+  //                   ^^^^^^   entity.name.type.result.wit
+  //                         ^  meta.function.wit punctuation.brackets.round.end.wit
+  //                           ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
+  //                              ^^^^^^   entity.name.type.result.wit
 
 }
 // <-    meta.interface-item.wit punctuation.brackets.curly.end.wit
 
 interface another-interface {
-// <---------    keyword.declaration.interface.interface-item.wit storage.type.wit
-//        ^^^^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
-//                          ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
+  // <---------    keyword.declaration.interface.interface-item.wit storage.type.wit
+  //        ^^^^^^^^^^^^^^^^^    entity.name.type.id.interface-item.wit
+  //                          ^    meta.interface-item.wit punctuation.brackets.curly.begin.wit
 
   type my-type = string // comment
-//^^^^    keyword.declaration.type.type-item.wit
-//     ^^^^^^^    entity.name.type.id.type-item.wit
-//             ^    meta.type-item.wit punctuation.equal.wit
-//               ^^^^^^    entity.name.type.string.wit
-//                      ^^^^^^^^^^    comment.line.double-slash.wit
+  //^^^^    keyword.declaration.type.type-item.wit
+  //     ^^^^^^^    entity.name.type.id.type-item.wit
+  //             ^    meta.type-item.wit punctuation.equal.wit
+  //               ^^^^^^    entity.name.type.string.wit
+  //                      ^^^^^^^^^^    comment.line.double-slash.wit
 
   record my-record {
-//^^^^^^    keyword.declaration.record.record-item.wit
-//       ^^^^^^^^^    entity.name.type.id.record-item.wit
-//                 ^    meta.record-item.wit punctuation.brackets.curly.begin.wit
+    //^^^^^^    keyword.declaration.record.record-item.wit
+    //       ^^^^^^^^^    entity.name.type.id.record-item.wit
+    //                 ^    meta.record-item.wit punctuation.brackets.curly.begin.wit
 
     foo: string,
-//  ^^^    variable.declaration.id.record-fields.wit
-//     ^    meta.record-fields.wit keyword.operator.key-value.wit
-//       ^^^^^^    entity.name.type.string.wit
-//             ^    meta.record-fields.wit punctuation.comma.wit
+    //  ^^^    variable.declaration.id.record-fields.wit
+    //     ^    meta.record-fields.wit keyword.operator.key-value.wit
+    //       ^^^^^^    entity.name.type.string.wit
+    //             ^    meta.record-fields.wit punctuation.comma.wit
 
     bar: string
   }
-//^    meta.record-item.wit punctuation.brackets.curly.end.wit
+  //^    meta.record-item.wit punctuation.brackets.curly.end.wit
 
 }
 // <-    meta.interface-item.wit punctuation.brackets.curly.end.wit

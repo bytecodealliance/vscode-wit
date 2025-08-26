@@ -12,12 +12,12 @@
 #      ^^^^^^^^ source.wit meta.world-item.wit entity.name.type.id.world-item.wit
 #              ^ source.wit meta.world-item.wit
 #               ^ source.wit meta.world-item.wit punctuation.brackets.curly.begin.wit
->    export component;
-#^^^^ source.wit meta.world-item.wit meta.whitespace.wit
-#    ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
-#          ^ source.wit meta.world-item.wit meta.export-item.wit
-#           ^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
-#                    ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
+>  export component;
+#^^ source.wit meta.world-item.wit meta.whitespace.wit
+#  ^^^^^^ source.wit meta.world-item.wit meta.export-item.wit keyword.control.export.export-item.wit
+#        ^ source.wit meta.world-item.wit meta.export-item.wit
+#         ^^^^^^^^^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit variable.other.constant.id.export-item.wit
+#                  ^ source.wit meta.world-item.wit meta.export-item.wit meta.id.export-item.wit
 >}
 #^ source.wit meta.world-item.wit punctuation.brackets.curly.end.wit
 >
@@ -27,60 +27,60 @@
 #          ^^^^^^^^^ source.wit meta.interface-item.wit entity.name.type.id.interface-item.wit
 #                   ^ source.wit meta.interface-item.wit
 #                    ^ source.wit meta.interface-item.wit punctuation.brackets.curly.begin.wit
->    variant unused-variant {
-#^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
-#    ^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit keyword.other.variant.wit
-#           ^ source.wit meta.interface-item.wit meta.variant.wit
-#            ^^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit entity.name.type.id.variant.wit
-#                          ^ source.wit meta.interface-item.wit meta.variant.wit
-#                           ^ source.wit meta.interface-item.wit meta.variant.wit punctuation.brackets.curly.begin.wit
->        %enum(unused-enum),
-#^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
-#        ^ source.wit meta.interface-item.wit meta.variant.wit
-#         ^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit variable.other.enummember.id.variant-cases.wit
-#             ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.begin.wit
-#              ^^^^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit entity.name.type.id.wit
-#                         ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.end.wit
-#                          ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.comma.wit
->        %record(unused-record)
-#^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
-#        ^ source.wit meta.interface-item.wit meta.variant.wit
-#         ^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit variable.other.enummember.id.variant-cases.wit
-#               ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.begin.wit
-#                ^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit entity.name.type.id.wit
-#                             ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.end.wit
->    }
+>  variant unused-variant {
+#^^ source.wit meta.interface-item.wit meta.whitespace.wit
+#  ^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit keyword.other.variant.wit
+#         ^ source.wit meta.interface-item.wit meta.variant.wit
+#          ^^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit entity.name.type.id.variant.wit
+#                        ^ source.wit meta.interface-item.wit meta.variant.wit
+#                         ^ source.wit meta.interface-item.wit meta.variant.wit punctuation.brackets.curly.begin.wit
+>    %enum(unused-enum),
 #^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
-#    ^ source.wit meta.interface-item.wit meta.variant.wit punctuation.brackets.curly.end.wit
->    enum unused-enum {
-#^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
-#    ^^^^ source.wit meta.interface-item.wit meta.enum-items.wit keyword.other.enum.enum-items.wit
-#        ^ source.wit meta.interface-item.wit meta.enum-items.wit
-#         ^^^^^^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit entity.name.type.id.enum-items.wit
-#                    ^ source.wit meta.interface-item.wit meta.enum-items.wit
-#                     ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.begin.wit
->        unused
-#^^^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#        ^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
->    }
+#    ^ source.wit meta.interface-item.wit meta.variant.wit
+#     ^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit variable.other.enummember.id.variant-cases.wit
+#         ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.begin.wit
+#          ^^^^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit entity.name.type.id.wit
+#                     ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.end.wit
+#                      ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.comma.wit
+>    %record(unused-record)
+#^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.variant.wit
+#     ^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit variable.other.enummember.id.variant-cases.wit
+#           ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.begin.wit
+#            ^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit entity.name.type.id.wit
+#                         ^ source.wit meta.interface-item.wit meta.variant.wit meta.variant-cases.wit punctuation.brackets.round.end.wit
+>  }
+#^^ source.wit meta.interface-item.wit meta.variant.wit meta.whitespace.wit
+#  ^ source.wit meta.interface-item.wit meta.variant.wit punctuation.brackets.curly.end.wit
+>  enum unused-enum {
+#^^ source.wit meta.interface-item.wit meta.whitespace.wit
+#  ^^^^ source.wit meta.interface-item.wit meta.enum-items.wit keyword.other.enum.enum-items.wit
+#      ^ source.wit meta.interface-item.wit meta.enum-items.wit
+#       ^^^^^^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit entity.name.type.id.enum-items.wit
+#                  ^ source.wit meta.interface-item.wit meta.enum-items.wit
+#                   ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.begin.wit
+>    unused
 #^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#    ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.end.wit
->    record unused-record {
-#^^^^ source.wit meta.interface-item.wit meta.whitespace.wit
-#    ^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit keyword.declaration.record.record-item.wit
-#          ^ source.wit meta.interface-item.wit meta.record-item.wit
-#           ^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit entity.name.type.id.record-item.wit
-#                        ^ source.wit meta.interface-item.wit meta.record-item.wit
-#                         ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.begin.wit
->        x: u32
-#^^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
-#        ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit variable.declaration.id.record-fields.wit
-#         ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit keyword.operator.key-value.wit
-#          ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
-#           ^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit entity.name.type.numeric.wit
->    }
-#^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
-#    ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
+#    ^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
+>  }
+#^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
+#  ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.end.wit
+>  record unused-record {
+#^^ source.wit meta.interface-item.wit meta.whitespace.wit
+#  ^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit keyword.declaration.record.record-item.wit
+#        ^ source.wit meta.interface-item.wit meta.record-item.wit
+#         ^^^^^^^^^^^^^ source.wit meta.interface-item.wit meta.record-item.wit entity.name.type.id.record-item.wit
+#                      ^ source.wit meta.interface-item.wit meta.record-item.wit
+#                       ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.begin.wit
+>    x: u32
+#^^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit variable.declaration.id.record-fields.wit
+#     ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit keyword.operator.key-value.wit
+#      ^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
+#       ^^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit entity.name.type.numeric.wit
+>  }
+#^^ source.wit meta.interface-item.wit meta.record-item.wit meta.record-fields.wit meta.whitespace.wit
+#  ^ source.wit meta.interface-item.wit meta.record-item.wit punctuation.brackets.curly.end.wit
 >}
 #^ source.wit meta.interface-item.wit punctuation.brackets.curly.end.wit
 >

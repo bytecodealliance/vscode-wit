@@ -10,10 +10,10 @@ interface transmit {
     write-future(string),
   }
 
-  exchange: func(control: stream<control>,
-                 caller-stream: stream<string>,
-                 caller-future1: future<string>,
-                 caller-future2: future<string>) -> tuple<stream<string>, future<string>, future<string>>;
+  exchange: func(control: stream<control>, 
+  caller-stream: stream<string>,
+  caller-future1: future<string>,
+  caller-future2: future<string>) -> tuple<stream<string>, future<string>, future<string>>;
 }
 
 interface streams {
