@@ -19,17 +19,17 @@
 #       ^^ source.wit meta.interface-item.wit meta.enum-items.wit entity.name.type.id.enum-items.wit
 #         ^ source.wit meta.interface-item.wit meta.enum-items.wit
 #          ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.begin.wit
->      a,
-#^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#      ^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
-#       ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.comma.wit
->      b,
-#^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#      ^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
-#       ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.comma.wit
->      c
-#^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#      ^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
+>    a,
+#^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
+#     ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.comma.wit
+>    b,
+#^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
+#     ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.comma.wit
+>    c
+#^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
+#    ^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
 >  }
 #^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.end.wit
@@ -41,13 +41,13 @@
 #       ^^ source.wit meta.interface-item.wit meta.enum-items.wit entity.name.type.id.enum-items.wit
 #         ^ source.wit meta.interface-item.wit meta.enum-items.wit
 #          ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.begin.wit
->      something,
-#^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#      ^^^^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
-#               ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.comma.wit
->      else
-#^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
-#      ^^^^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
+>    something,
+#^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
+#    ^^^^^^^^^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
+#             ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.comma.wit
+>    else
+#^^^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
+#    ^^^^ source.wit meta.interface-item.wit meta.enum-items.wit variable.other.enummember.id.enum-cases.wit
 >  }
 #^^ source.wit meta.interface-item.wit meta.enum-items.wit meta.whitespace.wit
 #  ^ source.wit meta.interface-item.wit meta.enum-items.wit punctuation.brackets.curly.end.wit

@@ -3,12 +3,12 @@ package foo:foo;
 interface sized-lists {
   // Regular lists without size
   simple-list: func(l: list<u32>);
-  
+
   // Sized lists with fixed length
   ipv4-address: func() -> list<u8, 4>;
   ipv6-address: func() -> list<u16, 8>;
   small-buffer: func(data: list<u8, 16>) -> list<u8, 32>;
-  
+
   // Nested structures with sized lists
   complex-data: func() -> tuple<list<u32, 4>, list<string, 2>>;
   record-with-sized-list: func() -> record-type;

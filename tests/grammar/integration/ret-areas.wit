@@ -6,8 +6,8 @@ interface tcp {
   type ipv6-socket-address = tuple<u16, u16, u16, u16, u16, u16, u16, u16, u16, u16>;
 
   connect: func(
-      local-address: ipv6-socket-address,
-      remote-address: ipv6-socket-address,
+    local-address: ipv6-socket-address,
+    remote-address: ipv6-socket-address,
   ) -> tuple<u32, u32>;
 }
 

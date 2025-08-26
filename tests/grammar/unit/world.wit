@@ -9,169 +9,169 @@ package bytecodealliance:test@1.0.0-beta.1
 //                            ^^^^^^^^^^^^   meta.package-identifier.wit constant.numeric.versioning.package-identifier.wit
 
 default world some-world {
-// <-------    storage.modifier.default.world-item.wit
-//      ^^^^^   keyword.declaration.world.world-item.wit storage.type.wit
-//            ^^^^^^^^^^   entity.name.type.id.world-item.wit
-//                       ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
+  // <-------    storage.modifier.default.world-item.wit
+  //      ^^^^^   keyword.declaration.world.world-item.wit storage.type.wit
+  //            ^^^^^^^^^^   entity.name.type.id.world-item.wit
+  //                       ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
 
   include foo
-//^^^^^^^    keyword.control.include.include-item.wit
-//        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
+  //^^^^^^^    keyword.control.include.include-item.wit
+  //        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
 
   import kebab-name
-//^^^^^^   keyword.control.import.import-item.wit
-//       ^^^^^^^^^^    variable.other.id.import-item.wit
+  //^^^^^^   keyword.control.import.import-item.wit
+  //       ^^^^^^^^^^    variable.other.id.import-item.wit
 
   import namespace:package/id
-//^^^^^^   keyword.control.import.import-item.wit
-//       ^^^^^^^^^    variable.other.id.import-item.wit
-//                ^    meta.import-item.wit meta.id.import-item.wit
-//                 ^^^^^^^    variable.other.id.import-item.wit
-//                        ^    meta.import-item.wit meta.id.import-item.wit
-//                         ^^    variable.other.id.import-item.wit
+  //^^^^^^   keyword.control.import.import-item.wit
+  //       ^^^^^^^^^    variable.other.id.import-item.wit
+  //                ^    meta.import-item.wit meta.id.import-item.wit
+  //                 ^^^^^^^    variable.other.id.import-item.wit
+  //                        ^    meta.import-item.wit meta.id.import-item.wit
+  //                         ^^    variable.other.id.import-item.wit
 
   import filesystem: filesystem.filesystem
-//^^^^^^   keyword.control.import.import-item.wit
-//       ^^^^^^^^^^   variable.other.id.import-item.wit
-//                 ^   meta.import-item.wit meta.id.import-item.wit
-//                   ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
-//                             ^   keyword.operator.namespace-separator.use-path.wit
-//                              ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
+  //^^^^^^   keyword.control.import.import-item.wit
+  //       ^^^^^^^^^^   variable.other.id.import-item.wit
+  //                 ^   meta.import-item.wit meta.id.import-item.wit
+  //                   ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
+  //                             ^   keyword.operator.namespace-separator.use-path.wit
+  //                              ^^^^^^^^^^   entity.name.namespace.id.use-path.wit
 
   import random: pkg.random
-//^^^^^^   keyword.control.import.import-item.wit
-//       ^^^^^^   variable.other.id.import-item.wit
-//             ^   meta.import-item.wit meta.id.import-item.wit
-//               ^^^   entity.name.namespace.id.use-path.wit
-//                  ^   keyword.operator.namespace-separator.use-path.wit
-//                   ^^^^^^   entity.name.namespace.id.use-path.wit
+  //^^^^^^   keyword.control.import.import-item.wit
+  //       ^^^^^^   variable.other.id.import-item.wit
+  //             ^   meta.import-item.wit meta.id.import-item.wit
+  //               ^^^   entity.name.namespace.id.use-path.wit
+  //                  ^   keyword.operator.namespace-separator.use-path.wit
+  //                   ^^^^^^   entity.name.namespace.id.use-path.wit
 
   export main: func(
-//^^^^^^   keyword.control.export.export-item.wit
-//       ^^^^   variable.other.constant.id.export-item.wit
-//           ^   meta.export-item.wit meta.id.export-item.wit
-//             ^^^^   keyword.other.func.func-type.wit
-//                 ^   meta.function.wit punctuation.brackets.round.begin.wit
+  //^^^^^^   keyword.control.export.export-item.wit
+  //       ^^^^   variable.other.constant.id.export-item.wit
+  //           ^   meta.export-item.wit meta.id.export-item.wit
+  //             ^^^^   keyword.other.func.func-type.wit
+  //                 ^   meta.function.wit punctuation.brackets.round.begin.wit
 
-    args: list<string>,
-//  ^^^^    variable.parameter.id.named-type.wit
-//      ^   meta.named-type-list.wit keyword.operator.key-value.wit
-//        ^^^^    entity.name.type.list.wit
-//            ^    meta.list.ty.wit punctuation.brackets.angle.begin.wit
-//              ^^^^^    entity.name.type.string.wit
-//                   ^    meta.list.ty.wit punctuation.brackets.angle.end.wit
-//                    ^    punctuation.comma.wit
+  args: list<string>,
+  //  ^^^^    variable.parameter.id.named-type.wit
+  //      ^   meta.named-type-list.wit keyword.operator.key-value.wit
+  //        ^^^^    entity.name.type.list.wit
+  //            ^    meta.list.ty.wit punctuation.brackets.angle.begin.wit
+  //              ^^^^^    entity.name.type.string.wit
+  //                   ^    meta.list.ty.wit punctuation.brackets.angle.end.wit
+  //                    ^    punctuation.comma.wit
 
   ) -> result
-//^    meta.function.wit punctuation.brackets.round.end.wit
-//  ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//     ^^^^^^    entity.name.type.result.wit
+  //^    meta.function.wit punctuation.brackets.round.end.wit
+  //  ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
+  //     ^^^^^^    entity.name.type.result.wit
 
 }
 // <-    meta.world-item.wit punctuation.brackets.curly.end.wit
 
 world another-world {
-// <-----    keyword.declaration.world.world-item.wit storage.type.wit
-//    ^^^^^^^^^^^^^    entity.name.type.id.world-item.wit
-//                  ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
+  // <-----    keyword.declaration.world.world-item.wit storage.type.wit
+  //    ^^^^^^^^^^^^^    entity.name.type.id.world-item.wit
+  //                  ^    meta.world-item.wit punctuation.brackets.curly.begin.wit
 
   include bar with { a as a1, b as b1 }
-//^^^^^^^    keyword.control.include.include-item.wit
-//        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
-//            ^^^^    keyword.control.with.include-item.wit
-//                 ^    meta.with.include-item.wit punctuation.brackets.curly.begin.wit
-//                   ^    variable.other.id.include-names-item.wit
-//                     ^^    keyword.control.as.include-names-item.wit
-//                        ^^    entity.name.type.include-names-item.wit
-//                          ^    meta.with.include-item.wit punctuation.comma.wit
-//                            ^    variable.other.id.include-names-item.wit
-//                              ^^    keyword.control.as.include-names-item.wit
-//                                 ^^    entity.name.type.include-names-item.wit
-//                                    ^    meta.with.include-item.wit punctuation.brackets.curly.end.wit
+  //^^^^^^^    keyword.control.include.include-item.wit
+  //        ^^^    meta.use-path.include-item.wit entity.name.namespace.id.use-path.wit
+  //            ^^^^    keyword.control.with.include-item.wit
+  //                 ^    meta.with.include-item.wit punctuation.brackets.curly.begin.wit
+  //                   ^    variable.other.id.include-names-item.wit
+  //                     ^^    keyword.control.as.include-names-item.wit
+  //                        ^^    entity.name.type.include-names-item.wit
+  //                          ^    meta.with.include-item.wit punctuation.comma.wit
+  //                            ^    variable.other.id.include-names-item.wit
+  //                              ^^    keyword.control.as.include-names-item.wit
+  //                                 ^^    entity.name.type.include-names-item.wit
+  //                                    ^    meta.with.include-item.wit punctuation.brackets.curly.end.wit
 
   use pkg.path.{id}
-//^^^    keyword.other.use.use-item.wit
-//    ^^^    entity.name.namespace.id.use-path.wit
-//       ^    keyword.operator.namespace-separator.use-path.wit
-//        ^^^^    entity.name.namespace.id.use-path.wit
-//            ^    keyword.operator.namespace-separator.use-item.wit
-//             ^    meta.use-item.wit punctuation.brackets.curly.begin.wit
-//              ^^    entity.name.type.declaration.use-names-item.use-item.wit
-//                ^    meta.use-item.wit punctuation.brackets.curly.end.wit
+  //^^^    keyword.other.use.use-item.wit
+  //    ^^^    entity.name.namespace.id.use-path.wit
+  //       ^    keyword.operator.namespace-separator.use-path.wit
+  //        ^^^^    entity.name.namespace.id.use-path.wit
+  //            ^    keyword.operator.namespace-separator.use-item.wit
+  //             ^    meta.use-item.wit punctuation.brackets.curly.begin.wit
+  //              ^^    entity.name.type.declaration.use-names-item.use-item.wit
+  //                ^    meta.use-item.wit punctuation.brackets.curly.end.wit
 
   type my-type = string
-//^^^^    keyword.declaration.type.type-item.wit
-//     ^^^^^^^    entity.name.type.id.type-item.wit
-//             ^    meta.type-item.wit punctuation.equal.wit
-//               ^^^^^^    entity.name.type.string.wit
+  //^^^^    keyword.declaration.type.type-item.wit
+  //     ^^^^^^^    entity.name.type.id.type-item.wit
+  //             ^    meta.type-item.wit punctuation.equal.wit
+  //               ^^^^^^    entity.name.type.string.wit
 
   record my-record {
-//^^^^^^    keyword.declaration.record.record-item.wit
-//       ^^^^^^^^^    entity.name.type.id.record-item.wit
-//                 ^    meta.record-item.wit punctuation.brackets.curly.begin.wit
+    //^^^^^^    keyword.declaration.record.record-item.wit
+    //       ^^^^^^^^^    entity.name.type.id.record-item.wit
+    //                 ^    meta.record-item.wit punctuation.brackets.curly.begin.wit
 
     foo: string,
-//  ^^^    variable.declaration.id.record-fields.wit
-//     ^    meta.record-fields.wit keyword.operator.key-value.wit
-//       ^^^^^^    entity.name.type.string.wit
-//             ^    meta.record-fields.wit punctuation.comma.wit
+    //  ^^^    variable.declaration.id.record-fields.wit
+    //     ^    meta.record-fields.wit keyword.operator.key-value.wit
+    //       ^^^^^^    entity.name.type.string.wit
+    //             ^    meta.record-fields.wit punctuation.comma.wit
 
     bar: bool
   }
-//^    meta.record-item.wit punctuation.brackets.curly.end.wit
+  //^    meta.record-item.wit punctuation.brackets.curly.end.wit
 
   import sample: interface {
     input: func(value: tuple<u8, i32, float64>) -> result
-//  ^^^^^    entity.name.function.id.func-item.wit
-//       ^    meta.func-item.wit keyword.operator.key-value.wit
-//         ^^^^    keyword.other.func.func-type.wit
-//             ^    meta.function.wit punctuation.brackets.round.begin.wit
+    //  ^^^^^    entity.name.function.id.func-item.wit
+    //       ^    meta.func-item.wit keyword.operator.key-value.wit
+    //         ^^^^    keyword.other.func.func-type.wit
+    //             ^    meta.function.wit punctuation.brackets.round.begin.wit
 
     output-XML: func(
-//  ^^^^^^    meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
-//        ^    entity.name.function.id.func-item.wit meta.word-separator.wit
-//         ^^^    entity.name.function.id.func-item.wit meta.word.wit
-//            ^    meta.func-item.wit keyword.operator.key-value.wit
-//              ^^^^    keyword.other.func.func-type.wit
-//                  ^    meta.function.wit punctuation.brackets.round.begin.wit
+    //  ^^^^^^    meta.func-item.wit entity.name.function.id.func-item.wit meta.word.wit
+    //        ^    entity.name.function.id.func-item.wit meta.word-separator.wit
+    //         ^^^    entity.name.function.id.func-item.wit meta.word.wit
+    //            ^    meta.func-item.wit keyword.operator.key-value.wit
+    //              ^^^^    keyword.other.func.func-type.wit
+    //                  ^    meta.function.wit punctuation.brackets.round.begin.wit
 
-      response: result<_,failure>
-//    ^^^^^^^^    variable.parameter.id.named-type.wit
-//            ^    meta.named-type-list.wit keyword.operator.key-value.wit
-//              ^^^^^^    entity.name.type.result.wit
-//                    ^    meta.result.ty.wit punctuation.brackets.angle.begin.wit
-//                     ^    variable.other.inferred-type.result.wit
-//                      ^    meta.result.ty.wit punctuation.comma.wit
-//                       ^^^^^^^    entity.name.type.id.wit
-//                              ^    meta.result.ty.wit punctuation.brackets.angle.end.wit
+    response: result<_, failure>
+    //    ^^^^^^^^    variable.parameter.id.named-type.wit
+    //            ^    meta.named-type-list.wit keyword.operator.key-value.wit
+    //              ^^^^^^    entity.name.type.result.wit
+    //                    ^    meta.result.ty.wit punctuation.brackets.angle.begin.wit
+    //                     ^    variable.other.inferred-type.result.wit
+    //                      ^    meta.result.ty.wit punctuation.comma.wit
+    //                       ^^^^^^^    entity.name.type.id.wit
+    //                              ^    meta.result.ty.wit punctuation.brackets.angle.end.wit
 
     ) -> result
-//  ^    meta.function.wit
-//    ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
-//       ^^^^^^    entity.name.type.result.wit
+    //  ^    meta.function.wit
+    //    ^^    meta.result-list.wit keyword.operator.arrow.skinny.wit
+    //       ^^^^^^    entity.name.type.result.wit
 
   }
-//^   meta.import-item.wit punctuation.brackets.curly.end.wit
+  //^   meta.import-item.wit punctuation.brackets.curly.end.wit
 
   export hello: func()
-//^^^^^^   keyword.control.export.export-item.wit
-//       ^^^^^    variable.other.constant.id.export-item.wit
-//            ^    meta.export-item.wit meta.id.export-item.wit
-//              ^^^^    keyword.other.func.func-type.wit
-//                  ^    meta.function.wit punctuation.brackets.round.begin.wit
-//                   ^    meta.function.wit punctuation.brackets.round.end.wit
+  //^^^^^^   keyword.control.export.export-item.wit
+  //       ^^^^^    variable.other.constant.id.export-item.wit
+  //            ^    meta.export-item.wit meta.id.export-item.wit
+  //              ^^^^    keyword.other.func.func-type.wit
+  //                  ^    meta.function.wit punctuation.brackets.round.begin.wit
+  //                   ^    meta.function.wit punctuation.brackets.round.end.wit
 
   export kebab-name
-//^^^^^^   keyword.control.export.export-item.wit
-//       ^^^^^^^^^^    variable.other.constant.id.export-item.wit
+  //^^^^^^   keyword.control.export.export-item.wit
+  //       ^^^^^^^^^^    variable.other.constant.id.export-item.wit
 
   export namespace:package/id
-//^^^^^^   keyword.control.export.export-item.wit
-//       ^^^^^^^^^    variable.other.constant.id.export-item.wit
-//                ^    meta.export-item.wit meta.id.export-item.wit
-//                 ^^^^^^^    variable.other.constant.id.export-item.wit
-//                        ^    meta.export-item.wit meta.id.export-item.wit
-//                         ^^    variable.other.constant.id.export-item.wit
+  //^^^^^^   keyword.control.export.export-item.wit
+  //       ^^^^^^^^^    variable.other.constant.id.export-item.wit
+  //                ^    meta.export-item.wit meta.id.export-item.wit
+  //                 ^^^^^^^    variable.other.constant.id.export-item.wit
+  //                        ^    meta.export-item.wit meta.id.export-item.wit
+  //                         ^^    variable.other.constant.id.export-item.wit
 
 }
 // <-    meta.world-item.wit punctuation.brackets.curly.end.wit

@@ -1,15 +1,15 @@
 package foo:bar2;
 
 interface f {
-    resource fd;
+  resource fd;
 }
 
 interface utils {
-    use f.{fd};
-    my-func: func() -> own<fd>;
+  use f.{fd};
+  my-func: func() -> own<fd>;
 }
 
 world test {
-    export f;
-    export utils;
+  export f;
+  export utils;
 }

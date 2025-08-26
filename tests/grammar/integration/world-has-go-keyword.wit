@@ -1,9 +1,9 @@
 package foo:foo;
 
 interface foo-bar {
-    hello: func() -> string;
+  hello: func() -> string;
 }
 
 world %type {
-    import foo-bar;
+  import foo-bar;
 }

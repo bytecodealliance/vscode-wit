@@ -1,3 +1,10 @@
-# Set default behavior to automatically normalize line endings.
+*.wit text eol=lf
+*.snap text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.mjs text eol=lf
+Cargo.toml text eol=lf
+README.md text eol=lf
+LICENSE text eol=lf# Set default behavior to automatically normalize line endings.
 * text=auto
 

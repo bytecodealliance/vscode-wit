@@ -32,7 +32,7 @@
 #                               ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit meta.named-type-list.wit meta.list.ty.wit punctuation.brackets.angle.end.wit
 #                                ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.param-list.wit punctuation.brackets.round.end.wit
 #                                 ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit
->  
+>
 >  // Sized lists with fixed length
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.double-slash.wit
 >  ipv4-address: func() -> list<u8, 4>;
@@ -108,7 +108,7 @@
 #                                                     ^^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit meta.list-size.wit constant.numeric.integer.list-size.wit
 #                                                       ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit meta.list.ty.wit punctuation.brackets.angle.end.wit
 #                                                        ^ source.wit meta.interface-item.wit meta.func-item.wit meta.function.wit meta.result-list.wit
->  
+>
 >  // Nested structures with sized lists
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ source.wit meta.interface-item.wit comment.line.double-slash.wit
 >  complex-data: func() -> tuple<list<u32, 4>, list<string, 2>>;

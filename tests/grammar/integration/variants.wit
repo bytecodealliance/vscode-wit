@@ -2,7 +2,7 @@ package foo:foo;
 
 interface variants {
   enum e1 {
-      a,
+    a,
   }
 
   e1-arg: func(x: e1);
@@ -15,13 +15,13 @@ interface variants {
   }
 
   variant v1 {
-      a,
-      c(e1),
-      d(string),
-      e(empty),
-      f,
-      g(u32),
-      h(f32),
+    a,
+    c(e1),
+    d(string),
+    e(empty),
+    f,
+    g(u32),
+    h(f32),
   }
 
   v1-arg: func(x: v1);
@@ -39,12 +39,12 @@ interface variants {
     g: option<option<bool>>,
   );
   option-result: func() -> tuple<
-    option<bool>,
-    option<tuple<u32>>,
-    option<u32>,
-    option<e1>,
-    option<f32>,
-    option<option<bool>>,
+  option<bool>,
+  option<tuple<u32>>,
+  option<u32>,
+  option<e1>,
+  option<f32>,
+  option<option<bool>>,
   >;
 
   variant casts1 {
@@ -85,12 +85,12 @@ interface variants {
     e: casts5,
     f: casts6,
   ) -> tuple<
-    casts1,
-    casts2,
-    casts3,
-    casts4,
-    casts5,
-    casts6,
+  casts1,
+  casts2,
+  casts3,
+  casts4,
+  casts5,
+  casts6,
   >;
 
   result-arg: func(
@@ -102,12 +102,12 @@ interface variants {
     f: result<string, list<u8>>,
   );
   result-result: func() -> tuple<
-    result,
-    result<_, e1>,
-    result<e1>,
-    result<tuple<u32>, tuple<u32>>,
-    result<u32, v1>,
-    result<string, list<u8>>,
+  result,
+  result<_, e1>,
+  result<e1>,
+  result<tuple<u32>, tuple<u32>>,
+  result<u32, v1>,
+  result<string, list<u8>>,
   >;
 
   enum my-errno {
