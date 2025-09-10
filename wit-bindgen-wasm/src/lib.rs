@@ -265,9 +265,9 @@ impl WitBindgen {
         let package_id = resolve.push_str(inline_path, content)?;
         
         let world_id = if let Some(world_name) = world_name {
-            resolve.select_world(package_id, Some(world_name))?
+            resolve.select_world(&[package_id], Some(world_name))?
         } else {
-            resolve.select_world(package_id, None)?
+            resolve.select_world(&[package_id], None)?
         };
         
         let opts = c::Opts::default();
@@ -307,9 +307,9 @@ impl WitBindgen {
         let package_id = resolve.push_str(inline_path, content)?;
         
         let world_id = if let Some(world_name) = world_name {
-            resolve.select_world(package_id, Some(world_name))?
+            resolve.select_world(&[package_id], Some(world_name))?
         } else {
-            resolve.select_world(package_id, None)?
+            resolve.select_world(&[package_id], None)?
         };
         
         let opts = rust::Opts { 
@@ -352,9 +352,9 @@ impl WitBindgen {
         let package_id = resolve.push_str(inline_path, content)?;
         
         let world_id = if let Some(world_name) = world_name {
-            resolve.select_world(package_id, Some(world_name))?
+            resolve.select_world(&[package_id], Some(world_name))?
         } else {
-            resolve.select_world(package_id, None)?
+            resolve.select_world(&[package_id], None)?
         };
         
         let opts = csharp::Opts::default();
@@ -415,9 +415,9 @@ impl WitBindgen {
         let package_id = resolve.push_str(inline_path, content)?;
         
         let world_id = if let Some(world_name) = world_name {
-            resolve.select_world(package_id, Some(world_name))?
+            resolve.select_world(&[package_id], Some(world_name))?
         } else {
-            resolve.select_world(package_id, None)?
+            resolve.select_world(&[package_id], None)?
         };
         
         let opts = moonbit::Opts::default();
