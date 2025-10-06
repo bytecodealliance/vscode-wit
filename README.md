@@ -90,4 +90,4 @@ To install from source, follow these steps:
 * Clone the repository: `git clone https://github.com/bytecodealliance/vscode-wit.git && cd vscode-wit`
 * Install build dependencies: `npm run setup-wasm`
 * Run npm commands to install:
-`npm ci && npm run install-plugin`
+`npm ci && npm run install-extension`
