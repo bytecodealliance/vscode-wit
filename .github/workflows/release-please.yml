@@ -49,10 +49,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.event_details.outputs.tag_name }}
+      # Publishes to GitHub releases, VS Code Marketplace, and Open VSX Registry
+      # Requires secrets: PAT_VSCE (VS Code Marketplace) and OVSX_PAT (Open VSX)
       - name: Add files and publish release
         env:
           GITHUB_TOKEN: ${{ github.token }}
           VSCE_PAT: ${{ secrets.PAT_VSCE }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
           TAG_NAME: ${{ steps.event_details.outputs.tag_name }}
         run: |
           npm ci
@@ -60,6 +63,7 @@ jobs:
           mv wit-idl.vsix ${TAG_NAME}.vsix
           gh release upload ${TAG_NAME} ${TAG_NAME}.vsix
           npx vsce publish --packagePath ${TAG_NAME}.vsix
+          npx ovsx publish ${TAG_NAME}.vsix -p ${OVSX_PAT}
 
   label:
     needs: [publish]
@@ -94,5 +98,7 @@ jobs:
 
             The release is available on:
             - GitHub releases: {release_link}
+            - Visual Studio Marketplace: https://marketplace.visualstudio.com/items?itemName=bytecodealliance.wit-idl
+            - Open VSX Registry: https://open-vsx.org/extension/bytecodealliance/wit-idl
 
             Your **[release-please](https://github.com/googleapis/release-please)** bot :rocket::pray:
