@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.17](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.16...wit-idl-v0.3.17) (2025-10-10)
+
+
+### Bug Fixes
+
+* publish to ovsx ([aacbf7b](https://github.com/bytecodealliance/vscode-wit/commit/aacbf7b959b7b347a8b89d0ade61baa7579df031))
+
 ## [0.3.16](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.15...wit-idl-v0.3.16) (2025-10-10)
 
 
