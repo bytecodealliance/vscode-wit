@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.16](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.15...wit-idl-v0.3.16) (2025-10-10)
+
+
+### Features
+
+* add Open VSX Registry publishing support ([b0b63ca](https://github.com/bytecodealliance/vscode-wit/commit/b0b63ca5d715d4ac9eae048b4897173079b79c2b))
+
 ## [0.3.15](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.14...wit-idl-v0.3.15) (2025-09-10)
 
 
