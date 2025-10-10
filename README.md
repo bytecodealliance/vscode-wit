@@ -68,6 +68,18 @@ Easily access extension features through the Command Palette:
 
 ## Installation
 
+### From Marketplace
+
+This extension is available on:
+
+- **Visual Studio Marketplace**: For VS Code users
+  - Install directly from VS Code: Search for "WIT IDL" in the Extensions view
+  - Or visit: https://marketplace.visualstudio.com/items?itemName=bytecodealliance.wit-idl
+
+- **Open VSX Registry**: For VSCodium and other compatible editors
+  - Install from Open VSX: https://open-vsx.org/extension/bytecodealliance/wit-idl
+  - Or install via CLI: `ovsx get bytecodealliance.wit-idl`
+
 ### Prerequisites
 
 This extension includes a WebAssembly component that requires the following tools for building:
@@ -91,3 +103,16 @@ To install from source, follow these steps:
 * Install build dependencies: `npm run setup-wasm`
 * Run npm commands to install:
 `npm ci && npm run install-extension`
+
+## Publishing (for maintainers)
+
+This extension is automatically published to both Visual Studio Marketplace and Open VSX Registry through GitHub Actions when a release is created.
+
+**Required secrets:**
+- `PAT_VSCE`: Personal Access Token for Visual Studio Marketplace
+- `OVSX_PAT`: Personal Access Token for Open VSX Registry
+
+To obtain an Open VSX token:
+1. Create an account at https://open-vsx.org/
+2. Generate a Personal Access Token from your account settings
+3. Add the token as `OVSX_PAT` in the repository secrets
