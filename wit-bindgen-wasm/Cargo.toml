@@ -14,7 +14,7 @@ console_error_panic_hook = ["dep:console_error_panic_hook"]
 wee_alloc = ["dep:wee_alloc"]
 
 [dependencies]
-wasm-bindgen = "0.2.101"
+wasm-bindgen = "0.2.104"
 wee_alloc = { version = "0.4.5", optional = true }
 console_error_panic_hook = { version = "0.1.7", optional = true }
 serde_json = "1.0"
@@ -26,16 +26,16 @@ wit-bindgen-rust = "0.46"
 wit-bindgen-csharp = "0.46"
 wit-bindgen-moonbit = "0.46"
 wit-component = "0.239"
-anyhow = "1.0.99"
+anyhow = "1.0.100"
 
 [dependencies.web-sys]
-version = "0.3.78"
+version = "0.3.81"
 features = [
   "console",
 ]
 
 [build-dependencies]
-toml = "0.9.5"
+toml = "0.9.8"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
