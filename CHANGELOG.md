@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.19](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.18...wit-idl-v0.3.19) (2025-12-09)
+
+
+### Features
+
+* update dependencies in package.json and Cargo files ([252d330](https://github.com/bytecodealliance/vscode-wit/commit/252d3300b679c4f21a82b528cd403b1e8fad3c64))
+
 ## [0.3.18](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.17...wit-idl-v0.3.18) (2025-10-25)
 
 
