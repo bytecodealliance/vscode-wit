@@ -7,14 +7,16 @@ Big picture architecture
 - Validation: `src/validator.ts` calls `validateWitSyntaxDetailedFromWasm` from `src/wasmUtils.ts`, parses errors with `src/errorParser.ts`, and writes VS Code diagnostics. Prefer Problems pane over popups.
 - WASM integration: `src/wasmUtils.ts` lazy-loads local package `wit-bindgen-wasm` and initializes its wasm binary. Primary APIs: `getWitBindgenVersionFromWasm`, `validateWitSyntaxDetailedFromWasm`, `generateBindingsFromWasm` (returns JSON map of files with latin1-encoded content).
 - Grammar/snippets: `syntaxes/wit.tmLanguage.json`, `snippets.json` (Language id: `wit`, scope: `source.wit`).
-- Rust subproject: `wit-bindgen-wasm/` builds a wasm-pack package consumed at runtime (`wit_bindgen_wasm_bg.wasm`).
+- Rust subproject: `wit-bindgen-wasm/` builds a wasm-pack package consumed at runtime (`wit_bindgen_wasm_bg.wasm`). Uses `wit-parser` 0.241, `wit-component` 0.241, and `wasmparser` 0.241.
 
 Build and dev workflows
 - One-time setup (requires Rust + cargo): `npm run setup-wasm` (installs wasm-pack 0.13.1 and wasm32 target).
 - Dev watch: `npm run dev` (parallel: `gen-watch` for d.ts, `build-extension-watch` for esbuild).
 - Full build: `npm run build` (build wasm via wasm-pack, then bundle the extension with esbuild).
+- Build WASM only: `npm run build-wasm` (dev) or `npm run build-wasm-prod` (release).
 - Pack/install locally: `npm run package` then `npm run install-extension` (uses `vsce` and `code --install-extension`).
 - Tests: `npm test` runs lint, prettier check, build, package, grammar tests, and unit tests. Quick loops: `npm run test-unit` or `npm run test-grammar`. Update grammar snapshots: `npm run update-snapshot`.
+- Verify WASM build: `npm run verify-wasm` checks that the built WASM file exists and is valid.
 
 Bundling details (esbuild.mjs)
 - ESM build targeting Node 22 with `external: ["vscode"]`, injects `src/node-polyfills.js`.
@@ -22,13 +24,22 @@ Bundling details (esbuild.mjs)
 
 Runtime behaviors and contracts
 - Extract WIT from components: command `wit-idl.extractWit` shells out to `wasm-tools component wit <file.wasm>`; ensure `wasm-tools` is on PATH. Enablement uses a context key set when active editor is a `.wasm` with component version 0x0A.
-- Binding generation: `generateBindingsFromWasm` returns a JSON map of filename -> content (latin1). When writing to disk, create buffers via `Buffer.from(content, 'latin1')`. See usage in `src/extension.ts`.
+- Extract Core WASM: command `wit-idl.extractCoreWasm` uses `wasm-tools component wit <file.wasm> --raw` to extract the core module.
+- Binding generation: `generateBindingsFromWasm` returns a JSON map of filename -> content (latin1). When writing to disk, create buffers via `Buffer.from(content, 'latin1')`. See usage in `src/extension.ts`. Supports Rust, C, C#, Go, and MoonBit.
 - Diagnostics: use `WitSyntaxValidator.createDiagnosticFromError` and keep `diagnostic.source` consistent (`wit-syntax` or `wit-bindgen`). Workspace validation streams progress via `withProgress` and writes a dedicated output channel.
+- Format Document: command `wit-idl.formatDocument` formats WIT files using the WASM module's formatting capability.
 
 Coding conventions specific to this repo
 - ESM TypeScript: use explicit `.js` extensions in relative imports (e.g., `import { X } from './validator.js'`). Keep explicit param/return types; avoid `any`.
 - File layout: implementation in `src/`, tests in `tests/` (Vitest), grammar tests under `tests/grammar/**`. Type declarations generated to `types/` by `npm run gen-types`.
 - VS Code contributions: update `package.json` for languages, grammars, snippets, menus, keybindings, and new commands. Match command IDs with registrations in `extension.ts`.
+- Use 4 spaces for indentation. Follow ESLint and Prettier rules.
+
+wit-parser API changes (v0.239.0+, currently using 0.241)
+- `resolve.select_world(package_id, world_name)` now expects first argument as a slice: `resolve.select_world(&[package_id], world_name)`.
+- When calling `select_world`, always wrap package IDs in a slice: `&[pkg_id]`.
+- This applies to all direct uses of `wit_parser::Resolve::select_world` in the Rust codebase.
+- The project is currently using wit-parser 0.241, which maintains this API contract.
 
 Adding a feature safely
 - Register a command in `package.json` and implement it in `src/extension.ts`; push to `context.subscriptions`.
@@ -36,8 +47,9 @@ Adding a feature safely
 - If you need WIT extraction or inspection, prefer `wasm-tools` CLI calls (as in `extractWitWithWasmTools`).
 
 Common pitfalls and fixes
-- “Failed to initialize WIT bindgen WASM module”: ensure `npm run build` copied `wit_bindgen_wasm_bg.wasm` to `dist/` or run `npm run setup-wasm && npm run build-wasm`.
-- “wasm-tools not found” when extracting WIT: install wasm-tools and ensure PATH is set for the VS Code environment.
+- "Failed to initialize WIT bindgen WASM module": ensure `npm run build` copied `wit_bindgen_wasm_bg.wasm` to `dist/` or run `npm run setup-wasm && npm run build-wasm`. Verify with `npm run verify-wasm`.
+- "wasm-tools not found" when extracting WIT: install wasm-tools and ensure PATH is set for the VS Code environment.
+- `select_world` signature errors: ensure you're wrapping package IDs in a slice `&[pkg_id]` when calling `resolve.select_world()`.
 
 Key references
 - Additional instructions: `.github/instructions/*`
@@ -45,3 +57,4 @@ Key references
 - Validation: `src/validator.ts`, `src/errorParser.ts`, `src/wasmUtils.ts`
 - Build: `esbuild.mjs`, `package.json` scripts
 - WASM package: `wit-bindgen-wasm/README.md`, `wit-bindgen-wasm/pkg/*`
+- Dependencies: `wit-parser` 0.241, `wit-component` 0.241, `wasmparser` 0.241, `wasm-tools` CLI

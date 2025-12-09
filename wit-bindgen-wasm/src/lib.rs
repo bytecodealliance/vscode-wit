@@ -262,7 +262,8 @@ impl WitBindgen {
     fn generate_c_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
         let inline_path = Path::new("inline.wit");
         let mut resolve = Resolve::default();
-        let package_id = resolve.push_str(inline_path, content)?;
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for C binding generation")?;
         
         let world_id = if let Some(world_name) = world_name {
             resolve.select_world(&[package_id], Some(world_name))?
@@ -304,7 +305,8 @@ impl WitBindgen {
     fn generate_rust_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
         let inline_path = Path::new("inline.wit");
         let mut resolve = Resolve::default();
-        let package_id = resolve.push_str(inline_path, content)?;
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for Rust binding generation")?;
         
         let world_id = if let Some(world_name) = world_name {
             resolve.select_world(&[package_id], Some(world_name))?
@@ -349,7 +351,8 @@ impl WitBindgen {
     fn generate_csharp_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
         let inline_path = Path::new("inline.wit");
         let mut resolve = Resolve::default();
-        let package_id = resolve.push_str(inline_path, content)?;
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for C# binding generation")?;
         
         let world_id = if let Some(world_name) = world_name {
             resolve.select_world(&[package_id], Some(world_name))?
@@ -412,7 +415,8 @@ impl WitBindgen {
     fn generate_moonbit_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
         let inline_path = Path::new("inline.wit");
         let mut resolve = Resolve::default();
-        let package_id = resolve.push_str(inline_path, content)?;
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for MoonBit binding generation")?;
         
         let world_id = if let Some(world_name) = world_name {
             resolve.select_world(&[package_id], Some(world_name))?
