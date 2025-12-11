@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.20](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.19...wit-idl-v0.3.20) (2025-12-11)
+
+
+### Features
+
+* add C++ bindings generation support and update related configur… ([#103](https://github.com/bytecodealliance/vscode-wit/issues/103)) ([84e63a6](https://github.com/bytecodealliance/vscode-wit/commit/84e63a6fddbd223359eedced728661ee589bef96))
+* add support for generating Markdown documentation and update re… ([#104](https://github.com/bytecodealliance/vscode-wit/issues/104)) ([65b0f49](https://github.com/bytecodealliance/vscode-wit/commit/65b0f4948cf296afc4b775929c609bbbadbf17a9))
+* enhance CI workflows with caching for Node.js and Rust dependen… ([#105](https://github.com/bytecodealliance/vscode-wit/issues/105)) ([112963a](https://github.com/bytecodealliance/vscode-wit/commit/112963a40a757c0ba314b83302d7d7bd9a40242d))
+
+
+### Bug Fixes
+
+* add context to WIT content parsing errors ([2772d4d](https://github.com/bytecodealliance/vscode-wit/commit/2772d4ddcb9b0b7d7d30f1a1390c85fecd272e43))
+
 ## [0.3.19](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.18...wit-idl-v0.3.19) (2025-12-09)
 
 
