@@ -66,9 +66,6 @@ jobs:
           workspaces: wit-bindgen-wasm
           shared-key: release-cargo-${{ hashFiles('wit-bindgen-wasm/Cargo.lock') }}
       
-      - name: Setup WebAssembly build tools
-        run: npm run setup-wasm
-      
       - name: Build VSIX and upload to release
         env:
           GITHUB_TOKEN: ${{ github.token }}

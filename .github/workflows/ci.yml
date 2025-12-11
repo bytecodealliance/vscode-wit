@@ -38,9 +38,6 @@ jobs:
             workspaces: wit-bindgen-wasm
             shared-key: ${{ runner.os }}-cargo-${{ hashFiles('wit-bindgen-wasm/Cargo.lock') }}
 
-        - name: Setup WebAssembly build tools
-          run: npm run setup-wasm
-
         - name: Install dependencies
           run: npm ci
 
