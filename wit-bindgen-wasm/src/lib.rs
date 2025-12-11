@@ -13,6 +13,7 @@ use wit_bindgen_c as c;
 use wit_bindgen_cpp as cpp;
 use wit_bindgen_csharp as csharp;
 use wit_bindgen_moonbit as moonbit;
+use wit_bindgen_markdown as markdown;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -231,11 +232,12 @@ impl WitBindgen {
             "csharp" | "c#" => self.generate_csharp_bindings(content, world_name),
             "go" => self.generate_go_bindings(content, world_name),
             "moonbit" => self.generate_moonbit_bindings(content, world_name),
+            "markdown" | "md" => self.generate_markdown_bindings(content, world_name),
             _ => {
                 let mut error_files = HashMap::new();
                 error_files.insert(
                     "error.txt".to_string(), 
-                    format!("// Unsupported language: {}\n// Supported languages: rust, c, cpp, csharp, go, moonbit", language)
+                    format!("// Unsupported language: {}\n// Supported languages: rust, c, cpp, csharp, go, moonbit, markdown", language)
                 );
                 error_files
             },
@@ -454,6 +456,52 @@ impl WitBindgen {
                 error_files
             }
         }
+    }
+
+    /// Generate Markdown documentation using wit-bindgen-markdown library
+    fn generate_markdown_bindings(&self, content: &str, world_name: Option<String>) -> HashMap<String, String> {
+        match self.generate_markdown_with_wit_bindgen(content, world_name.as_deref()) {
+            Ok(files) => files,
+            Err(e) => {
+                console_error(&format!("wit-bindgen-markdown failed: {}", e));
+                let mut error_files = HashMap::new();
+                error_files.insert(
+                    "error.txt".to_string(),
+                    format!("Markdown generation failed: {}", e)
+                );
+                error_files
+            }
+        }
+    }
+    
+    /// Internal implementation for generating Markdown documentation.
+    /// 
+    /// This function performs the actual Markdown generation using the wit-bindgen-markdown library.
+    /// It returns a `Result` containing a map of generated files, or an error if generation fails.
+    fn generate_markdown_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
+        let inline_path = Path::new("inline.wit");
+        let mut resolve = Resolve::default();
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for Markdown generation")?;
+        
+        let world_id = if let Some(world_name) = world_name {
+            resolve.select_world(&[package_id], Some(world_name))?
+        } else {
+            resolve.select_world(&[package_id], None)?
+        };
+        
+        let opts = markdown::Opts::default();
+        let mut generator = opts.build();
+        let mut files = Files::default();
+        
+        generator.generate(&resolve, world_id, &mut files)?;
+        
+        let mut result = HashMap::new();
+        for (filename, content) in files.iter() {
+            result.insert(filename.to_string(), bytes_to_latin1_string(content));
+        }
+        
+        Ok(result)
     }
 
     /// Generate MoonBit bindings using wit-bindgen-moonbit library

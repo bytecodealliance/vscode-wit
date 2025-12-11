@@ -62,7 +62,7 @@ main();
 - `has_world_definition(content: string): boolean` - Check for world definitions
 - `version(): string` - Get package version
 - `generate_bindings(content: string, language: string, world_name?: string): string` - Generate language bindings (returns JSON with file map)
-  - Supported languages: `rust`, `c`, `cpp` (or `c++`), `csharp` (or `c#`), `go`, `moonbit`
+  - Supported languages: `rust`, `c`, `cpp` (or `c++`), `csharp` (or `c#`), `go`, `moonbit`, `markdown` (or `md`)
 
 ### Binary Safety Contract
 

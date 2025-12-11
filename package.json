@@ -182,6 +182,11 @@
                 "category": "WIT"
             },
             {
+                "command": "wit-idl.generateBindingsMarkdown",
+                "title": "Generate Markdown Documentation",
+                "category": "WIT"
+            },
+            {
                 "command": "wit-idl.extractWit",
                 "title": "Extract WIT",
                 "category": "WIT"
@@ -271,6 +276,9 @@
                 },
                 {
                     "command": "wit-idl.generateBindingsMoonBit"
+                },
+                {
+                    "command": "wit-idl.generateBindingsMarkdown"
                 }
             ],
             "commandPalette": [
@@ -306,6 +314,10 @@
                 },
                 {
                     "command": "wit-idl.generateBindingsMoonBit",
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
+                },
+                {
+                    "command": "wit-idl.generateBindingsMarkdown",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {

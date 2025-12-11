@@ -26,6 +26,7 @@ wit-bindgen-cpp = "0.49"
 wit-bindgen-rust = "0.49"
 wit-bindgen-csharp = "0.49"
 wit-bindgen-moonbit = "0.49"
+wit-bindgen-markdown = "0.49"
 wit-component = "0.243"
 anyhow = "1.0.100"
 
