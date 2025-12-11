@@ -22,9 +22,24 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
-        - uses: actions/setup-node@v3
+        - uses: actions/setup-node@v4
           with:
             node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+
+        - name: Setup Rust toolchain
+          uses: dtolnay/rust-toolchain@stable
+          with:
+            targets: wasm32-unknown-unknown
+
+        - name: Cache Rust dependencies
+          uses: Swatinem/rust-cache@v2
+          with:
+            workspaces: wit-bindgen-wasm
+            shared-key: ${{ runner.os }}-cargo-${{ hashFiles('wit-bindgen-wasm/Cargo.lock') }}
+
+        - name: Setup WebAssembly build tools
+          run: npm run setup-wasm
 
         - name: Install dependencies
           run: npm ci

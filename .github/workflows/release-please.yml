@@ -49,6 +49,26 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.event_details.outputs.tag_name }}
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: wit-bindgen-wasm
+          shared-key: release-cargo-${{ hashFiles('wit-bindgen-wasm/Cargo.lock') }}
+      
+      - name: Setup WebAssembly build tools
+        run: npm run setup-wasm
+      
       - name: Build VSIX and upload to release
         env:
           GITHUB_TOKEN: ${{ github.token }}
