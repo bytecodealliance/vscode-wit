@@ -670,6 +670,7 @@ export function activate(context: vscode.ExtensionContext) {
     const generateCSharpBindingsCommand = createGenerateBindingsCommand("csharp", "CSharp");
     const generateGoBindingsCommand = createGenerateBindingsCommand("go", "Go");
     const generateMoonBitBindingsCommand = createGenerateBindingsCommand("moonbit", "MoonBit");
+    const generateMarkdownBindingsCommand = createGenerateBindingsCommand("markdown", "Markdown");
 
     const onSaveListener = vscode.workspace.onDidSaveTextDocument(async (document) => {
         if (document.languageId === "wit") {
@@ -721,6 +722,7 @@ export function activate(context: vscode.ExtensionContext) {
         generateCSharpBindingsCommand,
         generateGoBindingsCommand,
         generateMoonBitBindingsCommand,
+        generateMarkdownBindingsCommand,
         wasmToWitProvider,
         onSaveListener,
         onOpenListener,
