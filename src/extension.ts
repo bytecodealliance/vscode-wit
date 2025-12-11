@@ -666,6 +666,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Create individual language binding commands
     const generateRustBindingsCommand = createGenerateBindingsCommand("rust", "Rust");
     const generateCBindingsCommand = createGenerateBindingsCommand("c", "C");
+    const generateCppBindingsCommand = createGenerateBindingsCommand("cpp", "Cpp");
     const generateCSharpBindingsCommand = createGenerateBindingsCommand("csharp", "CSharp");
     const generateGoBindingsCommand = createGenerateBindingsCommand("go", "Go");
     const generateMoonBitBindingsCommand = createGenerateBindingsCommand("moonbit", "MoonBit");
@@ -716,6 +717,7 @@ export function activate(context: vscode.ExtensionContext) {
         extractCoreWasmCommand,
         generateRustBindingsCommand,
         generateCBindingsCommand,
+        generateCppBindingsCommand,
         generateCSharpBindingsCommand,
         generateGoBindingsCommand,
         generateMoonBitBindingsCommand,

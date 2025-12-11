@@ -162,6 +162,11 @@
                 "category": "WIT"
             },
             {
+                "command": "wit-idl.generateBindingsCpp",
+                "title": "Generate C++ Bindings",
+                "category": "WIT"
+            },
+            {
                 "command": "wit-idl.generateBindingsCSharp",
                 "title": "Generate C# Bindings",
                 "category": "WIT"
@@ -256,6 +261,9 @@
                     "command": "wit-idl.generateBindingsC"
                 },
                 {
+                    "command": "wit-idl.generateBindingsCpp"
+                },
+                {
                     "command": "wit-idl.generateBindingsCSharp"
                 },
                 {
@@ -282,6 +290,10 @@
                 },
                 {
                     "command": "wit-idl.generateBindingsC",
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
+                },
+                {
+                    "command": "wit-idl.generateBindingsCpp",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
