@@ -462,6 +462,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "wit-bindgen-cpp"
+version = "0.49.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8ea8b16791f62bf956d8735df7afed701e97b91a9e6b8496d406bb9bdccabd7"
+dependencies = [
+ "anyhow",
+ "heck",
+ "wasm-encoder",
+ "wasm-metadata",
+ "wit-bindgen-c",
+ "wit-bindgen-core",
+ "wit-component",
+]
+
+[[package]]
 name = "wit-bindgen-csharp"
 version = "0.49.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -517,6 +532,7 @@ dependencies = [
  "wee_alloc",
  "wit-bindgen-c",
  "wit-bindgen-core",
+ "wit-bindgen-cpp",
  "wit-bindgen-csharp",
  "wit-bindgen-moonbit",
  "wit-bindgen-rust",

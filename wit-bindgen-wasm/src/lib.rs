@@ -10,6 +10,7 @@ use wasmparser::{Parser, Payload};
 use wit_bindgen_core::Files;
 use wit_bindgen_rust as rust;
 use wit_bindgen_c as c;
+use wit_bindgen_cpp as cpp;
 use wit_bindgen_csharp as csharp;
 use wit_bindgen_moonbit as moonbit;
 
@@ -226,6 +227,7 @@ impl WitBindgen {
         let files = match language.to_lowercase().as_str() {
             "rust" => self.generate_rust_bindings(content, world_name),
             "c" => self.generate_c_bindings(content, world_name),
+            "cpp" | "c++" => self.generate_cpp_bindings(content, world_name),
             "csharp" | "c#" => self.generate_csharp_bindings(content, world_name),
             "go" => self.generate_go_bindings(content, world_name),
             "moonbit" => self.generate_moonbit_bindings(content, world_name),
@@ -233,7 +235,7 @@ impl WitBindgen {
                 let mut error_files = HashMap::new();
                 error_files.insert(
                     "error.txt".to_string(), 
-                    format!("// Unsupported language: {}\n// Supported languages: rust, c, csharp, go, moonbit", language)
+                    format!("// Unsupported language: {}\n// Supported languages: rust, c, cpp, csharp, go, moonbit", language)
                 );
                 error_files
             },
@@ -273,6 +275,49 @@ impl WitBindgen {
         
         let opts = c::Opts::default();
         let mut generator = opts.build();
+        let mut files = Files::default();
+        
+        generator.generate(&resolve, world_id, &mut files)?;
+        
+        let mut result = HashMap::new();
+        for (filename, content) in files.iter() {
+            result.insert(filename.to_string(), bytes_to_latin1_string(content));
+        }
+        
+        Ok(result)
+    }
+    
+    /// Generate C++ bindings using wit-bindgen-cpp library
+    fn generate_cpp_bindings(&self, content: &str, world_name: Option<String>) -> HashMap<String, String> {
+        match self.generate_cpp_with_wit_bindgen(content, world_name.as_deref()) {
+            Ok(files) => files,
+            Err(e) => {
+                console_error(&format!("wit-bindgen-cpp failed: {}", e));
+                let mut error_files = HashMap::new();
+                error_files.insert(
+                    "error.txt".to_string(),
+                    format!("C++ binding generation failed: {}", e)
+                );
+                error_files
+            }
+        }
+    }
+    
+    /// Generate C++ bindings using wit-bindgen-cpp library
+    fn generate_cpp_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
+        let inline_path = Path::new("inline.wit");
+        let mut resolve = Resolve::default();
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for C++ binding generation")?;
+        
+        let world_id = if let Some(world_name) = world_name {
+            resolve.select_world(&[package_id], Some(world_name))?
+        } else {
+            resolve.select_world(&[package_id], None)?
+        };
+        
+        let opts = cpp::Opts::default();
+        let mut generator = opts.build(None);
         let mut files = Files::default();
         
         generator.generate(&resolve, world_id, &mut files)?;
