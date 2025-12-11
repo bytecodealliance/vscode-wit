@@ -213,27 +213,27 @@
                 {
                     "command": "wit-idl.syntaxCheck",
                     "when": "resourceExtname == .wit",
-                    "group": "navigation"
+                    "group": "4_witIdl@10"
                 },
                 {
                     "command": "wit-idl.formatDocument",
                     "when": "resourceExtname == .wit",
-                    "group": "1_modification@10"
-                },
-                {
-                    "submenu": "wit-idl.generateBindings.submenu",
-                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
-                    "group": "navigation@12"
+                    "group": "4_witIdl@11"
                 },
                 {
                     "command": "wit-idl.extractWit",
                     "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
-                    "group": "navigation@10"
+                    "group": "4_witIdl@12"
                 },
                 {
                     "command": "wit-idl.extractCoreWasm",
                     "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
-                    "group": "navigation@11"
+                    "group": "4_witIdl@13"
+                },
+                {
+                    "submenu": "wit-idl.generateBindings.submenu",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "4_witIdl@14"
                 }
             ],
             "explorer/context": [
@@ -243,19 +243,24 @@
                     "group": "4_witIdl@10"
                 },
                 {
-                    "command": "wit-idl.extractWit",
-                    "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
+                    "command": "wit-idl.formatDocument",
+                    "when": "resourceExtname == .wit",
                     "group": "4_witIdl@11"
                 },
                 {
-                    "command": "wit-idl.extractCoreWasm",
+                    "command": "wit-idl.extractWit",
                     "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
                     "group": "4_witIdl@12"
                 },
                 {
+                    "command": "wit-idl.extractCoreWasm",
+                    "when": "resourceExtname == .wasm && witIdl.isWasmComponent",
+                    "group": "4_witIdl@13"
+                },
+                {
                     "submenu": "wit-idl.generateBindings.submenu",
                     "when": "resourceExtname == .wit || witIdl.isWasmComponent",
-                    "group": "4_witIdl@13"
+                    "group": "4_witIdl@14"
                 }
             ],
             "wit-idl.generateBindings.submenu": [
