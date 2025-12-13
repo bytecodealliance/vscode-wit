@@ -1,70 +1,202 @@
 # WIT IDL for VSCode
 
-This package is a Visual Studio Code extension to recognize and highlight the WebAssembly Interface Type (WIT) Interface Definition Language (IDL). It can also be used as a bundle in TextMate.
+![Editor with WIT menu](images/editor-menu.png)
+
+_A comprehensive Visual Studio Code extension for WebAssembly Interface Type (WIT) development. This extension provides **syntax highlighting**, **validation**, **formatting**, **language bindings generation**, and **WebAssembly component tooling** for the WIT Interface Definition Language (IDL). Also compatible as a TextMate bundle._
+
+**Key Features:**
+- 🎨 Full syntax highlighting and code completion
+- ✅ Real-time syntax validation with detailed error diagnostics
+- 🔧 Automatic code formatting
+- 🌐 Generate bindings for Rust, C, C++, C#, Go, MoonBit, and Markdown
+- 🧩 WebAssembly component detection and WIT extraction
+- 📝 Context menu integration for quick access to tools
 
 The description of the WIT format can be found at: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
 
-
 ## Features
 
-![Screenshot](images/screenshot.png)
+This extension provides comprehensive support for WebAssembly Interface Type (WIT) files and WebAssembly components:
 
-This extension provides:
-- Basic syntax highlighting of ".wit" files.
-- [Snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets) for worlds and interfaces.
-- Basic markdown highlighting in comments.
-- Simple list-based autocomplete.
-- **WIT Syntax Checking**: Validate WIT files for common syntax errors and provide diagnostics.
+### Language Support
+- **Syntax Highlighting**: Full TextMate grammar for WIT files with proper scoping
+- **Code Snippets**: Pre-built snippets for worlds, interfaces, and common patterns
+- **Markdown in Comments**: Syntax highlighting for markdown within WIT comments
+- **Code Completion**: Context-aware autocomplete for WIT keywords and constructs
 
-### Syntax Validation and Error Display
-
-The extension provides comprehensive WIT syntax validation with error display in VS Code's PROBLEMS pane:
+### Validation and Diagnostics
 
 #### Automatic Validation
 - **On File Save**: Automatically validates WIT files when saved
 - **On File Open**: Validates WIT files when opened in the editor
-- **Real-time Feedback**: Errors appear immediately in the PROBLEMS pane
+- **Real-time Feedback**: Errors appear immediately in VS Code's PROBLEMS pane
+- **Workspace Validation**: Validate all WIT files across your entire workspace
 
-#### Manual Commands
-- **WIT: Check Syntax** (`Ctrl+Shift+P` → "WIT: Check Syntax")
+#### Error Display
+- **Precise Location**: Errors show exact line and column numbers
+- **Detailed Messages**: Clear descriptions of syntax errors with context
+- **Quick Navigation**: Click any error in PROBLEMS pane to jump to the issue
+- **Multi-file Support**: Track errors across multiple files simultaneously
+
+### Document Formatting
+
+Format WIT files with a single command:
+- **Auto-formatting**: Format on save or on demand
+- **Consistent Style**: Ensures uniform code style across your project
+- **Default Formatter**: Automatically set as the default formatter for `.wit` files
+- **Keyboard Shortcut**: `Shift+Alt+F` to format the active document
+
+### Binding Generation
+
+Generate language bindings directly from WIT files or WebAssembly components:
+
+#### Supported Languages
+- **Rust**: Generate idiomatic Rust bindings with `wit-bindgen`
+- **C**: Generate C bindings for C projects
+- **C++**: Generate C++ bindings
+- **C#**: Generate C# bindings for .NET projects
+- **Go**: Generate Go bindings
+- **MoonBit**: Generate MoonBit bindings
+- **Markdown**: Generate documentation in Markdown format
+
+#### Binding Generation Features
+- **Context Menu Integration**: Right-click on `.wit` or `.wasm` files to generate bindings
+- **Multiple Targets**: Generate bindings for multiple languages at once
+- **Output to Folder**: Automatically creates language-specific output directories
+- **Progress Feedback**: Visual feedback during generation process
+
+### WebAssembly Component Support
+
+![Editor with WIT menu](images/component-view-menu.png)
+
+
+#### Component Detection
+- **Visual Indicators**: WebAssembly component files (`.wasm`) are decorated with a 🧩 emoji in the Explorer
+- **Component Colors**: Customizable color scheme for component files in the file explorer
+- **Automatic Detection**: Distinguishes between core WebAssembly modules and components
+
+#### Component Operations
+- **Extract WIT**: Extract WIT definitions from compiled WebAssembly components
+- **Extract Core Wasm**: Extract the core WebAssembly module from a component
+- **Custom Editor**: View WIT interfaces directly from `.wasm` component files
+- **Real-time Updates**: WIT view updates automatically when the component file changes
+
+### Context Menu Integration
+
+Right-click on files in the editor or Explorer for quick access to:
+
+**For `.wit` files:**
+- Check WIT Syntax
+- Format Document
+- Generate Bindings (with language submenu)
+
+**For `.wasm` component files:**
+- Extract WIT
+- Extract Core Wasm
+- Generate Bindings (with language submenu)
+
+## Available Commands
+
+Access these commands via the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
+
+### Validation Commands
+- **WIT: Check WIT Syntax** (`F7` when in a WIT file)
   - Validates the currently active WIT file
-  - Shows detailed error information in notifications
-  - Displays errors in the PROBLEMS pane
-
-- **WIT: Check Syntax in Workspace** (`Ctrl+Shift+P` → "WIT: Check Syntax in Workspace")
+  - Shows errors in the PROBLEMS pane and notifications
+  
+- **WIT: Check WIT Syntax in Workspace** (`Shift+F7`)
   - Validates all WIT files in the workspace
   - Shows progress notification during validation
-  - Provides summary of results
-  - Creates detailed report in output channel
+  - Provides summary of results in output channel
 
-#### Error Information
-When validation fails, the extension displays:
-- **Error location**: Precise line and column numbers
-- **Error message**: Detailed description of the syntax error
-- **Context**: Additional information about the error
-- **Related information**: Links to relevant documentation or context
+### Formatting Commands
+- **WIT: Format Document** (`Shift+Alt+F` when in a WIT file)
+  - Formats the current WIT file
+  - Applies consistent styling and indentation
 
-#### PROBLEMS Pane Integration
-- Errors appear automatically in VS Code's PROBLEMS pane
-- Click on any error to jump directly to the problematic line
-- Errors are cleared automatically when files are fixed or closed
-- Supports multiple files with errors simultaneously
+### Binding Generation Commands
+- **WIT: Generate Language Bindings**
+  - Opens a language selection menu
+  - Available for `.wit` files and WebAssembly components
+  
+- **WIT: Generate Rust Bindings**
+  - Generates Rust bindings using `wit-bindgen`
+  
+- **WIT: Generate C Bindings**
+  - Generates C bindings for C projects
+  
+- **WIT: Generate C++ Bindings**
+  - Generates C++ bindings
+  
+- **WIT: Generate C# Bindings**
+  - Generates C# bindings for .NET projects
+  
+- **WIT: Generate Go Bindings**
+  - Generates Go bindings
+  
+- **WIT: Generate MoonBit Bindings**
+  - Generates MoonBit bindings
+  
+- **WIT: Generate Markdown Documentation**
+  - Generates Markdown documentation from WIT definitions
 
-### Code Completion
+### WebAssembly Component Commands
+- **WIT: Extract WIT**
+  - Extracts WIT definitions from a WebAssembly component file
+  - Available only for component-type `.wasm` files
+  
+- **WIT: Extract Core Wasm**
+  - Extracts the core WebAssembly module from a component
+  - Available only for component-type `.wasm` files
 
-The extension offers intelligent code completion for WIT files:
+### Utility Commands
+- **WIT: Show WIT Bindgen Version**
+  - Displays the version of wit-bindgen used by the extension
 
-- **Context-aware suggestions**: Provides completion items based on the current context
-- **Keyword snippets**: Includes common WIT keywords and constructs
-- **Custom snippets**: User-defined snippets for faster coding
+## Keyboard Shortcuts
 
-### Command Palette Integration
+| Command | Shortcut | When |
+|---------|----------|------|
+| Check WIT Syntax | `F7` | Editing a `.wit` file |
+| Check WIT Syntax in Workspace | `Shift+F7` | Anytime |
+| Format Document | `Shift+Alt+F` | Editing a `.wit` file |
 
-Easily access extension features through the Command Palette:
+## Extension Settings
 
-- **WIT: Check Syntax**: Validate the current file's syntax
-- **WIT: Check Syntax in Workspace**: Validate all WIT files in the workspace
-- **WIT: Show Output Channel**: Display the extension's output channel
+This extension contributes the following settings:
+
+### Default Formatter
+The extension automatically configures itself as the default formatter for WIT files. This is equivalent to:
+
+```json
+{
+  "[wit]": {
+    "editor.defaultFormatter": "bytecodealliance.wit-idl"
+  }
+}
+```
+
+You can override this in your user or workspace settings if needed.
+
+### Component File Decoration Color
+Customize the color used to decorate WebAssembly component files in the Explorer:
+
+- **Color ID**: `witIdl.componentColor`
+- **Description**: Color used to decorate WebAssembly component files (.wasm) in the explorer
+- **Defaults**:
+  - Light theme: `#5043b3`
+  - Dark theme: `#7c5eff`
+  - High contrast: `#b15eff`
+
+To customize, add to your settings:
+
+```json
+{
+  "workbench.colorCustomizations": {
+    "witIdl.componentColor": "#your-color-here"
+  }
+}
+```
 
 ## Installation
 
@@ -80,7 +212,9 @@ This extension is available on:
   - Install from Open VSX: https://open-vsx.org/extension/bytecodealliance/wit-idl
   - Or install via CLI: `ovsx get bytecodealliance.wit-idl`
 
-### Prerequisites
+### From Source
+
+#### Prerequisites
 
 This extension includes a WebAssembly component that requires the following tools for building:
 
@@ -96,7 +230,6 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 npm run setup-wasm
 ```
 
-### From Source
 
 To install from source, follow these steps:
 * Clone the repository: `git clone https://github.com/bytecodealliance/vscode-wit.git && cd vscode-wit`
@@ -112,7 +245,3 @@ This extension is automatically published to both Visual Studio Marketplace and 
 - `PAT_VSCE`: Personal Access Token for Visual Studio Marketplace
 - `OVSX_PAT`: Personal Access Token for Open VSX Registry
 
-To obtain an Open VSX token:
-1. Create an account at https://open-vsx.org/
-2. Generate a Personal Access Token from your account settings
-3. Add the token as `OVSX_PAT` in the repository secrets
