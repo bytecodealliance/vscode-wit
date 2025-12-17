@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.21](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.20...wit-idl-v0.3.21) (2025-12-17)
+
+
+### Bug Fixes
+
+* switch to @vscode/vsce ([df196ac](https://github.com/bytecodealliance/vscode-wit/commit/df196ac559157c4829056332bb3853acb6cec078))
+
 ## [0.3.20](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.19...wit-idl-v0.3.20) (2025-12-11)
 
 
