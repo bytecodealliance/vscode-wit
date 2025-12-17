@@ -93,7 +93,7 @@ jobs:
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
           TAG_NAME: ${{ needs.release-artifacts.outputs.tag_name }}
-        run: npx vsce publish --packagePath ${TAG_NAME}.vsix
+        run: npx -y @vscode/vsce publish --packagePath ${TAG_NAME}.vsix
 
   publish-ovsx:
     needs: [release-please, release-artifacts]
