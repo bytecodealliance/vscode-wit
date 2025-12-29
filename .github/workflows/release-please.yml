@@ -82,16 +82,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Download VSIX asset
         env:
           GITHUB_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ needs.release-artifacts.outputs.tag_name }}
         run: gh release download ${TAG_NAME} --pattern "${TAG_NAME}.vsix"
+
       - name: Publish to VS Code Marketplace
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          VSCE_PAT: ${{ secrets.PAT_VSCE }}
           TAG_NAME: ${{ needs.release-artifacts.outputs.tag_name }}
         run: npx -y @vscode/vsce publish --packagePath ${TAG_NAME}.vsix
 

@@ -8,6 +8,7 @@ use anyhow::Context;
 use wit_component as wcomp;
 use wasmparser::{Parser, Payload};
 use wit_bindgen_core::Files;
+use wit_bindgen_core::WorldGenerator;
 use wit_bindgen_rust as rust;
 use wit_bindgen_c as c;
 use wit_bindgen_cpp as cpp;
