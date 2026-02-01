@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.25](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.24...wit-idl-v0.3.25) (2026-02-01)
+
+
+### Features
+
+* integrate go bindings generation using wit-bindgen-go and update documentation ([a98fadd](https://github.com/bytecodealliance/vscode-wit/commit/a98faddd8b90ebcb94ae174110763c82db21c21f))
+
+
+### Bug Fixes
+
+* drop wee_alloc (security) ([f76364b](https://github.com/bytecodealliance/vscode-wit/commit/f76364b24e95c5614d2bccbfe4647147437ed81a))
+
 ## [0.3.24](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.23...wit-idl-v0.3.24) (2026-02-01)
 
 
