@@ -79,3 +79,4 @@ dist/
 !/syntaxes/*.tmLanguage.json
 types/
 out/
+tmp/

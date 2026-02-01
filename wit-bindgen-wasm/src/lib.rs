@@ -12,6 +12,7 @@ use wit_bindgen_core::WorldGenerator;
 use wit_bindgen_rust as rust;
 use wit_bindgen_c as c;
 use wit_bindgen_cpp as cpp;
+use wit_bindgen_go as go;
 use wit_bindgen_csharp as csharp;
 use wit_bindgen_moonbit as moonbit;
 use wit_bindgen_markdown as markdown;
@@ -232,7 +233,7 @@ impl WitBindgen {
                 let mut error_files = HashMap::new();
                 error_files.insert(
                     "error.txt".to_string(), 
-                    format!("// Unsupported language: {}\n// Supported languages: rust, c, cpp, csharp, go, moonbit, markdown", language)
+                    format!("// Unsupported language: {}\n// Supported languages: rust, c, cpp, csharp, moonbit, markdown\n// Note: Go bindings moved to go.bytecodealliance.org/cmd/wit-bindgen-go", language)
                 );
                 error_files
             },
@@ -416,25 +417,47 @@ impl WitBindgen {
         Ok(result)
     }
 
-    /// Generate Go bindings - Note: wit-bindgen Go support has moved
-    fn generate_go_bindings(&self, _content: &str, _world_name: Option<String>) -> HashMap<String, String> {
-        let mut files = HashMap::new();
-        files.insert(
-            "README.md".to_string(),
-            "# Go Bindings Generation\n\n\
-            The wit-bindgen Go generators have been moved to a separate project.\n\n\
-            ## New Go Implementation\n\n\
-            Please use the new Go WIT bindings generator:\n\n\
-            ```bash\n\
-            # Install the new Go generator\n\
-            go install go.bytecodealliance.org/cmd/wit-bindgen-go@latest\n\n\
-            # Generate Go bindings\n\
-            wit-bindgen-go generate <path-to-wit-pkg>\n\
-            ```\n\n\
-            For more information, visit: https://github.com/bytecodealliance/go-modules\n\n\
-            Note: This requires `wasm-tools` to be installed.".to_string()
-        );
-        files
+    /// Generate Go bindings using wit-bindgen-go library
+    fn generate_go_bindings(&self, content: &str, world_name: Option<String>) -> HashMap<String, String> {
+        match self.generate_go_with_wit_bindgen(content, world_name.as_deref()) {
+            Ok(files) => files,
+            Err(e) => {
+                console_error(&format!("wit-bindgen-go failed: {}", e));
+                let mut error_files = HashMap::new();
+                error_files.insert(
+                    "error.txt".to_string(),
+                    format!("Go binding generation failed: {}", e)
+                );
+                error_files
+            }
+        }
+    }
+
+    /// Generate Go bindings using wit-bindgen-go library
+    fn generate_go_with_wit_bindgen(&self, content: &str, world_name: Option<&str>) -> Result<HashMap<String, String>, anyhow::Error> {
+        let inline_path = Path::new("inline.wit");
+        let mut resolve = Resolve::default();
+        let package_id = resolve.push_str(inline_path, content)
+            .with_context(|| "Failed to parse WIT content for Go binding generation")?;
+        
+        let world_id = if let Some(world_name) = world_name {
+            resolve.select_world(&[package_id], Some(world_name))?
+        } else {
+            resolve.select_world(&[package_id], None)?
+        };
+        
+        let opts = go::Opts::default();
+        let mut generator = opts.build();
+        let mut files = Files::default();
+        
+        generator.generate(&resolve, world_id, &mut files)?;
+        
+        let mut result = HashMap::new();
+        for (filename, content) in files.iter() {
+            result.insert(filename.to_string(), bytes_to_latin1_string(content));
+        }
+        
+        Ok(result)
     }
 
     /// Generate MoonBit bindings using wit-bindgen-moonbit library

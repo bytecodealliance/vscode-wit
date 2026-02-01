@@ -237,6 +237,23 @@ To install from source, follow these steps:
 * Run npm commands to install:
 `npm ci && npm run install-extension`
 
+## Testing
+
+The extension includes comprehensive tests:
+
+```bash
+# Run all tests (lint, format, build, grammar, unit tests)
+npm test
+
+# Run unit tests only
+npm run test-unit
+
+# Run tests in watch mode
+npm run test-unit-watch
+```
+
+For Go WASM integration tests, see [docs/GO_TESTING.md](docs/GO_TESTING.md).
+
 ## Publishing (for maintainers)
 
 This extension is automatically published to both Visual Studio Marketplace and Open VSX Registry through GitHub Actions when a release is created.

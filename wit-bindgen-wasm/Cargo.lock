@@ -451,6 +451,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "wit-bindgen-go"
+version = "0.52.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b2a9c87174304f1163e770405a2abcbdb2361287af15028ac2a171b8afe2f408"
+dependencies = [
+ "anyhow",
+ "heck",
+ "wasm-encoder",
+ "wasm-metadata",
+ "wit-bindgen-core",
+ "wit-component",
+]
+
+[[package]]
 name = "wit-bindgen-markdown"
 version = "0.52.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -504,6 +518,7 @@ dependencies = [
  "wit-bindgen-core",
  "wit-bindgen-cpp",
  "wit-bindgen-csharp",
+ "wit-bindgen-go",
  "wit-bindgen-markdown",
  "wit-bindgen-moonbit",
  "wit-bindgen-rust",
