@@ -274,8 +274,8 @@ impl WitBindgen {
         let opts = c::Opts::default();
         let mut generator = opts.build();
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
@@ -317,8 +317,8 @@ impl WitBindgen {
         let opts = cpp::Opts::default();
         let mut generator = opts.build(None);
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
@@ -357,14 +357,14 @@ impl WitBindgen {
             resolve.select_world(&[package_id], None)?
         };
         
-        let opts = rust::Opts { 
-            generate_all: true, 
-            ..Default::default() 
+        let opts = rust::Opts {
+            generate_all: true,
+            ..Default::default()
         };
         let mut generator = opts.build();
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
@@ -406,8 +406,8 @@ impl WitBindgen {
         let opts = csharp::Opts::default();
         let mut generator = opts.build();
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
@@ -449,8 +449,8 @@ impl WitBindgen {
         let opts = go::Opts::default();
         let mut generator = opts.build();
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
@@ -511,8 +511,8 @@ impl WitBindgen {
         let opts = markdown::Opts::default();
         let mut generator = opts.build();
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
@@ -538,8 +538,8 @@ impl WitBindgen {
         let opts = moonbit::Opts::default();
         let mut generator = opts.build();
         let mut files = Files::default();
-        
-        generator.generate(&resolve, world_id, &mut files)?;
+
+        generator.generate(&mut resolve, world_id, &mut files)?;
         
         let mut result = HashMap::new();
         for (filename, content) in files.iter() {
