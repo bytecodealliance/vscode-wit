@@ -18,7 +18,7 @@ Build and dev workflows
 - Tests: `npm test` runs lint, prettier check, build, package, grammar tests, and unit tests. Quick loops: `npm run test-unit` or `npm run test-grammar`. Update grammar snapshots: `npm run update-snapshot`.
 - Verify WASM build: `npm run verify-wasm` checks that the built WASM file exists and is valid.
 
-Bundling details (esbuild.mjs)
+Bundling details (esbuild.mts)
 - ESM build targeting Node 22 with `external: ["vscode"]`, injects `src/node-polyfills.js`.
 - Plugins auto-discover and copy dynamic WASM references and worker JS to `dist/`. `src/wasmUtils.ts` first looks for `dist/wit_bindgen_wasm_bg.wasm` and falls back to module default init. If you introduce new wasm or worker assets referenced via `new URL('file.ext', import.meta.url)`, the plugin will attempt to copy them.
 
@@ -55,6 +55,6 @@ Key references
 - Additional instructions: `.github/instructions/*`
 - Entry point: `src/extension.ts`
 - Validation: `src/validator.ts`, `src/errorParser.ts`, `src/wasmUtils.ts`
-- Build: `esbuild.mjs`, `package.json` scripts
+- Build: `esbuild.mts`, `package.json` scripts
 - WASM package: `wit-bindgen-wasm/README.md`, `wit-bindgen-wasm/pkg/*`
 - Dependencies: `wit-parser` 0.241, `wit-component` 0.241, `wasmparser` 0.241, `wasm-tools` CLI

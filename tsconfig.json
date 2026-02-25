@@ -6,12 +6,12 @@
 
         "module": "nodenext",
         "moduleResolution": "nodenext",
-        "target": "es2020",
+        "target": "es2022",
         "declaration": true,
         "sourceMap": true,
         "strict": true,
         "skipLibCheck": true,
 
-        "lib": ["es2020"]
+        "lib": ["ES2022"]
     }
 }

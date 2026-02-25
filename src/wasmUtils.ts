@@ -68,7 +68,9 @@ export async function getWitBindgenVersionFromWasm(): Promise<string> {
         return version;
     } catch (error) {
         console.error("Failed to get version from WASM module:", error);
-        throw new Error(`Failed to get version: ${error instanceof Error ? error.message : String(error)}`);
+        throw new Error(`Failed to get version: ${error instanceof Error ? error.message : String(error)}`, {
+            cause: error,
+        });
     }
 }
 

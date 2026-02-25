@@ -525,7 +525,7 @@ export function activate(context: vscode.ExtensionContext) {
                     }
 
                     const worldMatch = witContent.match(/world\s+([a-zA-Z][a-zA-Z0-9-_]*)/g);
-                    let selectedWorld: string | undefined;
+                    const selectedWorld = undefined;
 
                     const workspaceFolders = vscode.workspace.workspaceFolders;
                     const defaultUri = workspaceFolders ? workspaceFolders[0].uri : undefined;

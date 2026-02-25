@@ -25,15 +25,39 @@ const BUILD_TARGET = "node22";
 const ENTRY_POINT = "src/extension.ts";
 
 /**
+ * Options for the copyFiles utility function
+ */
+interface CopyFilesOptions {
+    srcDir: string;
+    destDir: string;
+    files: string[] | string;
+    logPrefix?: string;
+    skipIfExists?: boolean;
+    warnIfMissing?: boolean;
+}
+
+/**
+ * Parsed information from a package.json file
+ */
+interface PackageInfo {
+    name: string;
+    version: string;
+    files: string[];
+    dependencies: Record<string, string>;
+    peerDependencies: Record<string, string>;
+    optionalDependencies: Record<string, string>;
+}
+
+/**
  * Safely reads a directory and returns files or empty array on error
  * @param {string} dirPath - Directory path to read
  * @returns {string[]} Array of filenames or empty array
  */
-function safeReadDir(dirPath) {
+function safeReadDir(dirPath: string): string[] {
     try {
         return fs.readdirSync(dirPath);
     } catch (error) {
-        console.warn(`⚠️  Could not read directory ${dirPath}: ${error.message}`);
+        console.warn(`⚠️  Could not read directory ${dirPath}: ${(error as Error).message}`);
         return [];
     }
 }
@@ -43,11 +67,11 @@ function safeReadDir(dirPath) {
  * @param {string} filePath - Path to check
  * @returns {boolean} True if path exists
  */
-function safeExists(filePath) {
+function safeExists(filePath: string): boolean {
     try {
         return fs.existsSync(filePath);
     } catch (error) {
-        console.warn(`⚠️  Could not check existence of ${filePath}: ${error.message}`);
+        console.warn(`⚠️  Could not check existence of ${filePath}: ${(error as Error).message}`);
         return false;
     }
 }
@@ -56,13 +80,13 @@ function safeExists(filePath) {
  * Clean the dist directory before building
  * @param {string} distPath - Path to the dist directory
  */
-function cleanDistDirectory(distPath) {
+function cleanDistDirectory(distPath: string): void {
     if (safeExists(distPath)) {
         try {
             fs.rmSync(distPath, { recursive: true, force: true });
             console.log("🧹 Cleaned dist directory");
         } catch (error) {
-            console.warn(`⚠️  Could not clean dist directory: ${error.message}`);
+            console.warn(`⚠️  Could not clean dist directory: ${(error as Error).message}`);
         }
     }
 }
@@ -78,7 +102,7 @@ function cleanDistDirectory(distPath) {
  * @param {boolean} [options.warnIfMissing] - Log warning if source file doesn't exist
  * @returns {number} Number of files successfully copied
  */
-function copyFiles(options) {
+function copyFiles(options: CopyFilesOptions): number {
     const { srcDir, destDir, files, logPrefix = "", skipIfExists = false, warnIfMissing = true } = options;
 
     if (!safeExists(srcDir)) {
@@ -92,11 +116,11 @@ function copyFiles(options) {
     try {
         fs.mkdirSync(destDir, { recursive: true });
     } catch (error) {
-        console.error(`❌ Failed to create destination directory ${destDir}: ${error.message}`);
+        console.error(`❌ Failed to create destination directory ${destDir}: ${(error as Error).message}`);
         return 0;
     }
 
-    let filesToCopy = [];
+    let filesToCopy;
     let copiedCount = 0;
 
     try {
@@ -130,11 +154,11 @@ function copyFiles(options) {
                 console.log(`✅ Copied ${file}${logPrefix ? ` ${logPrefix}` : ""} to ${path.basename(destDir)}/`);
                 copiedCount++;
             } catch (error) {
-                console.error(`❌ Failed to copy ${file}: ${error.message}`);
+                console.error(`❌ Failed to copy ${file}: ${(error as Error).message}`);
             }
         });
     } catch (error) {
-        console.error(`❌ Error processing files in ${srcDir}: ${error.message}`);
+        console.error(`❌ Error processing files in ${srcDir}: ${(error as Error).message}`);
     }
 
     return copiedCount;
@@ -145,7 +169,7 @@ function copyFiles(options) {
  * @param {string} packagePath - Path to the package directory
  * @returns {Object} Package information including files to copy
  */
-function readPackageInfo(packagePath) {
+function readPackageInfo(packagePath: string): PackageInfo | null {
     const packageJsonPath = path.join(packagePath, "package.json");
 
     if (!safeExists(packageJsonPath)) {
@@ -153,17 +177,19 @@ function readPackageInfo(packagePath) {
     }
 
     try {
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-        const filesSection = packageJson.files || [];
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8")) as Record<string, unknown>;
+        const filesSection = (packageJson.files as string[]) || [];
 
         return {
-            name: packageJson.name,
-            version: packageJson.version,
+            name: packageJson.name as string,
+            version: packageJson.version as string,
             files: filesSection,
-            dependencies: packageJson.dependencies || {},
+            dependencies: (packageJson.dependencies as Record<string, string>) || {},
+            peerDependencies: (packageJson.peerDependencies as Record<string, string>) || {},
+            optionalDependencies: (packageJson.optionalDependencies as Record<string, string>) || {},
         };
     } catch (error) {
-        console.warn(`Warning: Could not read package.json at ${packageJsonPath}: ${error.message}`);
+        console.warn(`Warning: Could not read package.json at ${packageJsonPath}: ${(error as Error).message}`);
         return null;
     }
 }
@@ -175,7 +201,7 @@ function readPackageInfo(packagePath) {
  * @param {string} subDir - Subdirectory to check (e.g., 'lib', 'obj')
  * @returns {string[]} Array of WASM files found
  */
-function getWasmFilesFromPackage(packageDir, filesSpec, subDir) {
+function getWasmFilesFromPackage(packageDir: string, filesSpec: string[], subDir: string): string[] {
     const targetDir = path.join(packageDir, subDir);
 
     if (!safeExists(targetDir)) {
@@ -189,13 +215,13 @@ function getWasmFilesFromPackage(packageDir, filesSpec, subDir) {
         // If package has files specification, filter based on that
         if (filesSpec && filesSpec.length > 0) {
             const relevantSpecs = filesSpec.filter(
-                (spec) => spec.includes(subDir) && (spec.includes("*.wasm") || spec.includes("*.core*.wasm"))
+                (spec: string) => spec.includes(subDir) && (spec.includes("*.wasm") || spec.includes("*.core*.wasm"))
             );
 
             if (relevantSpecs.length > 0) {
                 // Use the files specification to determine which files to include
                 return wasmFiles.filter((file) => {
-                    return relevantSpecs.some((spec) => {
+                    return relevantSpecs.some((spec: string) => {
                         if (spec.includes("*.core*.wasm")) {
                             return file.includes(".core") && file.endsWith(".wasm");
                         }
@@ -211,7 +237,7 @@ function getWasmFilesFromPackage(packageDir, filesSpec, subDir) {
         // Default: return all WASM files
         return wasmFiles;
     } catch (error) {
-        console.warn(`⚠️  Could not read directory ${targetDir}: ${error.message}`);
+        console.warn(`⚠️  Could not read directory ${targetDir}: ${(error as Error).message}`);
         return [];
     }
 }
@@ -221,13 +247,13 @@ function getWasmFilesFromPackage(packageDir, filesSpec, subDir) {
  * @param {string[]|undefined} filesSpec - Files specification from package.json
  * @returns {string[]} Array of directory names to search for WASM files
  */
-function getWasmDirectoriesFromFiles(filesSpec) {
+function getWasmDirectoriesFromFiles(filesSpec: string[] | undefined): string[] {
     if (!filesSpec || !Array.isArray(filesSpec)) {
         // Fallback to standard directories if no files specification
         return [];
     }
 
-    const directories = new Set();
+    const directories = new Set<string>();
 
     filesSpec.forEach((filePattern) => {
         if (typeof filePattern === "string") {
@@ -255,7 +281,7 @@ function getWasmDirectoriesFromFiles(filesSpec) {
  * @param {string} packageName - Package name (e.g., "@bytecodealliance/jco")
  * @returns {string[]} Array of path segments for the package directory
  */
-function packageNameToPath(packageName) {
+function packageNameToPath(packageName: string): string[] {
     return packageName.startsWith("@") ? packageName.split("/") : [packageName];
 }
 
@@ -269,7 +295,14 @@ function packageNameToPath(packageName) {
  * @param {boolean} [isNested=false] - Whether this is a nested dependency (affects file copying behavior)
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function processPackageForWasm(packageName, packageDir, distDir, processedPaths, nodeModulesDir, isNested = false) {
+function processPackageForWasm(
+    packageName: string,
+    packageDir: string,
+    distDir: string,
+    processedPaths: Set<string>,
+    nodeModulesDir: string,
+    isNested = false
+): void {
     if (processedPaths.has(packageDir)) {
         return;
     }
@@ -343,14 +376,14 @@ function processPackageForWasm(packageName, packageDir, distDir, processedPaths,
 function createResourceDiscoveryPlugin() {
     return {
         name: "resource-discovery",
-        setup(build) {
+        setup(build: esbuild.PluginBuild) {
             // Hook into the build start
             build.onStart(() => {
                 console.log("🔨 [watch] build started");
             });
 
             // Hook into build end for comprehensive logging
-            build.onEnd((result) => {
+            build.onEnd((result: esbuild.BuildResult) => {
                 if (result.errors.length > 0) {
                     console.log("❌ Build completed with errors:");
                     result.errors.forEach(({ text, location }) => {
@@ -385,15 +418,15 @@ function createResourceDiscoveryPlugin() {
  * @returns {import('esbuild').Plugin} An esbuild plugin
  */
 function createWasmDiscoveryPlugin() {
-    const discoveredWasmFiles = new Set();
+    const discoveredWasmFiles = new Set<string>();
     const nodeModulesDir = path.join(process.cwd(), "node_modules");
     const distDir = path.join(process.cwd(), "dist");
 
     return {
         name: "wasm-discovery",
-        setup(build) {
+        setup(build: esbuild.PluginBuild) {
             // Hook into build end to analyze the output and discover WASM references
-            build.onEnd(async (result) => {
+            build.onEnd(async (result: esbuild.BuildResult) => {
                 if (result.errors.length > 0) return;
 
                 // Analyze the main bundle for dynamic WASM references
@@ -441,7 +474,9 @@ function createWasmDiscoveryPlugin() {
                                             fs.copyFileSync(srcPath, destPath);
                                             console.log(`✅ Copied dynamically referenced WASM: ${wasmFileName}`);
                                         } catch (error) {
-                                            console.error(`❌ Failed to copy ${wasmFileName}: ${error.message}`);
+                                            console.error(
+                                                `❌ Failed to copy ${wasmFileName}: ${(error as Error).message}`
+                                            );
                                         }
                                     }
                                 } else {
@@ -450,7 +485,7 @@ function createWasmDiscoveryPlugin() {
                             }
                         }
                     } catch (error) {
-                        console.warn(`⚠️  Could not analyze bundle for WASM references: ${error.message}`);
+                        console.warn(`⚠️  Could not analyze bundle for WASM references: ${(error as Error).message}`);
                     }
                 }
             });
@@ -464,7 +499,7 @@ function createWasmDiscoveryPlugin() {
  * @param {string} nodeModulesDir - Path to node_modules directory
  * @returns {Promise<string[]>} Array of paths where the file was found
  */
-async function findWasmFileInNodeModules(wasmFileName, nodeModulesDir) {
+async function findWasmFileInNodeModules(wasmFileName: string, nodeModulesDir: string): Promise<string[]> {
     const foundPaths = [];
 
     try {
@@ -489,7 +524,7 @@ async function findWasmFileInNodeModules(wasmFileName, nodeModulesDir) {
             }
         }
     } catch (error) {
-        console.warn(`⚠️  Error searching for WASM file ${wasmFileName}: ${error.message}`);
+        console.warn(`⚠️  Error searching for WASM file ${wasmFileName}: ${(error as Error).message}`);
     }
 
     return foundPaths;
@@ -501,7 +536,7 @@ async function findWasmFileInNodeModules(wasmFileName, nodeModulesDir) {
  * @param {string} wasmFileName - WASM file name to find
  * @returns {Promise<string[]>} Array of paths where the file was found
  */
-async function searchForWasmInPackage(packageDir, wasmFileName) {
+async function searchForWasmInPackage(packageDir: string, wasmFileName: string): Promise<string[]> {
     const foundPaths = [];
 
     // Common directories where WASM files might be located
@@ -525,7 +560,7 @@ async function searchForWasmInPackage(packageDir, wasmFileName) {
  * @param {string} nodeModulesDir - Path to node_modules directory
  * @returns {string[]} Array of paths where the file was found
  */
-async function findJsFileInNodeModules(fileName, nodeModulesDir) {
+async function findJsFileInNodeModules(fileName: string, nodeModulesDir: string): Promise<string[]> {
     const foundPaths = [];
 
     try {
@@ -550,7 +585,7 @@ async function findJsFileInNodeModules(fileName, nodeModulesDir) {
             }
         }
     } catch (error) {
-        console.warn(`⚠️  Error searching for JS file ${fileName}: ${error.message}`);
+        console.warn(`⚠️  Error searching for JS file ${fileName}: ${(error as Error).message}`);
     }
 
     return foundPaths;
@@ -562,7 +597,7 @@ async function findJsFileInNodeModules(fileName, nodeModulesDir) {
  * @param {string} fileName - JS file name to find
  * @returns {Promise<string[]>} Array of paths where the file was found
  */
-async function searchForJsInPackage(packageDir, fileName) {
+async function searchForJsInPackage(packageDir: string, fileName: string): Promise<string[]> {
     const foundPaths = [];
 
     // Common directories where JS files might be located
@@ -587,7 +622,7 @@ async function searchForJsInPackage(packageDir, fileName) {
  * @param {string} fileName - File name to find
  * @returns {Promise<string[]>} Array of paths where the file was found
  */
-async function searchRecursively(dir, fileName) {
+async function searchRecursively(dir: string, fileName: string): Promise<string[]> {
     const foundPaths = [];
 
     try {
@@ -628,7 +663,7 @@ async function searchRecursively(dir, fileName) {
  * @param {boolean} [requireImportMeta=false] - Whether to require import.meta.url in the pattern
  * @returns {RegExp} Compiled regex pattern with global flag
  */
-function createUrlRegex(extension, requireImportMeta = false) {
+function createUrlRegex(extension: string, requireImportMeta = false): RegExp {
     const importMetaPart = requireImportMeta ? "[^)]*import\\.meta\\.url" : "[^)]*";
     return new RegExp(`new URL\\(['"](?:\\.\\/)?([^'"]+\\.${extension})['"]${importMetaPart}\\)`, "g");
 }
@@ -681,7 +716,7 @@ async function discoverEntryPoints() {
             }
         }
     } catch (error) {
-        console.warn(`⚠️  Could not perform preliminary analysis: ${error.message}`);
+        console.warn(`⚠️  Could not perform preliminary analysis: ${(error as Error).message}`);
         console.warn("🔄 Falling back to main entry point only");
     }
 
