@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.27](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.26...wit-idl-v0.3.27) (2026-02-25)
+
+
+### Bug Fixes
+
+* update package dependencies and build scripts ([6016bae](https://github.com/bytecodealliance/vscode-wit/commit/6016baee45e5e68988bf2f730cad69bf86c1d51f))
+
 ## [0.3.26](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.25...wit-idl-v0.3.26) (2026-02-12)
 
 
