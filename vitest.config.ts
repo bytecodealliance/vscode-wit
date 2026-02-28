@@ -7,6 +7,13 @@ export default defineConfig({
         environment: "node",
         include: ["src/**/*.{test,spec}.{js,ts}", "tests/**/*.{test,spec}.{js,ts}"],
         exclude: ["node_modules", "dist", "out", "*.vsix"],
+        coverage: {
+            provider: "v8",
+            reporter: ["text", "lcov", "json-summary"],
+            reportsDirectory: "./coverage",
+            include: ["src/**/*.ts"],
+            exclude: ["src/**/*.test.ts", "src/**/*.spec.ts"],
+        },
     },
     resolve: {
         alias: {

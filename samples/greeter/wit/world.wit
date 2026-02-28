@@ -1,0 +1,25 @@
+package docs:greeter@0.1.0;
+
+interface greet {
+    /// Greet someone by name.
+    greet: func(name: string) -> string;
+}
+
+interface multi-greet {
+    /// Supported greeting languages.
+    enum language {
+        english,
+        spanish,
+        french,
+        german,
+        japanese,
+    }
+
+    /// Greet someone in a specific language.
+    greet-in: func(name: string, lang: language) -> string;
+}
+
+world greeter {
+    export greet;
+    export multi-greet;
+}

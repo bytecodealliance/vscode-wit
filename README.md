@@ -8,7 +8,9 @@ _A comprehensive Visual Studio Code extension for WebAssembly Interface Type (WI
 - 🎨 Full syntax highlighting and code completion
 - ✅ Real-time syntax validation with detailed error diagnostics
 - 🔧 Automatic code formatting
-- 🌐 Generate bindings for Rust, C, C++, C#, Go, MoonBit, and Markdown
+- 🌐 Generate guest bindings for Rust, C, C++, C#, Go, MoonBit, and JavaScript
+- 🧱 Generate JavaScript host bindings from WIT or `.wasm` components
+- 📚 Generate Markdown documentation from WIT definitions
 - 🧩 WebAssembly component detection and WIT extraction
 - 📝 Context menu integration for quick access to tools
 
@@ -50,19 +52,27 @@ Format WIT files with a single command:
 
 Generate language bindings directly from WIT files or WebAssembly components:
 
-#### Supported Languages
+#### Guest Bindings
 - **Rust**: Generate idiomatic Rust bindings with `wit-bindgen`
 - **C**: Generate C bindings for C projects
 - **C++**: Generate C++ bindings
 - **C#**: Generate C# bindings for .NET projects
 - **Go**: Generate Go bindings
 - **MoonBit**: Generate MoonBit bindings
+- **JavaScript**: Generate JavaScript/TypeScript guest-side bindings
+
+#### Host Bindings
+- **JavaScript**: Generate host-side JavaScript output
+  - For `.wit` files, generates host-oriented TypeScript declarations
+  - For `.wasm` components, transpiles to runnable JavaScript host modules
+
+#### Documentation Output
 - **Markdown**: Generate documentation in Markdown format
 
 #### Binding Generation Features
-- **Context Menu Integration**: Right-click on `.wit` or `.wasm` files to generate bindings
-- **Multiple Targets**: Generate bindings for multiple languages at once
-- **Output to Folder**: Automatically creates language-specific output directories
+- **Context Menu Integration**: Right-click on `.wit` or `.wasm` files to generate outputs
+- **Structured Menus**: Separate submenus for guest bindings, host bindings, and documentation
+- **Output to Folder**: Preserves generated relative folder layout safely
 - **Progress Feedback**: Visual feedback during generation process
 
 ### WebAssembly Component Support
@@ -88,12 +98,16 @@ Right-click on files in the editor or Explorer for quick access to:
 **For `.wit` files:**
 - Check WIT Syntax
 - Format Document
-- Generate Bindings (with language submenu)
+- Generate Guest Bindings (submenu)
+- Generate Host Bindings (submenu)
+- Generate Documentation (submenu)
 
 **For `.wasm` component files:**
 - Extract WIT
 - Extract Core Wasm
-- Generate Bindings (with language submenu)
+- Generate Guest Bindings (submenu)
+- Generate Host Bindings (submenu)
+- Generate Documentation (submenu)
 
 ## Available Commands
 
@@ -115,30 +129,35 @@ Access these commands via the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
   - Applies consistent styling and indentation
 
 ### Binding Generation Commands
-- **WIT: Generate Language Bindings**
-  - Opens a language selection menu
-  - Available for `.wit` files and WebAssembly components
-  
 - **WIT: Generate Rust Bindings**
-  - Generates Rust bindings using `wit-bindgen`
+  - Generates Rust guest bindings using `wit-bindgen`
   
 - **WIT: Generate C Bindings**
-  - Generates C bindings for C projects
+  - Generates C guest bindings for C projects
   
 - **WIT: Generate C++ Bindings**
-  - Generates C++ bindings
+  - Generates C++ guest bindings
   
 - **WIT: Generate C# Bindings**
-  - Generates C# bindings for .NET projects
+  - Generates C# guest bindings for .NET projects
   
 - **WIT: Generate Go Bindings**
-  - Generates Go bindings
+  - Generates Go guest bindings
   
 - **WIT: Generate MoonBit Bindings**
-  - Generates MoonBit bindings
+  - Generates MoonBit guest bindings
+
+- **WIT: Generate JavaScript Bindings (Guest)**
+  - Generates JavaScript/TypeScript guest bindings from `.wit` or extracted component WIT
+
+- **WIT: Generate JavaScript Bindings (Host)**
+  - Generates host-side JavaScript output
+  - Uses host type generation for `.wit`, and component transpilation for `.wasm`
   
 - **WIT: Generate Markdown Documentation**
   - Generates Markdown documentation from WIT definitions
+
+> Note: legacy command IDs for `wit-idl.generateBindings*` are still supported as deprecated aliases for backward compatibility.
 
 ### WebAssembly Component Commands
 - **WIT: Extract WIT**
@@ -247,6 +266,9 @@ npm test
 
 # Run unit tests only
 npm run test-unit
+
+# Run unit tests with coverage report
+npm run test-unit-coverage
 
 # Run tests in watch mode
 npm run test-unit-watch

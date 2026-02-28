@@ -41,8 +41,7 @@ export class WitFormatter implements vscode.DocumentFormattingEditProvider {
         let aliasGenericDepth = 0;
         let inFuncParams = false;
         for (let i = 0; i < lines.length; i++) {
-            const raw = lines[i];
-            const trimmed = raw.trim();
+            const trimmed = lines[i].trim();
             if (trimmed === "") {
                 out.push("");
                 continue;
