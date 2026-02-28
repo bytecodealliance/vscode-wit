@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "adder",
+    "greeter",
+    "counter",
+]
+resolver = "2"

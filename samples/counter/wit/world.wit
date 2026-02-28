@@ -1,0 +1,25 @@
+package docs:counter@0.1.0;
+
+interface types {
+    /// A counter resource that tracks a running total.
+    resource counter {
+        /// Create a new counter with an initial value.
+        constructor(initial: s32);
+
+        /// Increment the counter by a given amount and return the new value.
+        increment-by: func(amount: s32) -> s32;
+
+        /// Decrement the counter by a given amount and return the new value.
+        decrement-by: func(amount: s32) -> s32;
+
+        /// Get the current value of the counter.
+        get-value: func() -> s32;
+
+        /// Reset the counter to zero and return the old value.
+        reset: func() -> s32;
+    }
+}
+
+world counter {
+    export types;
+}

@@ -10,6 +10,14 @@ import {
     generateBindingsFromWasm,
     extractCoreWasmFromComponent,
 } from "./wasmUtils.js";
+import {
+    generateJsBindingsFromPath,
+    generateJsBindings,
+    transpileJsHostFromPath,
+    type JsBindingsMode,
+} from "./jsBindings.js";
+import { determineHostJsGenerationStrategy } from "./hostBindingsRouting.js";
+import { canUseWitPathGeneration } from "./bindingsSource.js";
 
 class WitExtractContentProvider implements vscode.TextDocumentContentProvider, vscode.Disposable {
     private readonly _onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
@@ -191,6 +199,11 @@ const staticCompletions = new vscode.CompletionList(
     true
 );
 
+/**
+ * Activate the WIT extension.
+ * Registers all commands, providers, and event listeners.
+ * @param context - The extension context for managing subscriptions
+ */
 export function activate(context: vscode.ExtensionContext) {
     const validator = new WitSyntaxValidator();
     const witExtractProvider = new WitExtractContentProvider();
@@ -474,203 +487,525 @@ export function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    const createGenerateBindingsCommand = (language: string, languageLabel: string) => {
-        return vscode.commands.registerCommand(
-            `wit-idl.generateBindings${languageLabel}`,
-            async (resource?: vscode.Uri) => {
-                try {
-                    const active = vscode.window.activeTextEditor;
-                    const targetUri: vscode.Uri | undefined = resource ?? active?.document.uri;
-                    if (!targetUri) {
-                        vscode.window.showErrorMessage("No file selected. Open a .wit or .wasm component file.");
+    const getGuestGenerationLabel = (languageLabel: string, isDocumentationGeneration: boolean): string => {
+        if (isDocumentationGeneration) {
+            return `${languageLabel} documentation`;
+        }
+        return `${languageLabel} guest bindings`;
+    };
+
+    const resolveSafeGeneratedOutputPath = (outputRoot: string, generatedName: string): string | undefined => {
+        if (path.isAbsolute(generatedName)) {
+            return undefined;
+        }
+
+        const normalized = path.posix.normalize(generatedName.replace(/\\/g, "/"));
+        if (normalized === "." || normalized.startsWith("../") || normalized.includes("/../")) {
+            return undefined;
+        }
+
+        const pathSegments = normalized.split("/").filter((segment) => segment.length > 0);
+        if (pathSegments.length === 0) {
+            return undefined;
+        }
+
+        const outputPath = path.join(outputRoot, ...pathSegments);
+        const relative = path.relative(outputRoot, outputPath);
+        if (relative.startsWith("..") || path.isAbsolute(relative)) {
+            return undefined;
+        }
+
+        return outputPath;
+    };
+
+    const createGenerateBindingsCommand = (language: string, commandId: string) => {
+        const languageLabels: Record<string, string> = {
+            rust: "Rust",
+            c: "C",
+            cpp: "C++",
+            csharp: "C#",
+            go: "Go",
+            moonbit: "MoonBit",
+            markdown: "Markdown",
+        };
+        const languageLabel = languageLabels[language] ?? language;
+        const isDocumentationGeneration = language === "markdown";
+        const generationLabel = getGuestGenerationLabel(languageLabel, isDocumentationGeneration);
+        return vscode.commands.registerCommand(commandId, async (resource?: vscode.Uri) => {
+            try {
+                const active = vscode.window.activeTextEditor;
+                const targetUri: vscode.Uri | undefined = resource ?? active?.document.uri;
+                if (!targetUri) {
+                    vscode.window.showErrorMessage("No file selected. Open a .wit or .wasm component file.");
+                    return;
+                }
+
+                let witContent: string;
+                let diagDoc: vscode.TextDocument | undefined;
+
+                const isWitDoc =
+                    active &&
+                    active.document.uri.toString() === targetUri.toString() &&
+                    active.document.languageId === "wit";
+                if (isWitDoc) {
+                    witContent = active!.document.getText();
+                    diagDoc = active!.document;
+                    if (!witContent.trim()) {
+                        vscode.window.showWarningMessage("The .wit file is empty.");
                         return;
                     }
-
-                    let witContent: string;
-                    let diagDoc: vscode.TextDocument | undefined;
-
-                    const isWitDoc =
-                        active &&
-                        active.document.uri.toString() === targetUri.toString() &&
-                        active.document.languageId === "wit";
-                    if (isWitDoc) {
-                        witContent = active!.document.getText();
-                        diagDoc = active!.document;
-                        if (!witContent.trim()) {
-                            vscode.window.showWarningMessage("The .wit file is empty.");
-                            return;
-                        }
-                    } else if (targetUri.fsPath.toLowerCase().endsWith(".wasm")) {
-                        const comp = await isWasmComponentFile(targetUri.fsPath);
-                        if (!comp) {
-                            vscode.window.showWarningMessage("The selected .wasm is not a WebAssembly component.");
-                            return;
-                        }
-                        const bytes = await vscode.workspace.fs.readFile(targetUri);
-                        const extracted = await extractWitFromComponent(bytes);
-                        if (!extracted.trim()) {
-                            vscode.window.showWarningMessage("No WIT could be extracted from this component.");
-                            return;
-                        }
-                        witContent = extracted;
-                        const os = await import("os");
-                        const tmpDir = os.tmpdir();
-                        const base = path.basename(targetUri.fsPath, ".wasm");
-                        const tmpPath = path.join(tmpDir, `wit-idl-${base}-${Date.now()}.wit`);
-                        fs.writeFileSync(tmpPath, witContent, "utf8");
-                        diagDoc = await vscode.workspace.openTextDocument(tmpPath);
-                    } else {
-                        vscode.window.showErrorMessage("Unsupported file type. Select a .wit or .wasm component file.");
+                } else if (targetUri.fsPath.toLowerCase().endsWith(".wasm")) {
+                    const comp = await isWasmComponentFile(targetUri.fsPath);
+                    if (!comp) {
+                        vscode.window.showWarningMessage("The selected .wasm is not a WebAssembly component.");
                         return;
                     }
-
-                    const worldMatch = witContent.match(/world\s+([a-zA-Z][a-zA-Z0-9-_]*)/g);
-                    const selectedWorld = undefined;
-
-                    const workspaceFolders = vscode.workspace.workspaceFolders;
-                    const defaultUri = workspaceFolders ? workspaceFolders[0].uri : undefined;
-
-                    const outputUri = await vscode.window.showOpenDialog({
-                        canSelectFiles: false,
-                        canSelectFolders: true,
-                        canSelectMany: false,
-                        defaultUri,
-                        openLabel: "Select Output Directory",
-                        title: `Select directory for ${languageLabel} bindings`,
-                    });
-
-                    if (!outputUri || outputUri.length === 0) {
+                    const bytes = await vscode.workspace.fs.readFile(targetUri);
+                    const extracted = await extractWitFromComponent(bytes);
+                    if (!extracted.trim()) {
+                        vscode.window.showWarningMessage("No WIT could be extracted from this component.");
                         return;
                     }
+                    witContent = extracted;
+                    const os = await import("os");
+                    const tmpDir = os.tmpdir();
+                    const base = path.basename(targetUri.fsPath, ".wasm");
+                    const tmpPath = path.join(tmpDir, `wit-idl-${base}-${Date.now()}.wit`);
+                    fs.writeFileSync(tmpPath, witContent, "utf8");
+                    diagDoc = await vscode.workspace.openTextDocument(tmpPath);
+                } else {
+                    vscode.window.showErrorMessage("Unsupported file type. Select a .wit or .wasm component file.");
+                    return;
+                }
 
-                    const outputPath = outputUri[0].fsPath;
+                const workspaceFolders = vscode.workspace.workspaceFolders;
+                const defaultUri = workspaceFolders ? workspaceFolders[0].uri : undefined;
 
-                    const bindingFiles = await generateBindingsFromWasm(witContent, language, selectedWorld);
+                const outputUri = await vscode.window.showOpenDialog({
+                    canSelectFiles: false,
+                    canSelectFolders: true,
+                    canSelectMany: false,
+                    defaultUri,
+                    openLabel: "Select Output Directory",
+                    title: `Select directory for ${generationLabel}`,
+                });
 
-                    const fileEntries = Object.entries(bindingFiles);
-                    const errorFile = fileEntries.find(([filename]) => filename === "error.txt");
+                if (!outputUri || outputUri.length === 0) {
+                    return;
+                }
 
-                    if (errorFile) {
-                        const errorMessage = errorFile[1];
-                        const docPath = diagDoc?.uri.fsPath ?? targetUri.fsPath;
-                        const parsedError = validator.parseWitBindgenError(errorMessage, docPath);
+                const outputPath = outputUri[0].fsPath;
 
-                        if (parsedError && diagDoc) {
-                            const diagnostic = validator.createDiagnosticFromError(parsedError, diagDoc);
-                            validator.getDiagnosticCollection().set(diagDoc.uri, [diagnostic]);
-                        } else {
-                            const cleanMessage = errorMessage.replace(/^\/\/\s*/, "").replace(/\n\/\/\s*/g, "\n");
-                            const diagnostic = new vscode.Diagnostic(
-                                new vscode.Range(0, 0, 0, 1),
-                                `Failed to generate ${languageLabel} bindings: ${cleanMessage}`,
-                                vscode.DiagnosticSeverity.Error
-                            );
-                            diagnostic.source = "wit-bindgen";
-                            diagnostic.code = "binding-generation-error";
-                            const uriForDiag = diagDoc?.uri ?? targetUri;
-                            validator.getDiagnosticCollection().set(uriForDiag, [diagnostic]);
-                        }
-                        return;
-                    }
+                const bindingFiles = await generateBindingsFromWasm(witContent, language);
 
-                    if (fileEntries.length === 0) {
-                        const errorMessage =
-                            "No files were generated. This may be due to invalid WIT syntax or unsupported features.";
-                        const docPath = diagDoc?.uri.fsPath ?? targetUri.fsPath;
-                        const parsedError = validator.parseWitBindgenError(errorMessage, docPath);
+                const fileEntries = Object.entries(bindingFiles);
+                const errorFile = fileEntries.find(([filename]) => filename === "error.txt");
 
-                        if (parsedError && diagDoc) {
-                            const diagnostic = validator.createDiagnosticFromError(parsedError, diagDoc);
-                            validator.getDiagnosticCollection().set(diagDoc.uri, [diagnostic]);
-                        } else {
-                            const diagnostic = new vscode.Diagnostic(
-                                new vscode.Range(0, 0, 0, 1),
-                                `Failed to generate ${languageLabel} bindings: ${errorMessage}`,
-                                vscode.DiagnosticSeverity.Error
-                            );
-                            diagnostic.source = "wit-bindgen";
-                            diagnostic.code = "binding-generation-error";
-                            const uriForDiag = diagDoc?.uri ?? targetUri;
-                            validator.getDiagnosticCollection().set(uriForDiag, [diagnostic]);
-                        }
-                        return;
-                    }
-
-                    if (diagDoc) {
-                        const existingDiagnostics = validator.getDiagnosticCollection().get(diagDoc.uri) || [];
-                        const filteredDiagnostics = existingDiagnostics.filter((d) => d.source !== "wit-bindgen");
-                        validator.getDiagnosticCollection().set(diagDoc.uri, filteredDiagnostics);
-                    }
-
-                    const writtenFiles: string[] = [];
-                    for (const [filename, fileContent] of fileEntries) {
-                        const sanitizedFilename = path.basename(filename);
-                        const filePath = path.join(outputPath, sanitizedFilename);
-
-                        const dir = path.dirname(filePath);
-                        if (!fs.existsSync(dir)) {
-                            fs.mkdirSync(dir, { recursive: true });
-                        }
-
-                        const binaryData = Buffer.from(fileContent, "latin1");
-                        fs.writeFileSync(filePath, binaryData);
-                        writtenFiles.push(sanitizedFilename);
-                    }
-
-                    const fileCount = writtenFiles.length;
-                    vscode.window.showInformationMessage(
-                        `${languageLabel} bindings generated successfully! ${fileCount} file${fileCount > 1 ? "s" : ""} written to ${outputPath}`
-                    );
-
-                    const mainFiles = ["src/lib.rs", "main.c", "Program.cs", "main.go", "main.mbt"];
-                    const mainFile = mainFiles.find((f) => writtenFiles.includes(f)) || writtenFiles[0];
-
-                    if (mainFile) {
-                        const mainFilePath = path.join(outputPath, mainFile);
-                        const doc = await vscode.workspace.openTextDocument(mainFilePath);
-                        await vscode.window.showTextDocument(doc);
-                    }
-                } catch (error) {
-                    console.error("Failed to generate bindings:", error);
-                    const errorMessage = error instanceof Error ? error.message : String(error);
-                    const uriForDiag = (vscode.window.activeTextEditor?.document ?? undefined)?.uri;
-                    const docPath = uriForDiag?.fsPath ?? "";
+                if (errorFile) {
+                    const errorMessage = errorFile[1];
+                    const docPath = diagDoc?.uri.fsPath ?? targetUri.fsPath;
                     const parsedError = validator.parseWitBindgenError(errorMessage, docPath);
 
-                    if (parsedError && vscode.window.activeTextEditor) {
-                        const diagnostic = validator.createDiagnosticFromError(
-                            parsedError,
-                            vscode.window.activeTextEditor.document
-                        );
-                        validator
-                            .getDiagnosticCollection()
-                            .set(vscode.window.activeTextEditor.document.uri, [diagnostic]);
+                    if (parsedError && diagDoc) {
+                        const diagnostic = validator.createDiagnosticFromError(parsedError, diagDoc);
+                        validator.getDiagnosticCollection().set(diagDoc.uri, [diagnostic]);
                     } else {
+                        const cleanMessage = errorMessage.replace(/^\/\/\s*/, "").replace(/\n\/\/\s*/g, "\n");
                         const diagnostic = new vscode.Diagnostic(
                             new vscode.Range(0, 0, 0, 1),
-                            `Failed to generate bindings: ${errorMessage}`,
+                            `Failed to generate ${generationLabel}: ${cleanMessage}`,
                             vscode.DiagnosticSeverity.Error
                         );
                         diagnostic.source = "wit-bindgen";
                         diagnostic.code = "binding-generation-error";
-                        const uriForSet = uriForDiag ?? resource ?? vscode.window.activeTextEditor?.document.uri;
-                        if (uriForSet) {
-                            validator.getDiagnosticCollection().set(uriForSet, [diagnostic]);
-                        }
+                        const uriForDiag = diagDoc?.uri ?? targetUri;
+                        validator.getDiagnosticCollection().set(uriForDiag, [diagnostic]);
+                    }
+                    return;
+                }
+
+                if (fileEntries.length === 0) {
+                    const errorMessage =
+                        "No files were generated. This may be due to invalid WIT syntax or unsupported features.";
+                    const docPath = diagDoc?.uri.fsPath ?? targetUri.fsPath;
+                    const parsedError = validator.parseWitBindgenError(errorMessage, docPath);
+
+                    if (parsedError && diagDoc) {
+                        const diagnostic = validator.createDiagnosticFromError(parsedError, diagDoc);
+                        validator.getDiagnosticCollection().set(diagDoc.uri, [diagnostic]);
+                    } else {
+                        const diagnostic = new vscode.Diagnostic(
+                            new vscode.Range(0, 0, 0, 1),
+                            `Failed to generate ${generationLabel}: ${errorMessage}`,
+                            vscode.DiagnosticSeverity.Error
+                        );
+                        diagnostic.source = "wit-bindgen";
+                        diagnostic.code = "binding-generation-error";
+                        const uriForDiag = diagDoc?.uri ?? targetUri;
+                        validator.getDiagnosticCollection().set(uriForDiag, [diagnostic]);
+                    }
+                    return;
+                }
+
+                if (diagDoc) {
+                    const existingDiagnostics = validator.getDiagnosticCollection().get(diagDoc.uri) || [];
+                    const filteredDiagnostics = existingDiagnostics.filter((d) => d.source !== "wit-bindgen");
+                    validator.getDiagnosticCollection().set(diagDoc.uri, filteredDiagnostics);
+                }
+
+                const writtenFiles: string[] = [];
+                const skippedFiles: string[] = [];
+                for (const [filename, fileContent] of fileEntries) {
+                    const filePath = resolveSafeGeneratedOutputPath(outputPath, filename);
+                    if (!filePath) {
+                        skippedFiles.push(filename);
+                        continue;
+                    }
+
+                    const dir = path.dirname(filePath);
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir, { recursive: true });
+                    }
+
+                    const binaryData = Buffer.from(fileContent, "latin1");
+                    fs.writeFileSync(filePath, binaryData);
+                    const relativeFilePath = path.relative(outputPath, filePath).replace(/\\/g, "/");
+                    writtenFiles.push(relativeFilePath);
+                }
+
+                if (writtenFiles.length === 0) {
+                    const skippedDetails = skippedFiles.length > 0 ? ` Skipped: ${skippedFiles.join(", ")}` : "";
+                    vscode.window.showErrorMessage(`No files could be written to disk.${skippedDetails}`);
+                    return;
+                }
+
+                const fileCount = writtenFiles.length;
+                vscode.window.showInformationMessage(
+                    `${generationLabel} generated successfully! ${fileCount} file${fileCount > 1 ? "s" : ""} written to ${outputPath}`
+                );
+
+                const mainFiles = ["src/lib.rs", "main.c", "Program.cs", "main.go", "main.mbt"];
+                const mainFile = mainFiles.find((f) => writtenFiles.includes(f)) || writtenFiles[0];
+
+                if (mainFile) {
+                    const mainFilePath = path.join(outputPath, mainFile);
+                    const doc = await vscode.workspace.openTextDocument(mainFilePath);
+                    await vscode.window.showTextDocument(doc);
+                }
+            } catch (error) {
+                console.error("Failed to generate guest bindings:", error);
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                const uriForDiag = (vscode.window.activeTextEditor?.document ?? undefined)?.uri;
+                const docPath = uriForDiag?.fsPath ?? "";
+                const parsedError = validator.parseWitBindgenError(errorMessage, docPath);
+
+                if (parsedError && vscode.window.activeTextEditor) {
+                    const diagnostic = validator.createDiagnosticFromError(
+                        parsedError,
+                        vscode.window.activeTextEditor.document
+                    );
+                    validator.getDiagnosticCollection().set(vscode.window.activeTextEditor.document.uri, [diagnostic]);
+                } else {
+                    const diagnostic = new vscode.Diagnostic(
+                        new vscode.Range(0, 0, 0, 1),
+                        `Failed to generate ${generationLabel}: ${errorMessage}`,
+                        vscode.DiagnosticSeverity.Error
+                    );
+                    diagnostic.source = "wit-bindgen";
+                    diagnostic.code = "binding-generation-error";
+                    const uriForSet = uriForDiag ?? resource ?? vscode.window.activeTextEditor?.document.uri;
+                    if (uriForSet) {
+                        validator.getDiagnosticCollection().set(uriForSet, [diagnostic]);
                     }
                 }
             }
-        );
+        });
     };
 
-    // Create individual language binding commands
-    const generateRustBindingsCommand = createGenerateBindingsCommand("rust", "Rust");
-    const generateCBindingsCommand = createGenerateBindingsCommand("c", "C");
-    const generateCppBindingsCommand = createGenerateBindingsCommand("cpp", "Cpp");
-    const generateCSharpBindingsCommand = createGenerateBindingsCommand("csharp", "CSharp");
-    const generateGoBindingsCommand = createGenerateBindingsCommand("go", "Go");
-    const generateMoonBitBindingsCommand = createGenerateBindingsCommand("moonbit", "MoonBit");
-    const generateMarkdownBindingsCommand = createGenerateBindingsCommand("markdown", "Markdown");
+    // Create individual language guest binding commands
+    const generateGuestRustCommand = createGenerateBindingsCommand("rust", "wit-idl.generateGuestBindingsRust");
+    const generateGuestCCommand = createGenerateBindingsCommand("c", "wit-idl.generateGuestBindingsC");
+    const generateGuestCppCommand = createGenerateBindingsCommand("cpp", "wit-idl.generateGuestBindingsCpp");
+    const generateGuestCSharpCommand = createGenerateBindingsCommand("csharp", "wit-idl.generateGuestBindingsCSharp");
+    const generateGuestGoCommand = createGenerateBindingsCommand("go", "wit-idl.generateGuestBindingsGo");
+    const generateGuestMoonBitCommand = createGenerateBindingsCommand(
+        "moonbit",
+        "wit-idl.generateGuestBindingsMoonBit"
+    );
+
+    // Documentation generation commands
+    const generateDocMarkdownCommand = createGenerateBindingsCommand("markdown", "wit-idl.generateDocMarkdown");
+
+    const deprecatedGenerateBindingsAliases: Array<{ alias: string; target: string }> = [
+        { alias: "wit-idl.generateBindingsRust", target: "wit-idl.generateGuestBindingsRust" },
+        { alias: "wit-idl.generateBindingsC", target: "wit-idl.generateGuestBindingsC" },
+        { alias: "wit-idl.generateBindingsCpp", target: "wit-idl.generateGuestBindingsCpp" },
+        { alias: "wit-idl.generateBindingsCSharp", target: "wit-idl.generateGuestBindingsCSharp" },
+        { alias: "wit-idl.generateBindingsGo", target: "wit-idl.generateGuestBindingsGo" },
+        { alias: "wit-idl.generateBindingsMoonBit", target: "wit-idl.generateGuestBindingsMoonBit" },
+        { alias: "wit-idl.generateBindingsMarkdown", target: "wit-idl.generateDocMarkdown" },
+    ];
+
+    const deprecatedAliasCommands = deprecatedGenerateBindingsAliases.map(({ alias, target }) =>
+        vscode.commands.registerCommand(alias, async (resource?: vscode.Uri) => {
+            await vscode.commands.executeCommand(target, resource);
+        })
+    );
+
+    const generateBindingsAliasCommand = vscode.commands.registerCommand(
+        "wit-idl.generateBindings",
+        async (resource?: vscode.Uri) => {
+            const picks: Array<{ label: string; commandId: string }> = [
+                { label: "Rust", commandId: "wit-idl.generateGuestBindingsRust" },
+                { label: "C", commandId: "wit-idl.generateGuestBindingsC" },
+                { label: "C++", commandId: "wit-idl.generateGuestBindingsCpp" },
+                { label: "C#", commandId: "wit-idl.generateGuestBindingsCSharp" },
+                { label: "Go", commandId: "wit-idl.generateGuestBindingsGo" },
+                { label: "MoonBit", commandId: "wit-idl.generateGuestBindingsMoonBit" },
+                { label: "JavaScript", commandId: "wit-idl.generateGuestBindingsJavaScript" },
+                { label: "Markdown", commandId: "wit-idl.generateDocMarkdown" },
+            ];
+
+            const choice = await vscode.window.showQuickPick(
+                picks.map((pick) => ({ label: pick.label, commandId: pick.commandId })),
+                {
+                    title: "Generate Bindings (Deprecated Alias)",
+                    placeHolder: "Select a generator",
+                }
+            );
+
+            if (!choice) {
+                return;
+            }
+
+            await vscode.commands.executeCommand(choice.commandId, resource);
+        }
+    );
+
+    /**
+     * Factory for JavaScript binding commands (guest or host).
+     * Uses jco's typesComponent under the hood.
+     */
+    const createJsBindingsCommand = (commandId: string, mode: JsBindingsMode): vscode.Disposable => {
+        return vscode.commands.registerCommand(commandId, async (resource?: vscode.Uri) => {
+            try {
+                const active = vscode.window.activeTextEditor;
+                const targetUri: vscode.Uri | undefined = resource ?? active?.document.uri;
+                if (!targetUri) {
+                    vscode.window.showErrorMessage("No file selected. Open a .wit or .wasm component file.");
+                    return;
+                }
+
+                let witContent: string | undefined;
+                let witFilePath: string | undefined;
+
+                const isWitDoc =
+                    active &&
+                    active.document.uri.toString() === targetUri.toString() &&
+                    active.document.languageId === "wit";
+
+                if (isWitDoc) {
+                    witContent = active!.document.getText();
+                    witFilePath = canUseWitPathGeneration(targetUri) ? targetUri.fsPath : undefined;
+                    if (!witContent.trim()) {
+                        vscode.window.showWarningMessage("The .wit file is empty.");
+                        return;
+                    }
+                } else if (targetUri.fsPath.toLowerCase().endsWith(".wasm")) {
+                    const comp = await isWasmComponentFile(targetUri.fsPath);
+                    if (!comp) {
+                        vscode.window.showWarningMessage("The selected .wasm is not a WebAssembly component.");
+                        return;
+                    }
+                    const bytes = await vscode.workspace.fs.readFile(targetUri);
+                    const extracted = await extractWitFromComponent(bytes);
+                    if (!extracted.trim()) {
+                        vscode.window.showWarningMessage("No WIT could be extracted from this component.");
+                        return;
+                    }
+                    witContent = extracted;
+                } else {
+                    vscode.window.showErrorMessage("Unsupported file type. Select a .wit or .wasm component file.");
+                    return;
+                }
+
+                const workspaceFolders = vscode.workspace.workspaceFolders;
+                const defaultUri = workspaceFolders ? workspaceFolders[0].uri : undefined;
+
+                const outputUri = await vscode.window.showOpenDialog({
+                    canSelectFiles: false,
+                    canSelectFolders: true,
+                    canSelectMany: false,
+                    defaultUri,
+                    openLabel: "Select Output Directory",
+                    title: `Select directory for JavaScript ${mode} bindings`,
+                });
+
+                if (!outputUri || outputUri.length === 0) {
+                    return;
+                }
+
+                const outputPath = outputUri[0].fsPath;
+
+                // Use the file path directly when we have a .wit file on disk,
+                // so that deps/ directories are resolved correctly.
+                // For .wasm components, pass the extracted WIT content instead.
+                const result = witFilePath
+                    ? await generateJsBindingsFromPath(witFilePath, mode)
+                    : await generateJsBindings({ witContent: witContent! }, mode);
+
+                const fileEntries = Object.entries(result.files);
+                if (fileEntries.length === 0) {
+                    vscode.window.showWarningMessage(
+                        "No files were generated. This may be due to invalid WIT syntax or unsupported features."
+                    );
+                    return;
+                }
+
+                const writtenFiles: string[] = [];
+                for (const [filename, fileContent] of fileEntries) {
+                    const filePath = path.join(outputPath, filename);
+                    const dir = path.dirname(filePath);
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir, { recursive: true });
+                    }
+                    fs.writeFileSync(filePath, fileContent);
+                    writtenFiles.push(filename);
+                }
+
+                const fileCount = writtenFiles.length;
+                vscode.window.showInformationMessage(
+                    `JavaScript ${mode} bindings generated successfully! ${fileCount} file${fileCount > 1 ? "s" : ""} written to ${outputPath}`
+                );
+
+                const mainFile = writtenFiles.find((f) => f.endsWith(".d.ts")) || writtenFiles[0];
+                if (mainFile) {
+                    const mainFilePath = path.join(outputPath, mainFile);
+                    const doc = await vscode.workspace.openTextDocument(mainFilePath);
+                    await vscode.window.showTextDocument(doc);
+                }
+            } catch (error) {
+                console.error(`Failed to generate JavaScript ${mode} bindings:`, error);
+                vscode.window.showErrorMessage(
+                    `Failed to generate JavaScript ${mode} bindings: ${error instanceof Error ? error.message : String(error)}`
+                );
+            }
+        });
+    };
+
+    // Host bindings commands — uses jco transpile for .wasm, types for .wit
+    const generateHostJavaScriptCommand = vscode.commands.registerCommand(
+        "wit-idl.generateHostBindingsJavaScript",
+        async (resource?: vscode.Uri) => {
+            try {
+                const active = vscode.window.activeTextEditor;
+                const targetUri: vscode.Uri | undefined = resource ?? active?.document.uri;
+                if (!targetUri) {
+                    vscode.window.showErrorMessage("No file selected. Open a .wit or .wasm component file.");
+                    return;
+                }
+
+                const workspaceFolders = vscode.workspace.workspaceFolders;
+                const defaultUri = workspaceFolders ? workspaceFolders[0].uri : undefined;
+
+                const outputUri = await vscode.window.showOpenDialog({
+                    canSelectFiles: false,
+                    canSelectFolders: true,
+                    canSelectMany: false,
+                    defaultUri,
+                    openLabel: "Select Output Directory",
+                    title: "Select directory for JavaScript host bindings",
+                });
+
+                if (!outputUri || outputUri.length === 0) {
+                    return;
+                }
+
+                const outputPath = outputUri[0].fsPath;
+                let resultFiles: Record<string, Uint8Array>;
+
+                const isWitDoc =
+                    active &&
+                    active.document.uri.toString() === targetUri.toString() &&
+                    active.document.languageId === "wit";
+
+                if (isWitDoc) {
+                    const witContent = active!.document.getText();
+                    if (!witContent.trim()) {
+                        vscode.window.showWarningMessage("The .wit file is empty.");
+                        return;
+                    }
+                }
+
+                const strategy = determineHostJsGenerationStrategy({ targetUri, isWitDoc: Boolean(isWitDoc) });
+
+                if (strategy === "transpile-wasm-path") {
+                    const comp = await isWasmComponentFile(targetUri.fsPath);
+                    if (!comp) {
+                        const message = isWitDoc
+                            ? "The source .wasm for this extracted WIT view is not a WebAssembly component."
+                            : "The selected .wasm is not a WebAssembly component.";
+                        vscode.window.showWarningMessage(message);
+                        return;
+                    }
+                    const result = await transpileJsHostFromPath(targetUri.fsPath);
+                    resultFiles = result.files;
+                } else if (strategy === "types-wit-path") {
+                    const result = await generateJsBindingsFromPath(targetUri.fsPath, "host");
+                    resultFiles = result.files;
+                } else if (strategy === "types-wit-content") {
+                    const witContent = active!.document.getText();
+                    const result = await generateJsBindings({ witContent }, "host");
+                    resultFiles = result.files;
+                } else {
+                    vscode.window.showErrorMessage("Unsupported file type. Select a .wit or .wasm component file.");
+                    return;
+                }
+
+                const fileEntries = Object.entries(resultFiles);
+                if (fileEntries.length === 0) {
+                    vscode.window.showWarningMessage(
+                        "No files were generated. This may be due to invalid WIT syntax or unsupported features."
+                    );
+                    return;
+                }
+
+                const writtenFiles: string[] = [];
+                for (const [filename, fileContent] of fileEntries) {
+                    const filePath = path.join(outputPath, filename);
+                    const dir = path.dirname(filePath);
+                    if (!fs.existsSync(dir)) {
+                        fs.mkdirSync(dir, { recursive: true });
+                    }
+                    fs.writeFileSync(filePath, fileContent);
+                    writtenFiles.push(filename);
+                }
+
+                const fileCount = writtenFiles.length;
+                vscode.window.showInformationMessage(
+                    `JavaScript host bindings generated successfully! ${fileCount} file${fileCount > 1 ? "s" : ""} written to ${outputPath}`
+                );
+
+                // Open the main JS or .d.ts file
+                const mainFile =
+                    writtenFiles.find((f) => f.endsWith(".js") || f.endsWith(".mjs")) ||
+                    writtenFiles.find((f) => f.endsWith(".d.ts")) ||
+                    writtenFiles[0];
+                if (mainFile) {
+                    const mainFilePath = path.join(outputPath, mainFile);
+                    const doc = await vscode.workspace.openTextDocument(mainFilePath);
+                    await vscode.window.showTextDocument(doc);
+                }
+            } catch (error) {
+                console.error("Failed to generate JavaScript host bindings:", error);
+                vscode.window.showErrorMessage(
+                    `Failed to generate JavaScript host bindings: ${error instanceof Error ? error.message : String(error)}`
+                );
+            }
+        }
+    );
+
+    const generateGuestJavaScriptCommand = createJsBindingsCommand("wit-idl.generateGuestBindingsJavaScript", "guest");
 
     const onSaveListener = vscode.workspace.onDidSaveTextDocument(async (document) => {
         if (document.languageId === "wit") {
@@ -716,13 +1051,17 @@ export function activate(context: vscode.ExtensionContext) {
         formatDocumentCommand,
         extractWitCommand,
         extractCoreWasmCommand,
-        generateRustBindingsCommand,
-        generateCBindingsCommand,
-        generateCppBindingsCommand,
-        generateCSharpBindingsCommand,
-        generateGoBindingsCommand,
-        generateMoonBitBindingsCommand,
-        generateMarkdownBindingsCommand,
+        generateGuestRustCommand,
+        generateGuestCCommand,
+        generateGuestCppCommand,
+        generateGuestCSharpCommand,
+        generateGuestGoCommand,
+        generateGuestMoonBitCommand,
+        generateDocMarkdownCommand,
+        generateGuestJavaScriptCommand,
+        generateHostJavaScriptCommand,
+        generateBindingsAliasCommand,
+        ...deprecatedAliasCommands,
         wasmToWitProvider,
         onSaveListener,
         onOpenListener,
@@ -735,4 +1074,8 @@ export function activate(context: vscode.ExtensionContext) {
     );
 }
 
+/**
+ * Deactivate the WIT extension.
+ * Resources are cleaned up via context.subscriptions disposal.
+ */
 export function deactivate() {}

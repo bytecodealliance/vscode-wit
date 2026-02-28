@@ -72,6 +72,9 @@ typings/
 # Typescript Output
 dist/
 
+# Rust build artifacts
+samples/target/
+
 # VSCode extension development
 .vscode-test/
 *.vsix
@@ -80,3 +83,6 @@ dist/
 types/
 out/
 tmp/
+
+# Test coverage
+coverage/

@@ -23,8 +23,9 @@
     "scripts": {
         "clean": "rimraf out dist types && rimraf --glob \"*.vsix\"",
         "clean-wasm": "rimraf wit-bindgen-wasm/pkg wit-bindgen-wasm/target",
+        "clean-samples": "rimraf samples/target samples/tmp/*",
         "clean-deps": "rimraf node_modules package-lock.json",
-        "clean-all": "npm run clean && npm run clean-wasm",
+        "clean-all": "npm run clean && npm run clean-wasm && npm run clean-samples",
         "clean-full": "npm run clean-all && npm run clean-deps",
         "setup-wasm": "./scripts/setup-wasm.sh",
         "install-extension": "npm run package && code --install-extension wit-idl.vsix",
@@ -33,6 +34,7 @@
         "test-unit": "vitest run",
         "test-unit-watch": "vitest",
         "test-unit-ui": "vitest --ui",
+        "test-unit-coverage": "vitest run --coverage",
         "test-build-resources": "vitest run tests/build-resources.test.ts",
         "test-navigator-polyfill": "vitest run tests/navigator-polyfill.test.ts",
         "gen-types": "tsc --project tsconfig.json --emitDeclarationOnly",
@@ -42,14 +44,16 @@
         "build-extension-prod": "node esbuild.mts -- --production",
         "build-extension": "node esbuild.mts",
         "build-extension-watch": "node esbuild.mts --watch",
+        "build-samples": "cd samples && ./build.sh",
         "build": "run-s build-wasm build-extension",
+        "build-with-samples": "run-s build build-samples",
         "vscode:prepublish": "run-s build-wasm-prod build-extension-prod",
         "package": "npx -y @vscode/vsce package -o wit-idl.vsix",
         "fmt": "prettier . --write",
         "fmt-check": "prettier --check .",
         "lint": "eslint src --ext ts ./*.m?s",
         "lint-fix": "eslint src --ext ts ./*.m?s --fix",
-        "test": "run-s lint fmt-check build package test-grammar test-unit",
+        "test": "run-s lint fmt-check build package gen-types test-grammar test-unit",
         "test-wasm": "cd wit-bindgen-wasm && cargo test",
         "check-wasm": "cd wit-bindgen-wasm && cargo check",
         "verify-wasm": "node -e \"console.log('Verifying WASM build...'); const fs = require('fs'); const path = 'wit-bindgen-wasm/pkg/wit_bindgen_wasm_bg.wasm'; if (fs.existsSync(path)) { console.log('✅ WASM file exists:', path); const size = Math.round(fs.statSync(path).size / 1024); console.log('📏 Size:', size, 'KB'); try { const fd = fs.openSync(path, 'r'); const header = Buffer.alloc(8); fs.readSync(fd, header, 0, 8, 0); fs.closeSync(fd); const magicOk = header[0] === 0x00 && header[1] === 0x61 && header[2] === 0x73 && header[3] === 0x6D; if (!magicOk) { console.warn('⚠️ Not a WebAssembly binary (bad magic).'); process.exit(1); } const version = header.readUInt32LE(4); if (version === 1) { console.log('🧩 Type: Core WebAssembly module (vanilla wasm)'); } else if (version === 0x0A) { console.log('🧩 Type: WebAssembly component'); } else { console.log('🧩 Type: Unknown/other (version ' + version + ')'); } } catch (e) { console.error('❌ Error reading header:', e.message); process.exit(1); } } else { console.error('❌ WASM file not found:', path); process.exit(1); }\"",
@@ -65,22 +69,23 @@
         "update-major": "run-s update-npm-major update-cargo-major"
     },
     "dependencies": {
+        "@bytecodealliance/jco": "1.17.0",
         "wit-bindgen-wasm": "file:wit-bindgen-wasm/pkg"
     },
     "devDependencies": {
         "@eslint/css": "0.14.1",
         "@eslint/js": "10.0.1",
-        "@eslint/markdown": "7.5.1",
-        "@types/node": "24.10.13",
+        "@types/node": "25.3.3",
         "@types/vscode": "1.99.0",
         "@typescript-eslint/parser": "8.56.1",
+        "@vitest/coverage-v8": "4.0.18",
         "@vitest/ui": "4.0.18",
         "@vscode/vsce": "3.7.1",
         "esbuild": "0.27.3",
         "esbuild-node-externals": "1.20.1",
         "eslint": "10.0.2",
         "eslint-plugin-prettier": "5.5.5",
-        "globals": "17.3.0",
+        "globals": "17.4.0",
         "npm-run-all": "4.1.5",
         "ovsx": "0.10.9",
         "prettier": "3.8.1",
@@ -147,43 +152,48 @@
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindings",
-                "title": "Generate Language Bindings",
-                "category": "WIT"
-            },
-            {
-                "command": "wit-idl.generateBindingsRust",
+                "command": "wit-idl.generateGuestBindingsRust",
                 "title": "Generate Rust Bindings",
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindingsC",
+                "command": "wit-idl.generateGuestBindingsC",
                 "title": "Generate C Bindings",
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindingsCpp",
+                "command": "wit-idl.generateGuestBindingsCpp",
                 "title": "Generate C++ Bindings",
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindingsCSharp",
+                "command": "wit-idl.generateGuestBindingsCSharp",
                 "title": "Generate C# Bindings",
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindingsGo",
+                "command": "wit-idl.generateGuestBindingsGo",
                 "title": "Generate Go Bindings",
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindingsMoonBit",
+                "command": "wit-idl.generateGuestBindingsMoonBit",
                 "title": "Generate MoonBit Bindings",
                 "category": "WIT"
             },
             {
-                "command": "wit-idl.generateBindingsMarkdown",
+                "command": "wit-idl.generateGuestBindingsJavaScript",
+                "title": "Generate JavaScript Bindings",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateDocMarkdown",
                 "title": "Generate Markdown Documentation",
+                "category": "WIT"
+            },
+            {
+                "command": "wit-idl.generateHostBindingsJavaScript",
+                "title": "Generate JavaScript Bindings",
                 "category": "WIT"
             },
             {
@@ -205,7 +215,15 @@
         "submenus": [
             {
                 "id": "wit-idl.generateBindings.submenu",
-                "label": "Generate Bindings"
+                "label": "Generate Guest Bindings"
+            },
+            {
+                "id": "wit-idl.generateDocs.submenu",
+                "label": "Generate Documentation"
+            },
+            {
+                "id": "wit-idl.generateHostBindings.submenu",
+                "label": "Generate Host Bindings"
             }
         ],
         "menus": {
@@ -234,6 +252,16 @@
                     "submenu": "wit-idl.generateBindings.submenu",
                     "when": "resourceExtname == .wit || witIdl.isWasmComponent",
                     "group": "4_witIdl@14"
+                },
+                {
+                    "submenu": "wit-idl.generateHostBindings.submenu",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "4_witIdl@15"
+                },
+                {
+                    "submenu": "wit-idl.generateDocs.submenu",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "4_witIdl@16"
                 }
             ],
             "explorer/context": [
@@ -261,29 +289,49 @@
                     "submenu": "wit-idl.generateBindings.submenu",
                     "when": "resourceExtname == .wit || witIdl.isWasmComponent",
                     "group": "4_witIdl@14"
+                },
+                {
+                    "submenu": "wit-idl.generateHostBindings.submenu",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "4_witIdl@15"
+                },
+                {
+                    "submenu": "wit-idl.generateDocs.submenu",
+                    "when": "resourceExtname == .wit || witIdl.isWasmComponent",
+                    "group": "4_witIdl@16"
                 }
             ],
             "wit-idl.generateBindings.submenu": [
                 {
-                    "command": "wit-idl.generateBindingsRust"
+                    "command": "wit-idl.generateGuestBindingsRust"
                 },
                 {
-                    "command": "wit-idl.generateBindingsC"
+                    "command": "wit-idl.generateGuestBindingsC"
                 },
                 {
-                    "command": "wit-idl.generateBindingsCpp"
+                    "command": "wit-idl.generateGuestBindingsCpp"
                 },
                 {
-                    "command": "wit-idl.generateBindingsCSharp"
+                    "command": "wit-idl.generateGuestBindingsCSharp"
                 },
                 {
-                    "command": "wit-idl.generateBindingsGo"
+                    "command": "wit-idl.generateGuestBindingsGo"
                 },
                 {
-                    "command": "wit-idl.generateBindingsMoonBit"
+                    "command": "wit-idl.generateGuestBindingsMoonBit"
                 },
                 {
-                    "command": "wit-idl.generateBindingsMarkdown"
+                    "command": "wit-idl.generateGuestBindingsJavaScript"
+                }
+            ],
+            "wit-idl.generateDocs.submenu": [
+                {
+                    "command": "wit-idl.generateDocMarkdown"
+                }
+            ],
+            "wit-idl.generateHostBindings.submenu": [
+                {
+                    "command": "wit-idl.generateHostBindingsJavaScript"
                 }
             ],
             "commandPalette": [
@@ -298,31 +346,39 @@
                     "command": "wit-idl.showVersion"
                 },
                 {
-                    "command": "wit-idl.generateBindingsRust",
+                    "command": "wit-idl.generateGuestBindingsRust",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
-                    "command": "wit-idl.generateBindingsC",
+                    "command": "wit-idl.generateGuestBindingsC",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
-                    "command": "wit-idl.generateBindingsCpp",
+                    "command": "wit-idl.generateGuestBindingsCpp",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
-                    "command": "wit-idl.generateBindingsCSharp",
+                    "command": "wit-idl.generateGuestBindingsCSharp",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
-                    "command": "wit-idl.generateBindingsGo",
+                    "command": "wit-idl.generateGuestBindingsGo",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
-                    "command": "wit-idl.generateBindingsMoonBit",
+                    "command": "wit-idl.generateGuestBindingsMoonBit",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
-                    "command": "wit-idl.generateBindingsMarkdown",
+                    "command": "wit-idl.generateGuestBindingsJavaScript",
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
+                },
+                {
+                    "command": "wit-idl.generateDocMarkdown",
+                    "when": "editorLangId == wit || witIdl.isWasmComponent"
+                },
+                {
+                    "command": "wit-idl.generateHostBindingsJavaScript",
                     "when": "editorLangId == wit || witIdl.isWasmComponent"
                 },
                 {
