@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.28](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.27...wit-idl-v0.3.28) (2026-03-01)
+
+
+### Features
+
+* add JavaScript bindings generation and transpilation for WIT components ([a080925](https://github.com/bytecodealliance/vscode-wit/commit/a080925619f114e287d28a513a18439aaa0229ec))
+
 ## [0.3.27](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.26...wit-idl-v0.3.27) (2026-02-25)
 
 
