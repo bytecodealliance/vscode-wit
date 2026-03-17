@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Setup script for WebAssembly build tools
+# Setup script for WebAssembly Component Model build tools
 
 set -e
 
-echo "Setting up WebAssembly build tools..."
+echo "Setting up WebAssembly Component Model build tools..."
 
 # Check if Rust is installed
 if ! command -v cargo &> /dev/null; then
@@ -16,27 +16,37 @@ fi
 
 echo "✅ Rust is installed: $(cargo --version)"
 
-# Check if wasm-pack is installed
-if ! command -v wasm-pack &> /dev/null; then
-    echo "📦 Installing wasm-pack v0.13.1..."
-    cargo install wasm-pack@0.13.1
-else
-    echo "✅ wasm-pack is already installed: $(wasm-pack --version)"
-    # Check if the version is compatible (0.13.x)
-    WASM_PACK_VERSION=$(wasm-pack --version | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-    if [[ ! "$WASM_PACK_VERSION" =~ ^0\.13\. ]]; then
-        echo "⚠️  Warning: wasm-pack version $WASM_PACK_VERSION detected. This project is tested with v0.13.1"
-        echo "   Consider running: cargo install wasm-pack@0.13.1"
+# Check if correct version of wasm-tools is installed
+WASM_TOOLS_VERSION="1.245.0"
+if command -v wasm-tools &> /dev/null; then
+    INSTALLED_VERSION=$(wasm-tools --version | awk '{print $2}')
+    if [[ "$INSTALLED_VERSION" == "$WASM_TOOLS_VERSION" ]]; then
+        echo "✅ wasm-tools is installed: $(wasm-tools --version)"
+    else
+        echo "📦 Updating wasm-tools from $INSTALLED_VERSION to $WASM_TOOLS_VERSION..."
+        cargo install wasm-tools@"$WASM_TOOLS_VERSION"
     fi
+else
+    echo "📦 Installing wasm-tools $WASM_TOOLS_VERSION..."
+    cargo install wasm-tools@"$WASM_TOOLS_VERSION"
 fi
 
 # Add wasm32 target if not present
 echo "🎯 Adding wasm32-unknown-unknown target..."
 rustup target add wasm32-unknown-unknown
 
-echo "✅ WebAssembly build tools setup complete!"
+# Check if jco is available via npx
+echo "🔍 Checking jco availability..."
+if npx jco --version &> /dev/null; then
+    echo "✅ jco is available: $(npx jco --version)"
+else
+    echo "⚠️  jco not found. Install it with: npm install @bytecodealliance/jco"
+    echo "   (It should be in the project's devDependencies)"
+fi
+
+echo ""
+echo "✅ WebAssembly Component Model build tools setup complete!"
 echo ""
 echo "You can now run:"
-echo "  npm run build-wasm      # Build WASM in release mode"
-echo "  npm run build-wasm-dev  # Build WASM in development mode"
-echo "  npm run build           # Build the entire extension"
+echo "  npm run build-wasm      # Build WASM component"
+echo "  npm run build            # Build the entire extension"

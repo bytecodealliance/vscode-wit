@@ -14,11 +14,11 @@ A simple WebAssembly wrapper for the Rust `wit-bindgen` package, designed to pro
 To build the WebAssembly module:
 
 ```bash
-# Install wasm-pack (specific version for consistency)
-cargo install wasm-pack@0.13.1
+# Install build tools (specific versions for consistency)
+npm run setup-wasm
 
-# Build the WebAssembly package
-wasm-pack build --target web --out-dir pkg
+# Build the WebAssembly component
+npm run build-wasm
 ```
 
 ## Usage

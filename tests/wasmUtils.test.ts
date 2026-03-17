@@ -1,51 +1,39 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-// Mock vscode before importing wasmUtils
-vi.mock("vscode", () => ({
-    extensions: {
-        getExtension: vi.fn(() => ({
-            extensionUri: { fsPath: "/mock/extension" },
-        })),
-    },
-    workspace: {
-        fs: {
-            stat: vi.fn(),
-            readFile: vi.fn(),
-        },
-    },
-    Uri: {
-        joinPath: vi.fn((_base: unknown, ...segments: string[]) => ({
-            fsPath: `/mock/extension/${segments.join("/")}`,
-        })),
-    },
-}));
-
-// Mock the wit-bindgen-wasm module
+// Mock the wit-bindgen-wasm module with the new jco-transpiled API
 vi.mock("wit-bindgen-wasm", () => {
-    class MockWitBindgen {
-        version(): string {
-            return "0.42.0-mock";
-        }
-        validateWitSyntax(content: string): boolean {
-            return content.includes("package");
-        }
-        validateWitSyntaxDetailed(content: string): string {
-            if (content.includes("package")) {
-                return JSON.stringify({ valid: true });
-            }
-            return JSON.stringify({ valid: false, error: "expected package", errorType: "parsing" });
-        }
-        extractInterfaces(): string {
-            return "my-interface, another-interface";
-        }
-        generateBindings(): string {
-            return JSON.stringify({ "lib.rs": "// generated" });
-        }
-        free(): void {}
-    }
     return {
-        default: vi.fn(),
-        WitBindgen: MockWitBindgen,
+        witValidator: {
+            version(): string {
+                return "0.42.0-mock";
+            },
+            validateWitSyntax(content: string): boolean {
+                return content.includes("package");
+            },
+            validateWitSyntaxDetailed(content: string): string {
+                if (content.includes("package")) {
+                    return JSON.stringify({ valid: true });
+                }
+                return JSON.stringify({ valid: false, error: "expected package", errorType: "parsing" });
+            },
+            extractInterfaces(): string {
+                return "my-interface, another-interface";
+            },
+            generateBindings(): string {
+                return JSON.stringify({ "lib.rs": "// generated" });
+            },
+            extractWitFromComponent: vi.fn().mockReturnValue("package test:component;"),
+            extractCoreWasmFromComponent: vi.fn().mockReturnValue(JSON.stringify({ "module-0.wasm": "\x00asm" })),
+            hasWorldDefinition(content: string): boolean {
+                return content.includes("world");
+            },
+            isWitFileExtension(filename: string): boolean {
+                return filename.toLowerCase().endsWith(".wit");
+            },
+            getWitBindgenVersion(): string {
+                return "0.42.0-mock";
+            },
+        },
     };
 });
 
@@ -53,12 +41,14 @@ import {
     isWitFileExtensionFromWasm,
     validateWitSyntaxFromWasm,
     getWitBindgenVersionFromWasm,
-    createWitBindgenInstance,
     extractInterfacesFromWasm,
     generateBindingsFromWasm,
     validateWitSyntaxDetailedFromWasm,
+    extractWitFromComponent,
+    extractCoreWasmFromComponent,
     initializeWasm,
 } from "../src/wasmUtils.js";
+import { witValidator } from "wit-bindgen-wasm";
 
 describe("wasmUtils", () => {
     beforeEach(() => {
@@ -111,14 +101,6 @@ describe("wasmUtils", () => {
         });
     });
 
-    describe("createWitBindgenInstance", () => {
-        it("should return a WitBindgen instance", async () => {
-            const instance = await createWitBindgenInstance();
-            expect(instance).toBeDefined();
-            expect(typeof instance.version).toBe("function");
-        });
-    });
-
     describe("validateWitSyntaxFromWasm", () => {
         it("should return true for valid WIT content", async () => {
             const result = await validateWitSyntaxFromWasm("package foo:bar;");
@@ -163,6 +145,98 @@ describe("wasmUtils", () => {
         it("should accept optional world name", async () => {
             const result = await generateBindingsFromWasm("package foo:bar; world w {}", "rust", "w");
             expect(result).toBeDefined();
+        });
+    });
+
+    describe("extractWitFromComponent", () => {
+        const dummyBytes = new Uint8Array([0, 97, 115, 109]);
+        const mockFn = witValidator.extractWitFromComponent as ReturnType<typeof vi.fn>;
+
+        beforeEach(() => {
+            mockFn.mockReturnValue("package test:component;");
+        });
+
+        it("should return extracted WIT text on success", async () => {
+            const result = await extractWitFromComponent(dummyBytes);
+            expect(result).toBe("package test:component;");
+            expect(mockFn).toHaveBeenCalledWith(dummyBytes);
+        });
+
+        it("should throw when API returns empty string", async () => {
+            mockFn.mockReturnValue("");
+            await expect(extractWitFromComponent(dummyBytes)).rejects.toThrow("WIT extraction returned no data");
+        });
+
+        it("should throw when API returns undefined", async () => {
+            mockFn.mockReturnValue(undefined);
+            await expect(extractWitFromComponent(dummyBytes)).rejects.toThrow("WIT extraction returned no data");
+        });
+
+        it("should throw when API returns null", async () => {
+            mockFn.mockReturnValue(null);
+            await expect(extractWitFromComponent(dummyBytes)).rejects.toThrow("WIT extraction returned no data");
+        });
+    });
+
+    describe("extractCoreWasmFromComponent", () => {
+        const dummyBytes = new Uint8Array([0, 97, 115, 109]);
+        const mockFn = witValidator.extractCoreWasmFromComponent as ReturnType<typeof vi.fn>;
+
+        beforeEach(() => {
+            mockFn.mockReturnValue(JSON.stringify({ "module-0.wasm": "\x00asm" }));
+        });
+
+        it("should return decoded binary buffers keyed by filename", async () => {
+            const result = await extractCoreWasmFromComponent(dummyBytes);
+            expect(Object.keys(result)).toEqual(["module-0.wasm"]);
+            expect(result["module-0.wasm"]).toBeInstanceOf(Uint8Array);
+        });
+
+        it("should correctly decode latin1-encoded content", async () => {
+            const latin1Str = "\x00\x01\xFF\xFE";
+            mockFn.mockReturnValue(JSON.stringify({ "core.wasm": latin1Str }));
+            const result = await extractCoreWasmFromComponent(dummyBytes);
+            const buf = result["core.wasm"];
+            expect(buf[0]).toBe(0x00);
+            expect(buf[1]).toBe(0x01);
+            expect(buf[2]).toBe(0xff);
+            expect(buf[3]).toBe(0xfe);
+        });
+
+        it("should return empty object when no modules found", async () => {
+            mockFn.mockReturnValue(JSON.stringify({}));
+            const result = await extractCoreWasmFromComponent(dummyBytes);
+            expect(result).toEqual({});
+        });
+
+        it("should fall back to empty object when API returns null", async () => {
+            mockFn.mockReturnValue(null);
+            const result = await extractCoreWasmFromComponent(dummyBytes);
+            expect(result).toEqual({});
+        });
+
+        it("should fall back to empty object when API returns empty string", async () => {
+            mockFn.mockReturnValue("");
+            const result = await extractCoreWasmFromComponent(dummyBytes);
+            expect(result).toEqual({});
+        });
+
+        it("should handle multiple modules", async () => {
+            mockFn.mockReturnValue(
+                JSON.stringify({
+                    "module-0.wasm": "abc",
+                    "module-1.wasm": "def",
+                })
+            );
+            const result = await extractCoreWasmFromComponent(dummyBytes);
+            expect(Object.keys(result)).toHaveLength(2);
+            expect(result["module-0.wasm"]).toBeInstanceOf(Uint8Array);
+            expect(result["module-1.wasm"]).toBeInstanceOf(Uint8Array);
+        });
+
+        it("should throw on invalid JSON", async () => {
+            mockFn.mockReturnValue("not json at all");
+            await expect(extractCoreWasmFromComponent(dummyBytes)).rejects.toThrow();
         });
     });
 });
