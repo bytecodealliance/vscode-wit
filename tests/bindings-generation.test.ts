@@ -1,12 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { readFileSync } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// Import the WASM module directly
-import init, { WitBindgen } from "../wit-bindgen-wasm/pkg/wit_bindgen_wasm.js";
+// Import the jco-transpiled WASM component module directly
+import { witValidator } from "../wit-bindgen-wasm/pkg/wit_bindgen_wasm.js";
 
 const TEST_WIT = `package example:test;
 
@@ -16,16 +11,9 @@ world test-world {
 `;
 
 describe("Bindings Generation for All Languages", () => {
-    let witBindgen: WitBindgen;
-
     beforeAll(async () => {
-        // Initialize WASM module using the built file
-        const wasmPath = path.join(__dirname, "../wit-bindgen-wasm/pkg/wit_bindgen_wasm_bg.wasm");
-        const wasmBuffer = readFileSync(wasmPath);
-        await init(wasmBuffer);
-
-        // Create WitBindgen instance
-        witBindgen = new WitBindgen();
+        // The jco-transpiled module self-initializes via top-level await.
+        // By the time the import resolves, the WASM is ready.
     });
 
     const supportedLanguages = [
@@ -40,7 +28,7 @@ describe("Bindings Generation for All Languages", () => {
 
     supportedLanguages.forEach(({ lang, extension, expectedContent, minLength }) => {
         it(`should generate actual code stubs for ${lang}`, () => {
-            const resultJson = witBindgen.generateBindings(TEST_WIT, lang, undefined);
+            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined);
             const result = JSON.parse(resultJson);
 
             // Verify files were generated
@@ -78,7 +66,7 @@ describe("Bindings Generation for All Languages", () => {
         });
 
         it(`should not generate only README files for ${lang}`, () => {
-            const resultJson = witBindgen.generateBindings(TEST_WIT, lang, undefined);
+            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined);
             const result = JSON.parse(resultJson);
 
             // Verify that not all files are README files
@@ -102,7 +90,7 @@ describe("Bindings Generation for All Languages", () => {
         const results: Record<string, Record<string, string>> = {};
 
         for (const { lang } of supportedLanguages) {
-            const resultJson = witBindgen.generateBindings(TEST_WIT, lang, undefined);
+            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined);
             results[lang] = JSON.parse(resultJson);
         }
 
@@ -161,7 +149,7 @@ world app {
 `;
 
         for (const { lang, extension } of supportedLanguages) {
-            const resultJson = witBindgen.generateBindings(complexWit, lang, undefined);
+            const resultJson = witValidator.generateBindings(complexWit, lang, undefined);
             const result = JSON.parse(resultJson);
 
             expect(Object.keys(result).length).toBeGreaterThan(0);

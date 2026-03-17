@@ -1,51 +1,41 @@
-import * as vscode from "vscode";
-
-// Import the WASM module types
-import type { WitBindgen } from "wit-bindgen-wasm";
-
 /**
- * WASM module instance for WIT bindgen functionality
+ * Cached reference to the witValidator interface from the WASM component module.
+ * The jco-transpiled module self-initializes via top-level await,
+ * so the module is ready to use once the dynamic import resolves.
  */
-let wasmModule: typeof import("wit-bindgen-wasm") | null = null;
+let witValidatorApi: typeof import("wit-bindgen-wasm").witValidator | null = null;
 
 /**
- * Initialize the WASM module
+ * Initialize the WASM module by dynamically importing it.
+ * The jco-transpiled component handles WASM loading internally.
  * @returns Promise that resolves when the module is loaded
  */
 export async function initializeWasm(): Promise<void> {
-    if (wasmModule) {
+    if (witValidatorApi) {
         return; // Already initialized
     }
 
     try {
-        // Import the WASM module
         const module = await import("wit-bindgen-wasm");
-
-        // Initialize the WASM module with the binary
-        const ext = vscode.extensions.getExtension("bytecodealliance.wit-idl");
-        if (!ext) {
-            throw new Error("Extension path not found");
-        }
-
-        // Look for the WASM file in the extension's dist directory (bundled location)
-        const wasmUri = vscode.Uri.joinPath(ext.extensionUri, "dist", "wit_bindgen_wasm_bg.wasm");
-
-        try {
-            // Check if the file exists; stat will throw if it doesn't
-            await vscode.workspace.fs.stat(wasmUri);
-            const wasmBuffer = await vscode.workspace.fs.readFile(wasmUri);
-            await module.default(wasmBuffer);
-        } catch {
-            // Fallback: try to initialize without explicit path
-            await module.default();
-        }
-
-        wasmModule = module;
-        console.log("WIT bindgen WASM module initialized successfully");
+        witValidatorApi = module.witValidator;
+        console.log("WIT bindgen WASM component module initialized successfully");
     } catch (error) {
-        console.error("Failed to initialize WIT bindgen WASM module:", error);
+        console.error("Failed to initialize WIT bindgen WASM component module:", error);
         throw error;
     }
+}
+
+/**
+ * Get the witValidator API, initializing if needed.
+ */
+async function getApi(): Promise<typeof import("wit-bindgen-wasm").witValidator> {
+    if (!witValidatorApi) {
+        await initializeWasm();
+    }
+    if (!witValidatorApi) {
+        throw new Error("WASM module not initialized");
+    }
+    return witValidatorApi;
 }
 
 /**
@@ -53,41 +43,15 @@ export async function initializeWasm(): Promise<void> {
  * @returns Promise that resolves to the version string
  */
 export async function getWitBindgenVersionFromWasm(): Promise<string> {
-    if (!wasmModule) {
-        await initializeWasm();
-    }
-
-    if (!wasmModule) {
-        throw new Error("WASM module not initialized");
-    }
-
+    const api = await getApi();
     try {
-        const instance = new wasmModule.WitBindgen();
-        const version = instance.version();
-        instance.free();
-        return version;
+        return api.version();
     } catch (error) {
         console.error("Failed to get version from WASM module:", error);
         throw new Error(`Failed to get version: ${error instanceof Error ? error.message : String(error)}`, {
             cause: error,
         });
     }
-}
-
-/**
- * Create a WIT bindgen instance for validation
- * @returns Promise that resolves to a WitBindgen instance
- */
-export async function createWitBindgenInstance(): Promise<WitBindgen> {
-    if (!wasmModule) {
-        await initializeWasm();
-    }
-
-    if (!wasmModule) {
-        throw new Error("WASM module not initialized");
-    }
-
-    return new wasmModule.WitBindgen();
 }
 
 /**
@@ -105,50 +69,22 @@ export async function isWitFileExtensionFromWasm(filename: string): Promise<bool
  * @returns Promise that resolves to true if the syntax is valid
  */
 export async function validateWitSyntaxFromWasm(content: string): Promise<boolean> {
-    const instance = await createWitBindgenInstance();
-    try {
-        return instance.validateWitSyntax(content);
-    } finally {
-        instance.free();
-    }
+    const api = await getApi();
+    return api.validateWitSyntax(content);
 }
 
 /**
  * Extract WIT text from a WebAssembly component using the WASM module.
- * The underlying WASM must implement `extractWitFromComponent(bytes: Uint8Array): string`.
  * @param bytes - The WebAssembly component bytes
  * @returns Promise resolving to extracted WIT text
  */
 export async function extractWitFromComponent(bytes: Uint8Array): Promise<string> {
-    if (!wasmModule) {
-        await initializeWasm();
+    const api = await getApi();
+    const witText = api.extractWitFromComponent(bytes);
+    if (!witText) {
+        throw new Error("WIT extraction returned no data");
     }
-
-    if (!wasmModule) {
-        throw new Error("WASM module not initialized");
-    }
-
-    // Type guard for extractWitFromComponent method
-    function hasExtractWitFromComponent(
-        obj: unknown
-    ): obj is { extractWitFromComponent: (data: Uint8Array) => string } {
-        return typeof (obj as { extractWitFromComponent?: unknown }).extractWitFromComponent === "function";
-    }
-
-    // Create instance and call the optional method via a type-guarded access
-    const instance = new wasmModule.WitBindgen();
-    try {
-        if (!hasExtractWitFromComponent(instance)) {
-            throw new Error("extractWitFromComponent not available in wit-bindgen-wasm module");
-        }
-        const witText = instance.extractWitFromComponent(bytes);
-        if (!witText || typeof witText !== "string") {
-            throw new Error("WIT extraction returned no data");
-        }
-        return witText;
-    } finally {
-        instance.free();
-    }
+    return witText;
 }
 
 /**
@@ -156,34 +92,14 @@ export async function extractWitFromComponent(bytes: Uint8Array): Promise<string
  * Returns a filename -> binary bytes map. Empty map on failure or none found.
  */
 export async function extractCoreWasmFromComponent(bytes: Uint8Array): Promise<Record<string, Uint8Array>> {
-    if (!wasmModule) {
-        await initializeWasm();
+    const api = await getApi();
+    const json = api.extractCoreWasmFromComponent(bytes);
+    const textMap = JSON.parse(json || "{}") as Record<string, string>;
+    const result: Record<string, Uint8Array> = {};
+    for (const [name, content] of Object.entries(textMap)) {
+        result[name] = Buffer.from(content, "latin1");
     }
-    if (!wasmModule) {
-        throw new Error("WASM module not initialized");
-    }
-
-    function hasExtractCore(obj: unknown): obj is { extractCoreWasmFromComponent: (data: Uint8Array) => string } {
-        return typeof (obj as { extractCoreWasmFromComponent?: unknown }).extractCoreWasmFromComponent === "function";
-    }
-
-    const instance = new wasmModule.WitBindgen();
-    try {
-        if (!hasExtractCore(instance)) {
-            throw new Error("extractCoreWasmFromComponent not available in wit-bindgen-wasm module");
-        }
-        const json = instance.extractCoreWasmFromComponent(bytes);
-        const textMap = JSON.parse(json || "{}") as Record<string, string>;
-        // Decode into binary bytes (latin1-to-bytes convention from WASM side)
-        const result: Record<string, Uint8Array> = {};
-        for (const [name, content] of Object.entries(textMap)) {
-            // Buffer.from with 'latin1' yields the original byte values 0..255
-            result[name] = Buffer.from(content, "latin1");
-        }
-        return result;
-    } finally {
-        instance.free();
-    }
+    return result;
 }
 
 /**
@@ -192,12 +108,8 @@ export async function extractCoreWasmFromComponent(bytes: Uint8Array): Promise<R
  * @returns Promise that resolves to a comma-separated list of interface names
  */
 export async function extractInterfacesFromWasm(content: string): Promise<string> {
-    const instance = await createWitBindgenInstance();
-    try {
-        return instance.extractInterfaces(content);
-    } finally {
-        instance.free();
-    }
+    const api = await getApi();
+    return api.extractInterfaces(content);
 }
 
 /**
@@ -212,13 +124,9 @@ export async function generateBindingsFromWasm(
     language: string,
     worldName?: string
 ): Promise<Record<string, string>> {
-    const instance = await createWitBindgenInstance();
-    try {
-        const jsonResult = instance.generateBindings(content, language, worldName);
-        return JSON.parse(jsonResult);
-    } finally {
-        instance.free();
-    }
+    const api = await getApi();
+    const jsonResult = api.generateBindings(content, language, worldName);
+    return JSON.parse(jsonResult);
 }
 
 /**
@@ -236,11 +144,7 @@ export interface WitValidationResult {
  * @returns Promise that resolves to detailed validation results
  */
 export async function validateWitSyntaxDetailedFromWasm(content: string): Promise<WitValidationResult> {
-    const instance = await createWitBindgenInstance();
-    try {
-        const resultJson = instance.validateWitSyntaxDetailed(content);
-        return JSON.parse(resultJson);
-    } finally {
-        instance.free();
-    }
+    const api = await getApi();
+    const resultJson = api.validateWitSyntaxDetailed(content);
+    return JSON.parse(resultJson);
 }

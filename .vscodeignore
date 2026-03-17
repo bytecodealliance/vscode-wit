@@ -1,14 +1,12 @@
-.vscode/**
-.vscode-test/**
-.github/
-.gitignore
-node_modules/
-tests/
-commitlint.config.cjs
-src/**
-.yarnrc
-**/tsconfig.json
-**/.eslintrc.json
-**/*.map
-**/*.ts
-wit-bindgen-wasm/**
+# Exclude everything by default
+**
+
+# Include only what the extension needs at runtime
+!dist/**
+!syntaxes/**
+!images/wit-icon.png
+!snippets.json
+!language-configuration.json
+!LICENSE
+!README.md
+!CHANGELOG.md

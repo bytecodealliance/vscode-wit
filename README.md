@@ -238,7 +238,7 @@ This extension is available on:
 This extension includes a WebAssembly component that requires the following tools for building:
 
 - **Rust** (with `cargo`): Required for building the WebAssembly module
-- **wasm-pack v0.13.1**: Used specifically for the `wit-bindgen-wasm` subproject
+- **wasm-tools v1.245.0**: Used for embedding WIT metadata and creating WebAssembly components
 
 You can install these dependencies by running:
 ```bash
