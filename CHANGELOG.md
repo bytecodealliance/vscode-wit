@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.30](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.29...wit-idl-v0.3.30) (2026-03-17)
+
+
+### Bug Fixes
+
+* add setup-wasm step to release workflow ([f7c704c](https://github.com/bytecodealliance/vscode-wit/commit/f7c704c6ee8e3864100bbf073f5012e8165b1bc9))
+
 ## [0.3.29](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.28...wit-idl-v0.3.29) (2026-03-17)
 
 
