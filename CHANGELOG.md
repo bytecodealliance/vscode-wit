@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.29](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.28...wit-idl-v0.3.29) (2026-03-17)
+
+
+### Features
+
+* switch to component model for wit-bindgen-wasm ([53ef3f9](https://github.com/bytecodealliance/vscode-wit/commit/53ef3f9b41288db5591e62c546f8b08f8313d102))
+
+
+### Bug Fixes
+
+* update dependencies in package.json and Cargo files ([c9c8d4d](https://github.com/bytecodealliance/vscode-wit/commit/c9c8d4d6afa5990feafaa412754b7628df8f384a))
+
 ## [0.3.28](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.27...wit-idl-v0.3.28) (2026-03-01)
 
 
