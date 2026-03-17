@@ -72,6 +72,7 @@ jobs:
           TAG_NAME: ${{ steps.event_details.outputs.tag_name }}
         run: |
           npm ci
+          npm run setup-wasm
           npm run package
           mv wit-idl.vsix ${TAG_NAME}.vsix
           gh release upload ${TAG_NAME} ${TAG_NAME}.vsix
