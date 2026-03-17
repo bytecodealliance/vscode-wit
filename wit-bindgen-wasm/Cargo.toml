@@ -18,14 +18,14 @@ console_error_panic_hook = { version = "0.1.7", optional = true }
 serde_json = "1.0"
 wasmparser = { version = "0.245", features = ["component-model"] }
 wit-parser = "0.245"
-wit-bindgen-core = "0.53"
-wit-bindgen-c = "0.53"
-wit-bindgen-cpp = "0.53"
-wit-bindgen-rust = "0.53"
-wit-bindgen-go = "0.53"
-wit-bindgen-csharp = "0.53"
-wit-bindgen-moonbit = "0.53"
-wit-bindgen-markdown = "0.53"
+wit-bindgen-core = "0.54"
+wit-bindgen-c = "0.54"
+wit-bindgen-cpp = "0.54"
+wit-bindgen-rust = "0.54"
+wit-bindgen-go = "0.54"
+wit-bindgen-csharp = "0.54"
+wit-bindgen-moonbit = "0.54"
+wit-bindgen-markdown = "0.54"
 wit-component = "0.245"
 anyhow = "1.0.102"
 
@@ -36,7 +36,7 @@ features = [
 ]
 
 [build-dependencies]
-toml = "1.0.3"
+toml = "1.0.6"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.
