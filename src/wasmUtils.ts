@@ -1,9 +1,136 @@
+import { readdir, readFile } from "node:fs/promises";
+import type { Dirent } from "node:fs";
+import path from "node:path";
+
 /**
  * Cached reference to the witValidator interface from the WASM component module.
  * The jco-transpiled module self-initializes via top-level await,
  * so the module is ready to use once the dynamic import resolves.
  */
 let witValidatorApi: typeof import("wit-bindgen-wasm").witValidator | null = null;
+
+interface PreparedSourceContext {
+    sourcePath?: string;
+    sourceFilesJson?: string;
+}
+
+function normalizeSourcePath(sourcePath?: string): string | undefined {
+    const trimmedPath = sourcePath?.trim();
+    if (!trimmedPath) {
+        return undefined;
+    }
+
+    return path.resolve(trimmedPath);
+}
+
+function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
+    return error instanceof Error && "code" in error;
+}
+
+async function readDirectoryEntries(directoryPath: string): Promise<Array<Dirent>> {
+    try {
+        return await readdir(directoryPath, { encoding: "utf8", withFileTypes: true });
+    } catch (error: unknown) {
+        if (isErrnoException(error) && error.code === "ENOENT") {
+            return [];
+        }
+
+        throw error;
+    }
+}
+
+async function collectWitFilePathsRecursively(directoryPath: string, filePaths: Array<string>): Promise<void> {
+    const entries = await readDirectoryEntries(directoryPath);
+    for (const entry of entries) {
+        const entryPath = path.join(directoryPath, entry.name);
+        if (entry.isDirectory()) {
+            await collectWitFilePathsRecursively(entryPath, filePaths);
+            continue;
+        }
+
+        if (entry.isFile() && entry.name.toLowerCase().endsWith(".wit")) {
+            filePaths.push(entryPath);
+        }
+    }
+}
+
+async function readWitFilesWithConcurrency(filePaths: Array<string>, target: Record<string, string>): Promise<void> {
+    if (filePaths.length === 0) {
+        return;
+    }
+
+    const maxConcurrency = 8;
+    let currentIndex = 0;
+
+    const worker = async (): Promise<void> => {
+        while (true) {
+            const index = currentIndex;
+            if (index >= filePaths.length) {
+                return;
+            }
+
+            currentIndex += 1;
+            const filePath = filePaths[index];
+            try {
+                const contents = await readFile(filePath, "utf8");
+                target[filePath] = contents;
+            } catch (error: unknown) {
+                if (isErrnoException(error) && (error.code === "ENOENT" || error.code === "EACCES")) {
+                    // Skip files that are missing or not accessible without failing the whole operation.
+                    continue;
+                }
+
+                throw error;
+            }
+        }
+    };
+
+    const workerCount = Math.min(maxConcurrency, filePaths.length);
+    const workers: Array<Promise<void>> = [];
+    for (let i = 0; i < workerCount; i += 1) {
+        workers.push(worker());
+    }
+
+    await Promise.all(workers);
+}
+
+async function collectWitContext(sourceDirectory: string): Promise<Record<string, string>> {
+    const sourceFiles: Record<string, string> = {};
+    const filePaths: Array<string> = [];
+
+    const entries = await readDirectoryEntries(sourceDirectory);
+    for (const entry of entries) {
+        const entryPath = path.join(sourceDirectory, entry.name);
+        if (entry.isDirectory()) {
+            if (entry.name === "deps") {
+                await collectWitFilePathsRecursively(entryPath, filePaths);
+            }
+            continue;
+        }
+
+        if (entry.isFile() && entry.name.toLowerCase().endsWith(".wit")) {
+            filePaths.push(entryPath);
+        }
+    }
+
+    await readWitFilesWithConcurrency(filePaths, sourceFiles);
+    return sourceFiles;
+}
+
+async function prepareSourceContext(content: string, sourcePath?: string): Promise<PreparedSourceContext> {
+    const normalizedSourcePath = normalizeSourcePath(sourcePath);
+    if (!normalizedSourcePath) {
+        return {};
+    }
+
+    const sourceFiles = await collectWitContext(path.dirname(normalizedSourcePath));
+    sourceFiles[normalizedSourcePath] = content;
+
+    return {
+        sourcePath: normalizedSourcePath,
+        sourceFilesJson: JSON.stringify(sourceFiles),
+    };
+}
 
 /**
  * Initialize the WASM module by dynamically importing it.
@@ -68,9 +195,10 @@ export async function isWitFileExtensionFromWasm(filename: string): Promise<bool
  * @param content - The WIT content to validate
  * @returns Promise that resolves to true if the syntax is valid
  */
-export async function validateWitSyntaxFromWasm(content: string): Promise<boolean> {
+export async function validateWitSyntaxFromWasm(content: string, sourcePath?: string): Promise<boolean> {
     const api = await getApi();
-    return api.validateWitSyntax(content);
+    const preparedSource = await prepareSourceContext(content, sourcePath);
+    return api.validateWitSyntax(content, preparedSource.sourcePath, preparedSource.sourceFilesJson);
 }
 
 /**
@@ -122,11 +250,19 @@ export async function extractInterfacesFromWasm(content: string): Promise<string
 export async function generateBindingsFromWasm(
     content: string,
     language: string,
-    worldName?: string
+    worldName?: string,
+    sourcePath?: string
 ): Promise<Record<string, string>> {
     const api = await getApi();
-    const jsonResult = api.generateBindings(content, language, worldName);
-    return JSON.parse(jsonResult);
+    const preparedSource = await prepareSourceContext(content, sourcePath);
+    const jsonResult = api.generateBindings(
+        content,
+        language,
+        worldName,
+        preparedSource.sourcePath,
+        preparedSource.sourceFilesJson
+    );
+    return JSON.parse(jsonResult) as Record<string, string>;
 }
 
 /**
@@ -143,8 +279,16 @@ export interface WitValidationResult {
  * @param content - The WIT content to validate
  * @returns Promise that resolves to detailed validation results
  */
-export async function validateWitSyntaxDetailedFromWasm(content: string): Promise<WitValidationResult> {
+export async function validateWitSyntaxDetailedFromWasm(
+    content: string,
+    sourcePath?: string
+): Promise<WitValidationResult> {
     const api = await getApi();
-    const resultJson = api.validateWitSyntaxDetailed(content);
-    return JSON.parse(resultJson);
+    const preparedSource = await prepareSourceContext(content, sourcePath);
+    const resultJson = api.validateWitSyntaxDetailed(
+        content,
+        preparedSource.sourcePath,
+        preparedSource.sourceFilesJson
+    );
+    return JSON.parse(resultJson) as WitValidationResult;
 }

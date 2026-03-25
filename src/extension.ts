@@ -596,7 +596,12 @@ export function activate(context: vscode.ExtensionContext) {
 
                 const outputPath = outputUri[0].fsPath;
 
-                const bindingFiles = await generateBindingsFromWasm(witContent, language);
+                const bindingFiles = await generateBindingsFromWasm(
+                    witContent,
+                    language,
+                    undefined,
+                    diagDoc?.uri.fsPath ?? targetUri.fsPath
+                );
 
                 const fileEntries = Object.entries(bindingFiles);
                 const errorFile = fileEntries.find(([filename]) => filename === "error.txt");

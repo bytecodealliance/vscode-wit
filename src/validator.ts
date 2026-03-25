@@ -34,7 +34,7 @@ export class WitSyntaxValidator {
     public async validate(path: string, content: string): Promise<ReturnType<typeof extractErrorInfo> | null> {
         try {
             // Use the enhanced WASM-based WIT validation with detailed error reporting
-            const validationResult = await validateWitSyntaxDetailedFromWasm(content);
+            const validationResult = await validateWitSyntaxDetailedFromWasm(content, path);
 
             if (validationResult.valid) {
                 return null;

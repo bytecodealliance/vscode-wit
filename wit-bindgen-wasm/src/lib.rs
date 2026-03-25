@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::Context;
 use wasmparser::{Parser, Payload};
@@ -13,7 +13,7 @@ use wit_bindgen_markdown as markdown;
 use wit_bindgen_moonbit as moonbit;
 use wit_bindgen_rust as rust;
 use wit_component as wcomp;
-use wit_parser::{PackageId, Resolve};
+use wit_parser::{PackageId, Resolve, SourceMap};
 
 // Generate component model bindings from our WIT file
 wit_bindgen::generate!({
@@ -27,24 +27,101 @@ fn bytes_to_latin1_string(bytes: &[u8]) -> String {
     bytes.iter().map(|&b| b as char).collect()
 }
 
+fn normalize_source_path(source_path: Option<&str>) -> Option<PathBuf> {
+    source_path.and_then(|value| {
+        let trimmed = value.trim();
+        if trimmed.is_empty() {
+            None
+        } else {
+            Some(PathBuf::from(trimmed))
+        }
+    })
+}
+
+fn normalize_optional_text(value: Option<&str>) -> Option<&str> {
+    value.and_then(|entry| {
+        let trimmed = entry.trim();
+        if trimmed.is_empty() {
+            None
+        } else {
+            Some(trimmed)
+        }
+    })
+}
+
+fn source_label(source_path: Option<&str>) -> String {
+    normalize_source_path(source_path)
+        .map(|path| path.display().to_string())
+        .unwrap_or_else(|| "inline content".to_string())
+}
+
+fn load_resolve(
+    content: &str,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+    operation: &str,
+) -> anyhow::Result<(Resolve, PackageId)> {
+    let mut resolve = Resolve::default();
+    let package_id = match normalize_optional_text(source_files_json) {
+        Some(source_files_json) => {
+            let source_files =
+                serde_json::from_str::<HashMap<String, String>>(source_files_json)
+                    .with_context(|| format!("{operation}: invalid source files payload"))?;
+            let mut source_map = SourceMap::default();
+            for (file_path, file_contents) in source_files {
+                source_map.push_str(&file_path, file_contents);
+            }
+            let unresolved_group = source_map
+                .parse()
+                .with_context(|| format!("{operation} from {}", source_label(source_path)))?;
+            resolve
+                .push_group(unresolved_group)
+                .with_context(|| format!("{operation} from {}", source_label(source_path)))?
+        }
+        None => {
+            let main_path = normalize_source_path(source_path)
+                .unwrap_or_else(|| PathBuf::from("inline.wit"))
+                .display()
+                .to_string();
+            resolve
+                .push_source(&main_path, content)
+                .with_context(|| format!("{operation} from {}", source_label(source_path)))?
+        }
+    };
+
+    Ok((resolve, package_id))
+}
+
 struct WitBindgenComponent;
 
 export!(WitBindgenComponent);
 
 impl exports::wit_bindgen::wasm::wit_validator::Guest for WitBindgenComponent {
-    fn validate_wit_syntax(content: String) -> bool {
+    fn validate_wit_syntax(
+        content: String,
+        source_path: Option<String>,
+        source_files_json: Option<String>,
+    ) -> bool {
         let trimmed = content.trim();
 
         if trimmed.is_empty() {
             return false;
         }
 
-        let inline_path = Path::new("inline.wit");
-        let mut resolve = Resolve::default();
-        resolve.push_str(inline_path, trimmed).is_ok()
+        load_resolve(
+            trimmed,
+            source_path.as_deref(),
+            source_files_json.as_deref(),
+            "Failed to validate WIT syntax",
+        )
+        .is_ok()
     }
 
-    fn validate_wit_syntax_detailed(content: String) -> String {
+    fn validate_wit_syntax_detailed(
+        content: String,
+        source_path: Option<String>,
+        source_files_json: Option<String>,
+    ) -> String {
         let trimmed = content.trim();
 
         if trimmed.is_empty() {
@@ -56,15 +133,18 @@ impl exports::wit_bindgen::wasm::wit_validator::Guest for WitBindgenComponent {
             .to_string();
         }
 
-        let inline_path = Path::new("inline.wit");
-        let mut resolve = Resolve::default();
-        match resolve.push_str(inline_path, trimmed) {
-            Ok(_package_id) => serde_json::json!({
+        match load_resolve(
+            trimmed,
+            source_path.as_deref(),
+            source_files_json.as_deref(),
+            "Failed to validate WIT syntax",
+        ) {
+            Ok((_resolve, _package_id)) => serde_json::json!({
                 "valid": true
             })
             .to_string(),
             Err(e) => {
-                let error_message = e.to_string();
+                let error_message = format!("{e:#}");
 
                 if error_message.contains("package not found")
                     || error_message.contains("interface not found")
@@ -122,15 +202,56 @@ impl exports::wit_bindgen::wasm::wit_validator::Guest for WitBindgenComponent {
         env!("WIT_BINDGEN_CORE_VERSION").to_string()
     }
 
-    fn generate_bindings(content: String, language: String, world_name: Option<String>) -> String {
+    fn generate_bindings(
+        content: String,
+        language: String,
+        world_name: Option<String>,
+        source_path: Option<String>,
+        source_files_json: Option<String>,
+    ) -> String {
         let files = match language.to_lowercase().as_str() {
-            "rust" => generate_rust_bindings(&content, world_name),
-            "c" => generate_c_bindings(&content, world_name),
-            "cpp" | "c++" => generate_cpp_bindings(&content, world_name),
-            "csharp" | "c#" => generate_csharp_bindings(&content, world_name),
-            "go" => generate_go_bindings(&content, world_name),
-            "moonbit" => generate_moonbit_bindings(&content, world_name),
-            "markdown" | "md" => generate_markdown_bindings(&content, world_name),
+            "rust" => generate_rust_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
+            "c" => generate_c_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
+            "cpp" | "c++" => generate_cpp_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
+            "csharp" | "c#" => generate_csharp_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
+            "go" => generate_go_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
+            "moonbit" => generate_moonbit_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
+            "markdown" | "md" => generate_markdown_bindings(
+                &content,
+                world_name,
+                source_path.as_deref(),
+                source_files_json.as_deref(),
+            ),
             _ => {
                 let mut error_files = HashMap::new();
                 error_files.insert(
@@ -233,14 +354,24 @@ fn extract_core_wasm_impl(bytes: &[u8]) -> anyhow::Result<HashMap<String, String
     Ok(map)
 }
 
-fn generate_rust_bindings(content: &str, world_name: Option<String>) -> HashMap<String, String> {
-    match generate_rust_with_wit_bindgen(content, world_name.as_deref()) {
+fn generate_rust_bindings(
+    content: &str,
+    world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+) -> HashMap<String, String> {
+    match generate_rust_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("Rust binding generation failed: {}", e),
+                format!("Rust binding generation failed: {e:#}"),
             );
             error_files
         }
@@ -250,12 +381,15 @@ fn generate_rust_bindings(content: &str, world_name: Option<String>) -> HashMap<
 fn generate_rust_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for Rust binding generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for Rust binding generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -274,14 +408,24 @@ fn generate_rust_with_wit_bindgen(
     Ok(result)
 }
 
-fn generate_c_bindings(content: &str, world_name: Option<String>) -> HashMap<String, String> {
-    match generate_c_with_wit_bindgen(content, world_name.as_deref()) {
+fn generate_c_bindings(
+    content: &str,
+    world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+) -> HashMap<String, String> {
+    match generate_c_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("C binding generation failed: {}", e),
+                format!("C binding generation failed: {e:#}"),
             );
             error_files
         }
@@ -291,12 +435,15 @@ fn generate_c_bindings(content: &str, world_name: Option<String>) -> HashMap<Str
 fn generate_c_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for C binding generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for C binding generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -312,14 +459,24 @@ fn generate_c_with_wit_bindgen(
     Ok(result)
 }
 
-fn generate_cpp_bindings(content: &str, world_name: Option<String>) -> HashMap<String, String> {
-    match generate_cpp_with_wit_bindgen(content, world_name.as_deref()) {
+fn generate_cpp_bindings(
+    content: &str,
+    world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+) -> HashMap<String, String> {
+    match generate_cpp_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("C++ binding generation failed: {}", e),
+                format!("C++ binding generation failed: {e:#}"),
             );
             error_files
         }
@@ -329,12 +486,15 @@ fn generate_cpp_bindings(content: &str, world_name: Option<String>) -> HashMap<S
 fn generate_cpp_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for C++ binding generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for C++ binding generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -350,14 +510,24 @@ fn generate_cpp_with_wit_bindgen(
     Ok(result)
 }
 
-fn generate_csharp_bindings(content: &str, world_name: Option<String>) -> HashMap<String, String> {
-    match generate_csharp_with_wit_bindgen(content, world_name.as_deref()) {
+fn generate_csharp_bindings(
+    content: &str,
+    world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+) -> HashMap<String, String> {
+    match generate_csharp_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("C# binding generation failed: {}", e),
+                format!("C# binding generation failed: {e:#}"),
             );
             error_files
         }
@@ -367,12 +537,15 @@ fn generate_csharp_bindings(content: &str, world_name: Option<String>) -> HashMa
 fn generate_csharp_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for C# binding generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for C# binding generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -388,14 +561,24 @@ fn generate_csharp_with_wit_bindgen(
     Ok(result)
 }
 
-fn generate_go_bindings(content: &str, world_name: Option<String>) -> HashMap<String, String> {
-    match generate_go_with_wit_bindgen(content, world_name.as_deref()) {
+fn generate_go_bindings(
+    content: &str,
+    world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+) -> HashMap<String, String> {
+    match generate_go_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("Go binding generation failed: {}", e),
+                format!("Go binding generation failed: {e:#}"),
             );
             error_files
         }
@@ -405,12 +588,15 @@ fn generate_go_bindings(content: &str, world_name: Option<String>) -> HashMap<St
 fn generate_go_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for Go binding generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for Go binding generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -426,14 +612,24 @@ fn generate_go_with_wit_bindgen(
     Ok(result)
 }
 
-fn generate_moonbit_bindings(content: &str, world_name: Option<String>) -> HashMap<String, String> {
-    match generate_moonbit_with_wit_bindgen(content, world_name.as_deref()) {
+fn generate_moonbit_bindings(
+    content: &str,
+    world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+) -> HashMap<String, String> {
+    match generate_moonbit_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("MoonBit binding generation failed: {}", e),
+                format!("MoonBit binding generation failed: {e:#}"),
             );
             error_files
         }
@@ -443,12 +639,15 @@ fn generate_moonbit_bindings(content: &str, world_name: Option<String>) -> HashM
 fn generate_moonbit_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for MoonBit binding generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for MoonBit binding generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -467,14 +666,21 @@ fn generate_moonbit_with_wit_bindgen(
 fn generate_markdown_bindings(
     content: &str,
     world_name: Option<String>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> HashMap<String, String> {
-    match generate_markdown_with_wit_bindgen(content, world_name.as_deref()) {
+    match generate_markdown_with_wit_bindgen(
+        content,
+        world_name.as_deref(),
+        source_path,
+        source_files_json,
+    ) {
         Ok(files) => files,
         Err(e) => {
             let mut error_files = HashMap::new();
             error_files.insert(
                 "error.txt".to_string(),
-                format!("Markdown generation failed: {}", e),
+                format!("Markdown generation failed: {e:#}"),
             );
             error_files
         }
@@ -484,12 +690,15 @@ fn generate_markdown_bindings(
 fn generate_markdown_with_wit_bindgen(
     content: &str,
     world_name: Option<&str>,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let inline_path = Path::new("inline.wit");
-    let mut resolve = Resolve::default();
-    let package_id = resolve
-        .push_str(inline_path, content)
-        .with_context(|| "Failed to parse WIT content for Markdown generation")?;
+    let (mut resolve, package_id) = load_resolve(
+        content,
+        source_path,
+        source_files_json,
+        "Failed to parse WIT content for Markdown generation",
+    )?;
 
     let world_id = resolve.select_world(&[package_id], world_name)?;
 
@@ -507,8 +716,51 @@ fn generate_markdown_with_wit_bindgen(
 
 #[cfg(test)]
 mod tests {
+    use std::time::{SystemTime, UNIX_EPOCH};
+
     use crate::exports::wit_bindgen::wasm::wit_validator::Guest;
     use crate::WitBindgenComponent;
+
+    fn create_import_fixture() -> (String, String, String) {
+        let suffix = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system clock should be after unix epoch")
+            .as_nanos();
+        let main_path = std::env::temp_dir()
+            .join(format!("wit-bindgen-wasm-imports-{suffix}"))
+            .join("a.wit");
+        let imported_path = main_path.with_file_name("b.wit");
+
+        let main_content = r#"package local:demo;
+
+world my-world {
+    import host;
+
+    export another-interface;
+}
+
+interface host {
+    ping: func();
+}
+"#
+        .to_string();
+        let imported_content = r#"interface another-interface {
+    pong: func();
+}
+"#
+        .to_string();
+        let source_files_json = serde_json::to_string(&HashMap::from([
+            (main_path.display().to_string(), main_content.clone()),
+            (imported_path.display().to_string(), imported_content),
+        ]))
+        .expect("source files json should serialize");
+
+        (
+            main_path.display().to_string(),
+            main_content,
+            source_files_json,
+        )
+    }
 
     #[test]
     fn test_validate_wit_syntax_with_undefined_type() {
@@ -530,7 +782,8 @@ world foo {
   export foo: func() -> tuple<type1, type2, type3, type4>;
 }"#;
 
-        let result = WitBindgenComponent::validate_wit_syntax(invalid_content.to_string());
+        let result =
+            WitBindgenComponent::validate_wit_syntax(invalid_content.to_string(), None, None);
         assert!(!result, "Should detect undefined type4 as invalid");
     }
 
@@ -541,16 +794,18 @@ world foo {
 world foo {
 }"#;
 
-        let result = WitBindgenComponent::validate_wit_syntax(valid_content.to_string());
+        let result =
+            WitBindgenComponent::validate_wit_syntax(valid_content.to_string(), None, None);
         assert!(result, "Should validate correct WIT syntax as valid");
     }
 
     #[test]
     fn test_validate_wit_syntax_with_empty_content() {
-        let result = WitBindgenComponent::validate_wit_syntax("".to_string());
+        let result = WitBindgenComponent::validate_wit_syntax("".to_string(), None, None);
         assert!(!result, "Empty content should be invalid");
 
-        let result = WitBindgenComponent::validate_wit_syntax("   \n  \t  ".to_string());
+        let result =
+            WitBindgenComponent::validate_wit_syntax("   \n  \t  ".to_string(), None, None);
         assert!(!result, "Whitespace-only content should be invalid");
     }
 
@@ -567,7 +822,47 @@ world test-world {
   export test;
 }"#;
 
-        let result = WitBindgenComponent::validate_wit_syntax(valid_content.to_string());
+        let result =
+            WitBindgenComponent::validate_wit_syntax(valid_content.to_string(), None, None);
         assert!(result, "Should validate sized list syntax as valid");
+    }
+
+    #[test]
+    fn test_validate_wit_syntax_with_local_imports() {
+        let (main_path, content, source_files_json) = create_import_fixture();
+
+        let result = WitBindgenComponent::validate_wit_syntax(
+            content,
+            Some(main_path),
+            Some(source_files_json),
+        );
+        assert!(
+            result,
+            "Should resolve imported WIT files from the local folder"
+        );
+    }
+
+    #[test]
+    fn test_generate_bindings_with_local_imports() {
+        let (main_path, content, source_files_json) = create_import_fixture();
+
+        let result_json = WitBindgenComponent::generate_bindings(
+            content,
+            "rust".to_string(),
+            Some("my-world".to_string()),
+            Some(main_path),
+            Some(source_files_json),
+        );
+
+        let files: std::collections::HashMap<String, String> =
+            serde_json::from_str(&result_json).expect("binding generation should return json");
+        assert!(
+            !files.contains_key("error.txt"),
+            "Binding generation should succeed with local imports: {files:?}"
+        );
+        assert!(
+            files.keys().any(|filename| filename.ends_with(".rs")),
+            "Rust bindings should include a .rs file"
+        );
     }
 }
