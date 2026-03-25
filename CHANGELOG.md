@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.31](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.30...wit-idl-v0.3.31) (2026-03-25)
+
+
+### Bug Fixes
+
+* enhance WIT validation and binding generation with source path support ([0121969](https://github.com/bytecodealliance/vscode-wit/commit/0121969ad605722ce5fe7cdedf2a3738f98d3910)), closes [#121](https://github.com/bytecodealliance/vscode-wit/issues/121)
+* update @bytecodealliance/jco and toml dependencies ([58a9d99](https://github.com/bytecodealliance/vscode-wit/commit/58a9d99550449a198d55445a9f4c60221e5c9646))
+
 ## [0.3.30](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.29...wit-idl-v0.3.30) (2026-03-17)
 
 
