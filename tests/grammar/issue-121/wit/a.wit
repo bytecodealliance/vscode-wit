@@ -1,0 +1,11 @@
+package local:demo;
+
+world my-world {
+  import host;
+
+  export another-interface;
+}
+
+interface host {
+  // ...
+}

@@ -28,7 +28,7 @@ describe("Bindings Generation for All Languages", () => {
 
     supportedLanguages.forEach(({ lang, extension, expectedContent, minLength }) => {
         it(`should generate actual code stubs for ${lang}`, () => {
-            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined);
+            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined, undefined, undefined);
             const result = JSON.parse(resultJson);
 
             // Verify files were generated
@@ -66,7 +66,7 @@ describe("Bindings Generation for All Languages", () => {
         });
 
         it(`should not generate only README files for ${lang}`, () => {
-            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined);
+            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined, undefined, undefined);
             const result = JSON.parse(resultJson);
 
             // Verify that not all files are README files
@@ -90,7 +90,7 @@ describe("Bindings Generation for All Languages", () => {
         const results: Record<string, Record<string, string>> = {};
 
         for (const { lang } of supportedLanguages) {
-            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined);
+            const resultJson = witValidator.generateBindings(TEST_WIT, lang, undefined, undefined, undefined);
             results[lang] = JSON.parse(resultJson);
         }
 
@@ -149,7 +149,7 @@ world app {
 `;
 
         for (const { lang, extension } of supportedLanguages) {
-            const resultJson = witValidator.generateBindings(complexWit, lang, undefined);
+            const resultJson = witValidator.generateBindings(complexWit, lang, undefined, undefined, undefined);
             const result = JSON.parse(resultJson);
 
             expect(Object.keys(result).length).toBeGreaterThan(0);

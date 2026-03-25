@@ -13,11 +13,19 @@ package wit-bindgen:wasm@0.1.0;
 interface wit-validator {
     /// Validate WIT syntax in the given content
     /// Returns true if the content appears to be valid WIT syntax
-    validate-wit-syntax: func(content: string) -> bool;
+    validate-wit-syntax: func(
+        content: string,
+        source-path: option<string>,
+        source-files-json: option<string>
+    ) -> bool;
 
     /// Validate WIT syntax and return detailed error information
     /// Returns JSON string with validation results and error details
-    validate-wit-syntax-detailed: func(content: string) -> string;
+    validate-wit-syntax-detailed: func(
+        content: string,
+        source-path: option<string>,
+        source-files-json: option<string>
+    ) -> string;
 
     /// Extract interface names from WIT content
     /// Returns a comma-separated list of interface names
@@ -37,7 +45,13 @@ interface wit-validator {
     /// to preserve binary data integrity. This ensures that binary files (like .wasm, .o)
     /// and text files can be round-tripped without corruption. Consumers must decode
     /// file content using Latin1 encoding when writing to disk.
-    generate-bindings: func(content: string, language: string, world-name: option<string>) -> string;
+    generate-bindings: func(
+        content: string,
+        language: string,
+        world-name: option<string>,
+        source-path: option<string>,
+        source-files-json: option<string>
+    ) -> string;
 
     /// Extract WIT text from a WebAssembly component (bytes).
     /// Returns the WIT text as a plain string on success, or an empty string on failure.

@@ -4,35 +4,23 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("wit-bindgen-wasm", () => {
     return {
         witValidator: {
-            version(): string {
-                return "0.42.0-mock";
-            },
-            validateWitSyntax(content: string): boolean {
+            version: vi.fn((): string => "0.42.0-mock"),
+            validateWitSyntax: vi.fn((content: string): boolean => {
                 return content.includes("package");
-            },
-            validateWitSyntaxDetailed(content: string): string {
+            }),
+            validateWitSyntaxDetailed: vi.fn((content: string): string => {
                 if (content.includes("package")) {
                     return JSON.stringify({ valid: true });
                 }
                 return JSON.stringify({ valid: false, error: "expected package", errorType: "parsing" });
-            },
-            extractInterfaces(): string {
-                return "my-interface, another-interface";
-            },
-            generateBindings(): string {
-                return JSON.stringify({ "lib.rs": "// generated" });
-            },
+            }),
+            extractInterfaces: vi.fn((): string => "my-interface, another-interface"),
+            generateBindings: vi.fn((): string => JSON.stringify({ "lib.rs": "// generated" })),
             extractWitFromComponent: vi.fn().mockReturnValue("package test:component;"),
             extractCoreWasmFromComponent: vi.fn().mockReturnValue(JSON.stringify({ "module-0.wasm": "\x00asm" })),
-            hasWorldDefinition(content: string): boolean {
-                return content.includes("world");
-            },
-            isWitFileExtension(filename: string): boolean {
-                return filename.toLowerCase().endsWith(".wit");
-            },
-            getWitBindgenVersion(): string {
-                return "0.42.0-mock";
-            },
+            hasWorldDefinition: vi.fn((content: string): boolean => content.includes("world")),
+            isWitFileExtension: vi.fn((filename: string): boolean => filename.toLowerCase().endsWith(".wit")),
+            getWitBindgenVersion: vi.fn((): string => "0.42.0-mock"),
         },
     };
 });
@@ -105,6 +93,7 @@ describe("wasmUtils", () => {
         it("should return true for valid WIT content", async () => {
             const result = await validateWitSyntaxFromWasm("package foo:bar;");
             expect(result).toBe(true);
+            expect(witValidator.validateWitSyntax).toHaveBeenCalledWith("package foo:bar;", undefined, undefined);
         });
 
         it("should return false for invalid WIT content", async () => {
@@ -117,6 +106,11 @@ describe("wasmUtils", () => {
         it("should return valid result for valid content", async () => {
             const result = await validateWitSyntaxDetailedFromWasm("package foo:bar;");
             expect(result.valid).toBe(true);
+            expect(witValidator.validateWitSyntaxDetailed).toHaveBeenCalledWith(
+                "package foo:bar;",
+                undefined,
+                undefined
+            );
         });
 
         it("should return error details for invalid content", async () => {
@@ -140,6 +134,13 @@ describe("wasmUtils", () => {
             expect(result).toBeDefined();
             expect(typeof result).toBe("object");
             expect(result["lib.rs"]).toBe("// generated");
+            expect(witValidator.generateBindings).toHaveBeenCalledWith(
+                "package foo:bar; world w {}",
+                "rust",
+                undefined,
+                undefined,
+                undefined
+            );
         });
 
         it("should accept optional world name", async () => {
