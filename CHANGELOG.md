@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.32](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.31...wit-idl-v0.3.32) (2026-05-15)
+
+
+### Bug Fixes
+
+* update dependencies and improve wasm setup scripts ([602e376](https://github.com/bytecodealliance/vscode-wit/commit/602e3760051bfdda2230a5e2648e1301b763d9e1))
+
 ## [0.3.31](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.30...wit-idl-v0.3.31) (2026-03-25)
 
 
