@@ -1,9 +1,12 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use anyhow::Context;
+use anyhow::{anyhow, Context};
 use wasmparser::{Parser, Payload};
 use wit_bindgen_c as c;
+use wit_bindgen_core::wit_parser::{
+    PackageId as BindgenPackageId, Resolve as BindgenResolve, SourceMap as BindgenSourceMap,
+};
 use wit_bindgen_core::Files;
 use wit_bindgen_core::WorldGenerator;
 use wit_bindgen_cpp as cpp;
@@ -71,9 +74,52 @@ fn load_resolve(
             for (file_path, file_contents) in source_files {
                 source_map.push_str(&file_path, file_contents);
             }
-            let unresolved_group = source_map
-                .parse()
-                .with_context(|| format!("{operation} from {}", source_label(source_path)))?;
+            let unresolved_group = source_map.parse().map_err(|(_source_map, error)| {
+                anyhow!(
+                    "{}: {error}",
+                    format!("{operation} from {}", source_label(source_path))
+                )
+            })?;
+            resolve
+                .push_group(unresolved_group)
+                .with_context(|| format!("{operation} from {}", source_label(source_path)))?
+        }
+        None => {
+            let main_path = normalize_source_path(source_path)
+                .unwrap_or_else(|| PathBuf::from("inline.wit"))
+                .display()
+                .to_string();
+            resolve
+                .push_source(&main_path, content)
+                .with_context(|| format!("{operation} from {}", source_label(source_path)))?
+        }
+    };
+
+    Ok((resolve, package_id))
+}
+
+fn load_bindgen_resolve(
+    content: &str,
+    source_path: Option<&str>,
+    source_files_json: Option<&str>,
+    operation: &str,
+) -> anyhow::Result<(BindgenResolve, BindgenPackageId)> {
+    let mut resolve = BindgenResolve::default();
+    let package_id = match normalize_optional_text(source_files_json) {
+        Some(source_files_json) => {
+            let source_files =
+                serde_json::from_str::<HashMap<String, String>>(source_files_json)
+                    .with_context(|| format!("{operation}: invalid source files payload"))?;
+            let mut source_map = BindgenSourceMap::default();
+            for (file_path, file_contents) in source_files {
+                source_map.push_str(&file_path, file_contents);
+            }
+            let unresolved_group = source_map.parse().map_err(|(_source_map, error)| {
+                anyhow!(
+                    "{}: {error}",
+                    format!("{operation} from {}", source_label(source_path))
+                )
+            })?;
             resolve
                 .push_group(unresolved_group)
                 .with_context(|| format!("{operation} from {}", source_label(source_path)))?
@@ -384,7 +430,7 @@ fn generate_rust_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,
@@ -438,7 +484,7 @@ fn generate_c_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,
@@ -489,7 +535,7 @@ fn generate_cpp_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,
@@ -540,7 +586,7 @@ fn generate_csharp_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,
@@ -591,7 +637,7 @@ fn generate_go_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,
@@ -642,7 +688,7 @@ fn generate_moonbit_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,
@@ -693,7 +739,7 @@ fn generate_markdown_with_wit_bindgen(
     source_path: Option<&str>,
     source_files_json: Option<&str>,
 ) -> Result<HashMap<String, String>, anyhow::Error> {
-    let (mut resolve, package_id) = load_resolve(
+    let (mut resolve, package_id) = load_bindgen_resolve(
         content,
         source_path,
         source_files_json,

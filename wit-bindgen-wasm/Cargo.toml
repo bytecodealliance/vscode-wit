@@ -9,23 +9,23 @@ license = "Apache-2.0 WITH LLVM-exception"
 crate-type = ["cdylib"]
 
 [dependencies]
-wit-bindgen = { version = "0.54", default-features = false, features = ["macros", "realloc"] }
+wit-bindgen = { version = "0.57", default-features = false, features = ["macros", "realloc"] }
 serde_json = "1.0"
-wasmparser = { version = "0.245", features = ["component-model"] }
-wit-parser = "0.245"
-wit-bindgen-core = "0.54"
-wit-bindgen-c = "0.54"
-wit-bindgen-cpp = "0.54"
-wit-bindgen-rust = "0.54"
-wit-bindgen-go = "0.54"
-wit-bindgen-csharp = "0.54"
-wit-bindgen-moonbit = "0.54"
-wit-bindgen-markdown = "0.54"
-wit-component = "0.245"
+wasmparser = { version = "0.248", features = ["component-model"] }
+wit-parser = "0.248"
+wit-bindgen-core = "0.57"
+wit-bindgen-c = "0.57"
+wit-bindgen-cpp = "0.57"
+wit-bindgen-rust = "0.57"
+wit-bindgen-go = "0.57"
+wit-bindgen-csharp = "0.57"
+wit-bindgen-moonbit = "0.57"
+wit-bindgen-markdown = "0.57"
+wit-component = "0.248"
 anyhow = "1.0.102"
 
 [build-dependencies]
-toml = "1.1.0"
+toml = "1.1.2"
 
 [profile.release]
 opt-level = "s"

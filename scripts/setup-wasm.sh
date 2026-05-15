@@ -17,7 +17,7 @@ fi
 echo "✅ Rust is installed: $(cargo --version)"
 
 # Check if correct version of wasm-tools is installed
-WASM_TOOLS_VERSION="1.245.0"
+WASM_TOOLS_VERSION="1.248.0"
 if command -v wasm-tools &> /dev/null; then
     INSTALLED_VERSION=$(wasm-tools --version | awk '{print $2}')
     if [[ "$INSTALLED_VERSION" == "$WASM_TOOLS_VERSION" ]]; then
