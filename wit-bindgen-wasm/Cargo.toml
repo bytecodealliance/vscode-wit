@@ -11,8 +11,8 @@ crate-type = ["cdylib"]
 [dependencies]
 wit-bindgen = { version = "0.57", default-features = false, features = ["macros", "realloc"] }
 serde_json = "1.0"
-wasmparser = { version = "0.248", features = ["component-model"] }
-wit-parser = "0.248"
+wasmparser = { version = "0.251", features = ["component-model"] }
+wit-parser = "0.251"
 wit-bindgen-core = "0.57"
 wit-bindgen-c = "0.57"
 wit-bindgen-cpp = "0.57"
@@ -21,7 +21,7 @@ wit-bindgen-go = "0.57"
 wit-bindgen-csharp = "0.57"
 wit-bindgen-moonbit = "0.57"
 wit-bindgen-markdown = "0.57"
-wit-component = "0.248"
+wit-component = "0.251"
 anyhow = "1.0.102"
 
 [build-dependencies]
