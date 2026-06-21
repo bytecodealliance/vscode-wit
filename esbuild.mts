@@ -734,6 +734,27 @@ async function main() {
         // Note: WASM resources are now discovered and copied dynamically by the WASM discovery plugin
         console.log("📦 Dynamic WASM and worker discovery enabled...");
 
+        // Explicitly copy vendor WASM files from jco-transpile that are needed at runtime
+        // These files use new URL() with import.meta.url, so they need to be in dist/
+        const jcoTranspileVendorDir = path.join(process.cwd(), "node_modules/@bytecodealliance/jco-transpile/vendor");
+        if (safeExists(jcoTranspileVendorDir)) {
+            const vendorWasmFiles = [
+                "js-component-bindgen-component.core.wasm",
+                "js-component-bindgen-component.core2.wasm",
+                "wasm-tools.core.wasm",
+                "wasm-tools.core2.wasm",
+            ];
+
+            copyFiles({
+                srcDir: jcoTranspileVendorDir,
+                destDir: distPath,
+                files: vendorWasmFiles,
+                logPrefix: "from @bytecodealliance/jco-transpile/vendor",
+                skipIfExists: false,
+                warnIfMissing: false,
+            });
+        }
+
         // Discover all entry points (extension + workers)
         const entryPoints = await discoverEntryPoints();
 
