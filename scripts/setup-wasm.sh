@@ -17,14 +17,22 @@ fi
 echo "✅ Rust is installed: $(cargo --version)"
 
 # Check if correct version of wasm-tools is installed
-WASM_TOOLS_VERSION="1.252.0"
+WASM_TOOLS_VERSION="1.253.0"
+
+# Returns 0 (true) when $1 is lower than $2 according to semantic version ordering.
+version_lt() {
+    [[ "$(printf '%s\n' "$1" "$2" | sort -V | head -n 1)" != "$2" ]]
+}
+
 if command -v wasm-tools &> /dev/null; then
     INSTALLED_VERSION=$(wasm-tools --version | awk '{print $2}')
-    if [[ "$INSTALLED_VERSION" == "$WASM_TOOLS_VERSION" ]]; then
-        echo "✅ wasm-tools is installed: $(wasm-tools --version)"
-    else
+    if version_lt "$INSTALLED_VERSION" "$WASM_TOOLS_VERSION"; then
         echo "📦 Updating wasm-tools from $INSTALLED_VERSION to $WASM_TOOLS_VERSION..."
         cargo install wasm-tools@"$WASM_TOOLS_VERSION"
+    elif [[ "$INSTALLED_VERSION" == "$WASM_TOOLS_VERSION" ]]; then
+        echo "✅ wasm-tools is installed: $(wasm-tools --version)"
+    else
+        echo "✅ wasm-tools is newer than target version: $(wasm-tools --version)"
     fi
 else
     echo "📦 Installing wasm-tools $WASM_TOOLS_VERSION..."
