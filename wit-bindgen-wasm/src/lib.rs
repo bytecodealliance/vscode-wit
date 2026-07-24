@@ -388,7 +388,11 @@ fn extract_core_wasm_impl(bytes: &[u8]) -> anyhow::Result<HashMap<String, String
             Payload::ModuleSection {
                 unchecked_range, ..
             } => {
-                let module_bytes = &bytes[unchecked_range.start..unchecked_range.end];
+                let start = usize::try_from(unchecked_range.start)
+                    .with_context(|| "core module start offset exceeds addressable memory")?;
+                let end = usize::try_from(unchecked_range.end)
+                    .with_context(|| "core module end offset exceeds addressable memory")?;
+                let module_bytes = &bytes[start..end];
                 let filename = format!("core{index}.wasm");
                 map.insert(filename, bytes_to_latin1_string(module_bytes));
                 index += 1;
