@@ -17,7 +17,7 @@ fi
 echo "✅ Rust is installed: $(cargo --version)"
 
 # Check if correct version of wasm-tools is installed
-WASM_TOOLS_VERSION="1.253.0"
+WASM_TOOLS_VERSION="1.259.0"
 
 # Returns 0 (true) when $1 is lower than $2 according to semantic version ordering.
 version_lt() {
