@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.36](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.35...wit-idl-v0.3.36) (2026-09-23)
+
+
+### Bug Fixes
+
+* bump versions (security) ([418a1f8](https://github.com/bytecodealliance/vscode-wit/commit/418a1f83602ff0c2cdfaa7e359c93c11e7827945))
+
 ## [0.3.35](https://github.com/bytecodealliance/vscode-wit/compare/wit-idl-v0.3.34...wit-idl-v0.3.35) (2026-07-16)
 
 
